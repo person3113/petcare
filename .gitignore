@@ -1,0 +1,47 @@
+# Gradle (전체 경로 적용됨)
+.gradle
+build/
+!backend/gradle/wrapper/gradle-wrapper.jar   ← 수정
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# 환경변수/API 키 ← 추가
+.env
+.env.*
+*.env
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
