@@ -1,0 +1,19 @@
+meta {
+  name: "시군구 조회 (v2)",
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://apis.data.go.kr/1543061/abandonmentPublicService_v2/sigungu_v2?serviceKey={{serviceKey}}&upr_cd=6110000&numOfRows=10&pageNo=1&_type=json
+  body: none
+  auth: none
+}
+
+params:query {
+  serviceKey: {{serviceKey}}
+  upr_cd: 6110000
+  numOfRows: 10
+  pageNo: 1
+  _type: json
+}

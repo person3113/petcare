@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "data": {
+    "totalRescued": 190503,
+    "totalAdopted": 21138,
+    "totalProtecting": 108283,
+    "totalEuthanized": 16809,
+    "period": {
+      "from": "20240101",
+      "to": "20260101"
+    },
+    "cachedAt": "2026-03-30T09:00:00.000Z"
+  }
+}

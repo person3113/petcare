@@ -1,0 +1,27 @@
+meta {
+  name: "구조동물 조회 (v2)",
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://apis.data.go.kr/1543061/abandonmentPublicService_v2/abandonmentPublic_v2?serviceKey={{serviceKey}}&bgnde=20260301&endde=20260331&pageNo=1&numOfRows=10&_type=json
+  body: none
+  auth: none
+}
+
+params:query {
+  serviceKey: {{serviceKey}}
+  bgnde: 20260301
+  endde: 20260331
+  pageNo: 1
+  numOfRows: 10
+  _type: json
+}
+
+settings {
+  encodeUrl: false
+  followRedirects: true
+  maxRedirects: 5
+  timeout: inherit
+}

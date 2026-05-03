@@ -1,0 +1,18 @@
+meta {
+  name: "시도 조회 (v2)",
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://apis.data.go.kr/1543061/abandonmentPublicService_v2/sido_v2?serviceKey={{serviceKey}}&numOfRows=10&pageNo=1&_type=json
+  body: none
+  auth: none
+}
+
+params:query {
+  serviceKey: {{serviceKey}}
+  numOfRows: 10
+  pageNo: 1
+  _type: json
+}

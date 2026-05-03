@@ -26,20 +26,20 @@
 ## 📝 상세 To-Do List
 
 ### 🛠️ Phase 0: 공통 / 환경 설정 (시험 기간)
-- [ ] **Git Repository 설정**
-  - [ ] 모노레포 폴더 구조(`backend/`, `frontend/`) 구성 및 브랜치 룰 설정
-- [ ] **프로젝트 초기화 (Frontend)**
-  - [ ] Vite + React + **JavaScript(JSX)** 환경 구성 (TypeScript는 일정상 보류/제외)
-  - [ ] **Tailwind CSS** 설치 및 설정 (테마, 폰트 위계, 기본 여백 등 세팅)
-  - [ ] 필수 라이브러리(Chart.js, CountUp.js, Swiper.js) 설치
-- [ ] **프로젝트 초기화 (Backend)**
-  - [ ] Spring Boot 4.0.5 + Java 21 + Gradle (Groovy) 생성 및 의존성 추가
-  - [ ] `application.yml` (H2 로컬) 및 `.env` 파일 구성 (API 키)
-- [ ] **[핵심] API 통신 스펙 합의 (공공 API 불일치 방어)**
-  - [ ] Bruno 설치 및 모노레포 내 `bruno/` 폴더 초기화 (팀원 간 API 테스트 이력 Git 공유용)
-  - [ ] Bruno로 **공공 API(구조동물, 보호소, 통계)를 실제 호출하여 실제 응답 JSON 확인** (명세서 맹신 금지)
-  - [ ] 지저분한 공공 데이터를 백엔드에서 정제/변환하여 프론트에 내려줄 깔끔한 API 규격 설계
-  - [ ] 확인한 실제 응답 및 규격에 맞춰 프론트엔드용 Mock JSON 필드 구조 확정 및 합의
+- [x] **Git Repository 설정**
+  - [x] 모노레포 폴더 구조(`backend/`, `frontend/`) 구성 및 브랜치 룰 설정
+- [x] **프로젝트 초기화 (Frontend)**
+  - [x] Vite + React + **JavaScript(JSX)** 환경 구성 (TypeScript는 일정상 보류/제외)
+  - [x] **Tailwind CSS** 설치 및 설정 (테마, 폰트 위계, 기본 여백 등 세팅)
+  - [x] 필수 라이브러리(Chart.js, CountUp.js, Swiper.js) 설치
+- [x] **프로젝트 초기화 (Backend)**
+  - [x] Spring Boot 4.0.5 + Java 21 + Gradle (Groovy) 생성 및 의존성 추가
+  - [x] `application.yml` (H2 로컬) 및 `.env` 파일 구성 (API 키)
+- [x] **[핵심] API 통신 스펙 합의 (공공 API 불일치 방어)**
+  - [x] Bruno 설치 및 모노레포 내 `bruno/` 폴더 초기화 (팀원 간 API 테스트 이력 Git 공유용)
+  - [x] Bruno로 **공공 API(구조동물, 보호소, 통계)를 실제 호출하여 실제 응답 JSON 확인** (명세서 맹신 금지)
+  - [x] 지저분한 공공 데이터를 백엔드에서 정제/변환하여 프론트에 내려줄 깔끔한 API 규격 설계
+  - [x] 확인한 실제 응답 및 규격에 맞춰 프론트엔드용 Mock JSON 필드 구조 확정 및 합의
 
 ### 🎨 Phase 1: Frontend UI 완성 & Backend 사전 작업 (1~2주차)
 

@@ -1,0 +1,20 @@
+meta {
+  name: "동물보호센터 상세 정보 (v2)",
+  type: http
+  seq: 6
+}
+
+get {
+  url: https://apis.data.go.kr/1543061/animalShelterSrvc_v2/shelterInfo_v2?serviceKey={{serviceKey}}&care_nm=&care_reg_no=&numOfRows=10&pageNo=1&_type=json
+  body: none
+  auth: none
+}
+
+params:query {
+  serviceKey: {{serviceKey}}
+  care_nm: 
+  care_reg_no: 
+  numOfRows: 10
+  pageNo: 1
+  _type: json
+}

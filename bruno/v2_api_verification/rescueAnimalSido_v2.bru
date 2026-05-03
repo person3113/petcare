@@ -1,0 +1,18 @@
+meta {
+  name: "구조동물 시도별 통계 (v2)",
+  type: http
+  seq: 7
+}
+
+get {
+  url: https://apis.data.go.kr/1543061/rescueAnimalStatsService/rescueAnimalSido?serviceKey={{serviceKey}}&numOfRows=10&pageNo=1&_type=json
+  body: none
+  auth: none
+}
+
+params:query {
+  serviceKey: {{serviceKey}}
+  numOfRows: 10
+  pageNo: 1
+  _type: json
+}

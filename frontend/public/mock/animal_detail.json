@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "data": {
+    "id": "447515202600086",
+    "discoveryDate": "2026-03-31",
+    "discoveryPlace": "옥산면 감계리",
+    "kind": "[개] 믹스견",
+    "color": "갈색&검정&흰색",
+    "age": "2024(년생)",
+    "weight": "4(Kg)",
+    "noticeNumber": "경북-의성-2026-00078",
+    "noticeStartDate": "2026-04-03",
+    "noticeEndDate": "2026-04-13",
+    "images": [
+      "http://openapi.animal.go.kr/openapi/service/rest/fileDownloadSrvc/files/shelter/2026/03/202604031404349.png",
+      "http://openapi.animal.go.kr/openapi/service/rest/fileDownloadSrvc/files/shelter/2026/03/202604031404375.png"
+    ],
+    "status": "보호중",
+    "gender": "수컷",
+    "isNeutered": "아니오",
+    "description": "밤톨이처럼 작고 귀여움, 조금은 예민한 아이",
+    "socialization": "밤톨이처럼 작고 귀여움, 조금은 예민한 아이",
+    "healthStatus": "양호",
+    "shelterName": "의성동물보호센터",
+    "shelterTel": "010-8855-5661",
+    "shelterAddr": "경상북도 의성군 의성읍 의성사곡로 101  상리리 440-2",
+    "jurisdiction": "경상북도 의성군",
+    "updatedAt": "2026-04-03 14:39:27.0",
+    "isLiked": false
+  }
+}
