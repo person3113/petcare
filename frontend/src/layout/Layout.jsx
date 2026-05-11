@@ -1,13 +1,15 @@
 import React from 'react'; //리엑트 파일이라는 의미
 import { Outlet } from 'react-router-dom'; //Outlet을 사용하기 위해 import
-import Navbar from '../components/Navbar'; // 나중에 만들 컴포넌트
-import Footer from '../components/Footer'; // 나중에 만들 컴포넌트
+import Navbar from '../components/Navbar.jsx'; // 나중에 만들 컴포넌트
+import Footer from '../components/Footer.jsx'; // 나중에 만들 컴포넌트
+import Searchbar from '../components/Searchbar';
 
 function Layout() {
   return (
     <div>
       <header>
-        <Navbar /> {/* 네비게이션 바 컴포넌트 */}
+          <Searchbar/>
+          <Navbar /> {/* 네비게이션 바 컴포넌트 */}
 
       </header>
 
