@@ -23,7 +23,11 @@ public class WebConfig implements WebMvcConfigurer {
                 "/api/auth/login",
                 "/api/auth/register",
                 "/api/auth/logout",
-                "/api/auth/me"
+                "/api/auth/me",
+                "/api/animals/**",
+                "/api/codes/**",
+                "/api/shelters",
+                "/api/admin/sync"
             );
     }
 

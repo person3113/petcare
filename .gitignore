@@ -18,6 +18,7 @@ frontend/build/
 # H2 database files
 *.mv.db
 *.trace.db
+*.lock.db
 
 ### STS ###
 .apt_generated

@@ -75,4 +75,38 @@ public class AnimalRepository {
             .setMaxResults(limit)
             .getResultList();
     }
+
+    public int countAllWithFilters(
+        String upKindCd,
+        String orgNm,
+        String careRegNo,
+        String processState
+    ) {
+        StringBuilder jpql = new StringBuilder("select count(a) from Animal a where 1=1");
+        Map<String, Object> params = new HashMap<>();
+
+        if (upKindCd != null && !upKindCd.isBlank()) {
+            jpql.append(" and a.upKindCd = :upKindCd");
+            params.put("upKindCd", upKindCd);
+        }
+        if (orgNm != null && !orgNm.isBlank()) {
+            jpql.append(" and a.orgNm like :orgNm");
+            params.put("orgNm", "%" + orgNm + "%");
+        }
+        if (careRegNo != null && !careRegNo.isBlank()) {
+            jpql.append(" and a.careRegNo = :careRegNo");
+            params.put("careRegNo", careRegNo);
+        }
+        if (processState != null && !processState.isBlank()) {
+            jpql.append(" and a.processState = :processState");
+            params.put("processState", processState);
+        }
+
+        TypedQuery<Long> query = entityManager.createQuery(jpql.toString(), Long.class);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        Long count = query.getSingleResult();
+        return count == null ? 0 : count.intValue();
+    }
 }

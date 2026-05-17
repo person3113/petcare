@@ -31,4 +31,13 @@ public class FavoriteRepository {
             .setParameter("userId", userId)
             .getResultList();
     }
+
+    public boolean existsByUserIdAndDesertionNo(Long userId, String desertionNo) {
+        String jpql = "select count(f) from Favorite f where f.user.id = :userId and f.desertionNo = :desertionNo";
+        Long count = entityManager.createQuery(jpql, Long.class)
+            .setParameter("userId", userId)
+            .setParameter("desertionNo", desertionNo)
+            .getSingleResult();
+        return count != null && count > 0;
+    }
 }

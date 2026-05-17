@@ -1,9 +1,11 @@
 spring:
   application:
     name: petcare
+  config:
+    import: optional:file:.env[.properties]
   sql:
     init:
-      mode: always
+      mode: never
   datasource:
     url: jdbc:h2:file:./data/petcare;AUTO_SERVER=TRUE
     driver-class-name: org.h2.Driver
@@ -27,3 +29,6 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+public-data:
+  service-key: ${PUBLIC_DATA_API_KEY:}

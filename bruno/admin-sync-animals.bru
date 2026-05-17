@@ -1,0 +1,16 @@
+meta {
+  name: admin-sync-animals
+  type: http
+  seq: 50
+}
+
+post {
+  url: http://localhost:8080/api/admin/sync?type=animals&numOfRows=200
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
