@@ -3,20 +3,25 @@ DELETE FROM animals;
 DELETE FROM shelters;
 DELETE FROM users;
 
-INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
-VALUES (1, 'test1@petcare.com', 'hash_sample', 'tester1', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
-VALUES (2, 'test2@petcare.com', 'hash_sample', 'tester2', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (1, 'test1@petcare.com', '$2a$10$8.ZUnR9OYqpDnRoBG9IcDeWp9.pEKpW3/SInp90/ZfD9pIByJ3zP.', 'tester1', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
-VALUES (3, 'test3@petcare.com', 'hash_sample', 'tester3', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (2, 'test2@petcare.com', '$2a$10$8.ZUnR9OYqpDnRoBG9IcDeWp9.pEKpW3/SInp90/ZfD9pIByJ3zP.', 'tester2', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
-VALUES (4, 'test4@petcare.com', 'hash_sample', 'tester4', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (3, 'test3@petcare.com', '$2a$10$8.ZUnR9OYqpDnRoBG9IcDeWp9.pEKpW3/SInp90/ZfD9pIByJ3zP.', 'tester3', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
-VALUES (5, 'test5@petcare.com', 'hash_sample', 'tester5', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+VALUES (4, 'test4@petcare.com', '$2a$10$8.ZUnR9OYqpDnRoBG9IcDeWp9.pEKpW3/SInp90/ZfD9pIByJ3zP.', 'tester4', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
+VALUES (5, 'test5@petcare.com', '$2a$10$8.ZUnR9OYqpDnRoBG9IcDeWp9.pEKpW3/SInp90/ZfD9pIByJ3zP.', 'tester5', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- Restart identity sequence to avoid PK violation on next insert
+ALTER TABLE users ALTER COLUMN id RESTART WITH 6;
+ALTER TABLE favorites ALTER COLUMN id RESTART WITH 4;
 
 INSERT INTO shelters (care_reg_no, care_nm, org_nm)
 VALUES ('S001', 'Seoul Shelter', 'Seoul Org');

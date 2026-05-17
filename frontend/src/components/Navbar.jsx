@@ -1,7 +1,23 @@
 import React from 'react'; //리엑트 파일이라는 의미
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { logout } from '../api/auth.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
 function Navbar() {
+    const navigate = useNavigate();
+    const { user, setUser } = useAuth();
+
+    async function handleLogout() {
+        try {
+            await logout();
+        } catch (error) {
+            // 서버 응답 실패여도 프론트 상태는 초기화
+        } finally {
+            setUser(null);
+            navigate('/');
+        }
+    }
+
     return(
         <header>
             <div id="nav_logo">  {/* 로고 부분 */}
@@ -16,8 +32,17 @@ function Navbar() {
                 </div>
             </nav>
             <div>
-                <button>로그인</button>
-                <button>회원가입</button>
+                {user ? (
+                    <>
+                        <span>{user.nickname || user.email}</span>
+                        <button type="button" onClick={handleLogout}>로그아웃</button>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/login">로그인</Link>
+                        <Link to="/register">회원가입</Link>
+                    </>
+                )}
             </div>
 
         </header>
