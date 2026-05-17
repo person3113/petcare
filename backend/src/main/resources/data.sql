@@ -1,11 +1,113 @@
+DELETE FROM favorites;
+DELETE FROM animals;
+DELETE FROM shelters;
+DELETE FROM users;
+
 INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
 VALUES (1, 'test1@petcare.com', 'hash_sample', 'tester1', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
+VALUES (2, 'test2@petcare.com', 'hash_sample', 'tester2', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
+VALUES (3, 'test3@petcare.com', 'hash_sample', 'tester3', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
+VALUES (4, 'test4@petcare.com', 'hash_sample', 'tester4', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
+VALUES (5, 'test5@petcare.com', 'hash_sample', 'tester5', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO shelters (care_reg_no, care_nm, org_nm)
 VALUES ('S001', 'Seoul Shelter', 'Seoul Org');
 
-INSERT INTO animals (desertion_no, care_reg_no, care_nm, process_state)
-VALUES ('A001', 'S001', 'Seoul Shelter', '보호중');
+INSERT INTO shelters (care_reg_no, care_nm, org_nm)
+VALUES ('S002', 'Gyeonggi Shelter', 'Gyeonggi Org');
+
+INSERT INTO shelters (care_reg_no, care_nm, org_nm)
+VALUES ('S003', 'Busan Shelter', 'Busan Org');
+
+INSERT INTO shelters (care_reg_no, care_nm, org_nm)
+VALUES ('S004', 'Incheon Shelter', 'Incheon Org');
+
+INSERT INTO shelters (care_reg_no, care_nm, org_nm)
+VALUES ('S005', 'Daegu Shelter', 'Daegu Org');
+
+INSERT INTO shelters (care_reg_no, care_nm, org_nm)
+VALUES ('S006', 'Daejeon Shelter', 'Daejeon Org');
+
+INSERT INTO shelters (care_reg_no, care_nm, org_nm)
+VALUES ('S007', 'Gwangju Shelter', 'Gwangju Org');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A001', 'S001', 'Seoul Shelter', 'Seoul Org', '417000', '개', '푸들', '보호중', '2026-06-01');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A002', 'S001', 'Seoul Shelter', 'Seoul Org', '422400', '고양이', '코리안숏헤어', '공고중', '2026-05-28');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A003', 'S001', 'Seoul Shelter', 'Seoul Org', '429900', '기타', '토끼', '보호중', '2026-06-10');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A004', 'S002', 'Gyeonggi Shelter', 'Gyeonggi Org', '417000', '개', '말티즈', '보호중', '2026-06-02');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A005', 'S002', 'Gyeonggi Shelter', 'Gyeonggi Org', '422400', '고양이', '러시안블루', '공고중', '2026-05-29');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A006', 'S002', 'Gyeonggi Shelter', 'Gyeonggi Org', '417000', '개', '시바', '종료(반환)', '2026-05-10');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A007', 'S003', 'Busan Shelter', 'Busan Org', '417000', '개', '진도', '보호중', '2026-06-05');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A008', 'S003', 'Busan Shelter', 'Busan Org', '422400', '고양이', '먼치킨', '보호중', '2026-06-07');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A009', 'S003', 'Busan Shelter', 'Busan Org', '429900', '기타', '페럿', '공고중', '2026-05-31');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A010', 'S004', 'Incheon Shelter', 'Incheon Org', '417000', '개', '웰시코기', '보호중', '2026-06-03');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A011', 'S004', 'Incheon Shelter', 'Incheon Org', '422400', '고양이', '샴', '종료(반환)', '2026-05-12');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A012', 'S004', 'Incheon Shelter', 'Incheon Org', '417000', '개', '비글', '공고중', '2026-05-27');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A013', 'S005', 'Daegu Shelter', 'Daegu Org', '417000', '개', '닥스훈트', '보호중', '2026-06-04');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A014', 'S005', 'Daegu Shelter', 'Daegu Org', '422400', '고양이', '브리티시숏헤어', '보호중', '2026-06-06');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A015', 'S005', 'Daegu Shelter', 'Daegu Org', '429900', '기타', '고슴도치', '공고중', '2026-05-30');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A016', 'S006', 'Daejeon Shelter', 'Daejeon Org', '417000', '개', '포메라니안', '보호중', '2026-06-08');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A017', 'S006', 'Daejeon Shelter', 'Daejeon Org', '422400', '고양이', '스코티시폴드', '공고중', '2026-05-26');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A018', 'S006', 'Daejeon Shelter', 'Daejeon Org', '417000', '개', '시츄', '종료(반환)', '2026-05-11');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A019', 'S007', 'Gwangju Shelter', 'Gwangju Org', '417000', '개', '스피츠', '보호중', '2026-06-09');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A020', 'S007', 'Gwangju Shelter', 'Gwangju Org', '422400', '고양이', '페르시안', '보호중', '2026-06-11');
+
+INSERT INTO animals (desertion_no, care_reg_no, care_nm, org_nm, up_kind_cd, up_kind_nm, kind_nm, process_state, notice_edt)
+VALUES ('A021', 'S007', 'Gwangju Shelter', 'Gwangju Org', '429900', '기타', '햄스터', '공고중', '2026-05-25');
 
 INSERT INTO favorites (id, user_id, desertion_no, created_at)
 VALUES (1, 1, 'A001', CURRENT_TIMESTAMP);
+
+INSERT INTO favorites (id, user_id, desertion_no, created_at)
+VALUES (2, 2, 'A008', CURRENT_TIMESTAMP);
+
+INSERT INTO favorites (id, user_id, desertion_no, created_at)
+VALUES (3, 3, 'A014', CURRENT_TIMESTAMP);
+

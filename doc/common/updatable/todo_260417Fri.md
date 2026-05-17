@@ -64,8 +64,8 @@
 **[Backend 병행] Phase 1 기간 내 선행 작업**
 - [x] **DB 설계 및 엔티티 구현:** `USERS`, `ANIMALS`, `SHELTERS`, `FAVORITES` 엔티티 클래스 및 Repository 작성
 - [x] **인증 로직 뼈대:** BCrypt + `HttpSession` 인증 로직 구조 설계 및 로컬 테스트
-- [ ] **쿼리 초안:** A-1 구조동물 목록 조회용 JPQL 다중 필터 쿼리 초안 작성
-- [ ] **DB 설정:** H2 로컬 DB 연결 확인 및 초기 테스트용 더미 데이터 INSERT 스크립트(`data.sql`) 준비
+- [x] **쿼리 초안:** A-1 구조동물 목록 조회용 JPQL 다중 필터 쿼리 초안 작성
+- [x] **DB 설정:** H2 로컬 DB 연결 확인 및 초기 테스트용 더미 데이터 INSERT 스크립트(`data.sql`) 준비
 
 ### ⚙️ Phase 2: Backend API 완성 및 프론트 연동 (3~4주차)
 
