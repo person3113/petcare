@@ -26,7 +26,7 @@ function Navbar() {
             <nav>
                 <div id="menu"> {/* 메뉴 부분 */}
                     <Link to="#">입양하기</Link>  {/* 다른페이지로 가기 위한 링크 현재는 빈경로 */}
-                    <Link to="#">인연찾기</Link>
+                    <Link to="/survey">인연찾기</Link>
                     <Link to="#">지도</Link>
                     <Link to="#">통계</Link>
                 </div>

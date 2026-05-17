@@ -72,6 +72,54 @@ public class AnimalService {
     }
 
     @Transactional(readOnly = true)
+    public AnimalListResponse getMatchedAnimals(
+        String upkind,
+        String uprCd,
+        String state,
+        String sexCd,
+        String neuterYn,
+        Integer page,
+        Integer limit
+    ) {
+        int safePage = page == null || page < 1 ? 1 : page;
+        int safeLimit = limit == null || limit < 1 ? 20 : limit;
+        int offset = (safePage - 1) * safeLimit;
+
+        String upKindCd = upkind;
+        String orgNm = uprCd;
+        String careRegNo = null;
+        String processState = state;
+
+        List<Animal> animals = animalRepository.findAllWithFiltersForMatch(
+            upKindCd,
+            orgNm,
+            careRegNo,
+            processState,
+            sexCd,
+            neuterYn,
+            offset,
+            safeLimit
+        );
+        int totalCount = animalRepository.countAllWithFiltersForMatch(
+            upKindCd,
+            orgNm,
+            careRegNo,
+            processState,
+            sexCd,
+            neuterYn
+        );
+        int totalPages = (int) Math.ceil((double) totalCount / safeLimit);
+
+        List<AnimalResponse> items = new ArrayList<>();
+        for (Animal animal : animals) {
+            items.add(toAnimalResponse(animal));
+        }
+
+        PaginationResponse pagination = new PaginationResponse(safePage, safeLimit, totalCount, totalPages);
+        return new AnimalListResponse(items, pagination);
+    }
+
+    @Transactional(readOnly = true)
     public AnimalDetailResponse getAnimalDetail(String desertionNo, Long userId) {
         Animal animal = animalRepository.findById(desertionNo)
             .orElseThrow(() -> new IllegalArgumentException("Animal not found"));

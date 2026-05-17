@@ -1,7 +1,9 @@
+import { useState } from 'react';
+import { addFavorite, removeFavorite } from '../../api/favorites.js';
 import Tag from '../Tag';
 import Button from '../Button';
 
-function AnimalInfoBox({animal}) {
+function AnimalInfoBox({animal, onFavoriteChange}) {
 
     if(!animal)return(<div>데이터 로드 안됨</div>)
 
@@ -16,7 +18,35 @@ function AnimalInfoBox({animal}) {
         healthStatus,  //건강상태
         discoveryDate, //발견날짜
         discoveryPlace, //발견장소
+        isLiked,
     } = animal;
+
+    const [favoriteLoading, setFavoriteLoading] = useState(false);
+
+    async function handleToggleFavorite() {
+        if (favoriteLoading) {
+            return;
+        }
+        if (!animal.id) {
+            alert('동물 정보가 올바르지 않습니다.');
+            return;
+        }
+        setFavoriteLoading(true);
+        try {
+            if (isLiked) {
+                await removeFavorite(animal.id);
+            } else {
+                await addFavorite(animal.id);
+            }
+            const updated = { ...animal, isLiked: !isLiked };
+            onFavoriteChange?.(updated);
+        } catch (error) {
+            console.log('찜하기 처리 실패', error);
+            alert('찜하기 처리에 실패했습니다.');
+        } finally {
+            setFavoriteLoading(false);
+        }
+    }
 
     return(
         <div className="animal-info-box" style={{ padding: '20px', maxWidth: '600px', textAlign: 'left' }}>
@@ -57,11 +87,11 @@ function AnimalInfoBox({animal}) {
             {/* 버튼 영역 */}
             <div style={{ display: 'flex', gap: '12px' }}>
                 <Button
-                text="찜하기"
+                text={favoriteLoading ? "처리중..." : (isLiked ? "찜됨" : "찜하기")}
                 flex={1}
-                bgColor="#222"
+                bgColor={isLiked ? "#e11d48" : "#222"}
                 textColor="white"
-                onClick={() => alert('찜하기 버튼을 눌렀음.')}
+                onClick={handleToggleFavorite}
                 />
                 <Button
                     text="보호소 연락"

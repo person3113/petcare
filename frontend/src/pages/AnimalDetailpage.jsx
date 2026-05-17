@@ -1,5 +1,6 @@
 import React,{useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
+import { request } from '../api/http.js';
 import AnimalInfoBox from '../components/animaldetail/AnimalInfoBox';
 import AnimalImg from '../components/animaldetail/AnimalImg';
 import AnimalInfoTab from '../components/animaldetail/AnimalInfoTab';
@@ -12,19 +13,18 @@ function AnimalDetailpage(){
 
     //컴포넌트가 처음 나타나는 한번 데이터를 가져오기 위해 useEffect사용(안쓰면 데이터가져올때 usetate가 바뀌어서 다시가져오는 무한에 빠짐)
     useEffect(()=>{
-        //fetch:데이터 요청, .then: 데이터 요청 성공했을때 .catch: 데이터 요청 실패했을때
-        fetch('/mock/animal_detail.json') //데이터 받아올 api주소 여기에 넣기:useParams으로 가져온 id사용해서 그 동물정보 가져오기**********
-            .then(res => res.json())
-            .then(json=>{
-                //데이터 요청 성공했으니 animal에 값 넣고, loding상태 false로 세팅
-                SetAnimal(json.data);
-                SetLoding(false);
-            })
-            .catch(err => {
+        async function fetchAnimal() {
+            try {
+                const data = await request(`/api/animals/${id}`, { method: 'GET' });
+                SetAnimal(data?.data || data);
+            } catch (err) {
                 console.log("err:데이터로드 실패" , err)
+            } finally {
                 SetLoding(false); //로딩 끝내기
-            }); //데이터 요청 실패시 에러메세지
+            }
+        }
 
+        fetchAnimal();
     },[id]) //id가 바뀔때마다 다시 데이터 받아오기
 
     if(loding){return(<div>...로딩중...</div>)}
@@ -47,7 +47,7 @@ function AnimalDetailpage(){
                     <AnimalImg images={animal.images} />
                 </div>
                 <div style={{ flex: 1, minWidth: '320px' }}>
-                    <AnimalInfoBox animal={animal} />
+                    <AnimalInfoBox animal={animal} onFavoriteChange={SetAnimal} />
                 </div>
 
             </div>

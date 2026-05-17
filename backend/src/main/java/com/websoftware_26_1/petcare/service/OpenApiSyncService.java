@@ -2,8 +2,10 @@ package com.websoftware_26_1.petcare.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.websoftware_26_1.petcare.domain.Animal;
+import com.websoftware_26_1.petcare.domain.RescueStatsCache;
 import com.websoftware_26_1.petcare.domain.Shelter;
 import com.websoftware_26_1.petcare.repository.AnimalRepository;
+import com.websoftware_26_1.petcare.repository.RescueStatsCacheRepository;
 import com.websoftware_26_1.petcare.repository.ShelterRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,15 +27,18 @@ public class OpenApiSyncService {
     private final OpenApiClient openApiClient;
     private final AnimalRepository animalRepository;
     private final ShelterRepository shelterRepository;
+    private final RescueStatsCacheRepository rescueStatsCacheRepository;
 
     public OpenApiSyncService(
         OpenApiClient openApiClient,
         AnimalRepository animalRepository,
-        ShelterRepository shelterRepository
+        ShelterRepository shelterRepository,
+        RescueStatsCacheRepository rescueStatsCacheRepository
     ) {
         this.openApiClient = openApiClient;
         this.animalRepository = animalRepository;
         this.shelterRepository = shelterRepository;
+        this.rescueStatsCacheRepository = rescueStatsCacheRepository;
     }
 
     @Transactional
@@ -100,11 +105,63 @@ public class OpenApiSyncService {
         return new SyncResult(savedCount, totalCount);
     }
 
+    @Transactional
+    public SyncResult syncRescueStats(LocalDate bgnde, LocalDate endde, int numOfRows) {
+        if (bgnde == null || endde == null) {
+            return new SyncResult(0, 0);
+        }
+
+        rescueStatsCacheRepository.deleteByPeriod(bgnde, endde);
+
+        int pageNo = 1;
+        int totalCount = 0;
+        int savedCount = 0;
+
+        List<String> seList = List.of("chart1", "chart2");
+        for (String se : seList) {
+            pageNo = 1;
+            int seTotalCount = 0;
+
+            while (true) {
+                OpenApiClient.PagedResult result = openApiClient.fetchRescueStats(
+                    bgnde.format(DATE_FORMATTER),
+                    endde.format(DATE_FORMATTER),
+                    se,
+                    pageNo,
+                    numOfRows
+                );
+                if (result.getItems().isEmpty()) {
+                    break;
+                }
+                if (seTotalCount == 0) {
+                    seTotalCount = result.getTotalCount();
+                    totalCount += seTotalCount;
+                }
+
+                for (JsonNode item : result.getItems()) {
+                    RescueStatsCache stats = toRescueStats(item, bgnde, endde, se);
+                    if (stats != null) {
+                        rescueStatsCacheRepository.save(stats);
+                        savedCount++;
+                    }
+                }
+
+                if (pageNo * numOfRows >= seTotalCount) {
+                    break;
+                }
+                pageNo++;
+            }
+        }
+
+        return new SyncResult(savedCount, totalCount);
+    }
+
     private Animal toAnimal(JsonNode item) {
         String desertionNo = getText(item, "desertionNo");
         if (desertionNo == null) {
             return null;
         }
+        Animal existing = animalRepository.findById(desertionNo).orElse(null);
         LocalDate happenDt = parseDate(getText(item, "happenDt"));
         LocalDate noticeSdt = parseDate(getText(item, "noticeSdt"));
         LocalDate noticeEdt = parseDate(getText(item, "noticeEdt"));
@@ -122,6 +179,10 @@ public class OpenApiSyncService {
             }
         }
         String popfilesValue = popfiles.isEmpty() ? null : String.join(",", popfiles);
+
+        String evntImg = getText(item, "evntImg");
+        String geminiIntro = existing != null ? existing.getGeminiIntro() : null;
+        LocalDateTime cachedAt = LocalDateTime.now();
 
         return Animal.builder()
             .desertionNo(desertionNo)
@@ -149,7 +210,7 @@ public class OpenApiSyncService {
             .vaccinationChk(getText(item, "vaccinationChk"))
             .healthChk(getText(item, "healthChk"))
             .popfiles(popfilesValue)
-            .evntImg(getText(item, "evntImg"))
+            .evntImg(evntImg)
             .adptnTitle(getText(item, "adptnTitle"))
             .adptnTxt(getText(item, "adptnTxt"))
             .adptnConditionLimitTxt(getText(item, "adptnConditionLimitTxt"))
@@ -167,6 +228,28 @@ public class OpenApiSyncService {
             .orgNm(getText(item, "orgNm"))
             .etcBigo(getText(item, "etcBigo"))
             .updTm(updTm)
+            .geminiIntro(geminiIntro)
+            .cachedAt(cachedAt)
+            .build();
+    }
+
+    private RescueStatsCache toRescueStats(JsonNode item, LocalDate bgnde, LocalDate endde, String se) {
+        String prcsNm = getText(item, "prcsNm");
+        String totValue = getText(item, "tot");
+        if (prcsNm == null || totValue == null) {
+            return null;
+        }
+        Integer tot = parseNumber(totValue);
+        if (tot == null) {
+            return null;
+        }
+        return RescueStatsCache.builder()
+            .se(se)
+            .prcsCd(null)
+            .prcsNm(prcsNm)
+            .tot(tot)
+            .bgnde(bgnde)
+            .endde(endde)
             .cachedAt(LocalDateTime.now())
             .build();
     }
@@ -266,6 +349,25 @@ public class OpenApiSyncService {
         }
         try {
             return LocalDateTime.parse(value, DATETIME_FORMATTER);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    private Integer parseNumber(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        try {
+            String normalized = value.replaceAll("[^0-9.]", "").trim();
+            if (normalized.isEmpty()) {
+                return null;
+            }
+            if (normalized.contains(".")) {
+                double parsed = Double.parseDouble(normalized);
+                return (int) Math.round(parsed);
+            }
+            return Integer.parseInt(normalized);
         } catch (Exception ex) {
             return null;
         }

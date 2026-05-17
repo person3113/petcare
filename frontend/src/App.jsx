@@ -2,9 +2,11 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './layout/Layout.jsx';
 import AnimalDetailpage from './pages/AnimalDetailpage.jsx';
+import MatchResult from './pages/MatchResult.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import Survey from './pages/Survey.jsx';
 import './App.css';
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
                 {/* 여기에 layout파일을 상속받는 페이지들을 넣으면 됨*/}
                 <Route index element={<Home />} />
                 <Route path="animal/:id" element={<AnimalDetailpage />} /> {/*동물 상세페이지*/}
+                <Route path="survey" element={<Survey />} />
+                <Route path="match-result" element={<MatchResult />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
             </Route>

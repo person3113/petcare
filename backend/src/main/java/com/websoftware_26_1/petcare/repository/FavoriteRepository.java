@@ -32,6 +32,23 @@ public class FavoriteRepository {
             .getResultList();
     }
 
+    public Optional<Favorite> findByUserIdAndDesertionNo(Long userId, String desertionNo) {
+        String jpql = "select f from Favorite f where f.user.id = :userId and f.desertionNo = :desertionNo";
+        return entityManager.createQuery(jpql, Favorite.class)
+            .setParameter("userId", userId)
+            .setParameter("desertionNo", desertionNo)
+            .getResultStream()
+            .findFirst();
+    }
+
+    public int deleteByUserIdAndDesertionNo(Long userId, String desertionNo) {
+        String jpql = "delete from Favorite f where f.user.id = :userId and f.desertionNo = :desertionNo";
+        return entityManager.createQuery(jpql)
+            .setParameter("userId", userId)
+            .setParameter("desertionNo", desertionNo)
+            .executeUpdate();
+    }
+
     public boolean existsByUserIdAndDesertionNo(Long userId, String desertionNo) {
         String jpql = "select count(f) from Favorite f where f.user.id = :userId and f.desertionNo = :desertionNo";
         Long count = entityManager.createQuery(jpql, Long.class)

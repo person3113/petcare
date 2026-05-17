@@ -21,6 +21,7 @@ public class OpenApiClient {
 
     private static final String ABANDONMENT_BASE_URL = "https://apis.data.go.kr/1543061/abandonmentPublicService_v2";
     private static final String SHELTER_BASE_URL = "https://apis.data.go.kr/1543061/animalShelterSrvc_v2";
+    private static final String STATS_BASE_URL = "https://apis.data.go.kr/1543061/rescueAnimalStatsService";
 
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
@@ -85,6 +86,17 @@ public class OpenApiClient {
 
     public PagedResult fetchShelterInfos(int pageNo, int numOfRows) {
         JsonNode root = get(SHELTER_BASE_URL, "/shelterInfo_v2", Map.of(
+            "pageNo", String.valueOf(pageNo),
+            "numOfRows", String.valueOf(numOfRows)
+        ));
+        return toPagedResult(root);
+    }
+
+    public PagedResult fetchRescueStats(String bgnde, String endde, String se, int pageNo, int numOfRows) {
+        JsonNode root = get(STATS_BASE_URL, "/rescueAnimalStats", Map.of(
+            "bgnde", bgnde,
+            "endde", endde,
+            "se", se,
             "pageNo", String.valueOf(pageNo),
             "numOfRows", String.valueOf(numOfRows)
         ));
