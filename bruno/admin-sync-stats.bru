@@ -1,0 +1,16 @@
+meta {
+  name: admin-sync-stats
+  type: http
+  seq: 52
+}
+
+post {
+  url: http://localhost:8080/api/admin/sync?type=stats&numOfRows=200
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

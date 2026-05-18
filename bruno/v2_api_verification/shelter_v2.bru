@@ -1,0 +1,18 @@
+meta {
+  name: "보호소 조회 (v2)",
+  type: http
+  seq: 4
+}
+
+get {
+  url: https://apis.data.go.kr/1543061/abandonmentPublicService_v2/shelter_v2?serviceKey={{serviceKey}}&upr_cd=6110000&org_cd=3220000&_type=json
+  body: none
+  auth: none
+}
+
+params:query {
+  serviceKey: {{serviceKey}}
+  upr_cd: 6110000
+  org_cd: 3220000
+  _type: json
+}

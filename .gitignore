@@ -1,10 +1,7 @@
-# 기타
-/doc
-
-# Gradle (전체 경로 적용됨)
+# Gradle (전체 경로)
 .gradle
 build/
-!backend/gradle/wrapper/gradle-wrapper.jar   ← 수정
+!backend/gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -13,10 +10,15 @@ frontend/node_modules/
 frontend/dist/
 frontend/build/
 
-# 환경변수/API 키 ← 추가
+# 환경변수/API 키
 .env
 .env.*
 *.env
+
+# H2 database files
+*.mv.db
+*.trace.db
+*.lock.db
 
 ### STS ###
 .apt_generated
