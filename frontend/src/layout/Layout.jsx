@@ -5,8 +5,11 @@ import Footer from '../components/Footer.jsx'; // 나중에 만들 컴포넌트
 import Searchbar from '../components/Searchbar';
 
 function Layout() {
+    //min-w-[375px]:최소 모바일 해상도 보장
+    //max-w-[1200px]:pc화면 최대 크기
+    //mx-auto:마진오토 px-4:패딩 x축(좌우) 16px"
   return (
-    <div>
+    <div className="min-w-[375px] max-w-[1200px] mx-auto px-4">
       <header>
           <Searchbar/>
           <Navbar /> {/* 네비게이션 바 컴포넌트 */}

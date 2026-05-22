@@ -115,4 +115,3 @@
 --
 -- INSERT INTO favorites (id, user_id, desertion_no, created_at)
 -- VALUES (3, 3, 'A014', CURRENT_TIMESTAMP);
---
