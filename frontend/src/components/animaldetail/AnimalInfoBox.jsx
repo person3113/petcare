@@ -85,20 +85,26 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
             </div>
 
             {/* 버튼 영역 */}
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                 <Button
-                text={favoriteLoading ? "처리중..." : (isLiked ? "찜됨" : "찜하기")}
-                flex={1}
-                bgColor={isLiked ? "#e11d48" : "#222"}
-                textColor="white"
-                onClick={handleToggleFavorite}
+                    text={favoriteLoading ? "..." : (isLiked ? "❤️" : "🤍")}
+                    flex={0.4}
+                    bgColor="none" // 원하면 배경 추가
+                    onClick={handleToggleFavorite}
+                />
+                <Button
+                    text="입양 신청하기"
+                    flex={1.5}
+                    bgColor="#4f46e5"
+                    textColor="white"
                 />
                 <Button
                     text="보호소 연락"
-                    flex={1}
+                    flex={1.1}
                     bgColor="white"
-                    textColor="#222"
-                    onClick={() => alert('보호소 연락 버튼을 눌렀음.')}
+                    textColor="#444"
+                    onClick={() => alert(`${shelterName} 연락처: ${animal.shelterTel}`)}
+                    style={{ border: '1px solid #ddd' }}
                 />
             </div>
         </div>
