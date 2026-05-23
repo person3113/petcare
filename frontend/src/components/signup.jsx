@@ -1,7 +1,9 @@
 // userState는 백엔드에 적용하는 것에 맞춰서 추후 변경
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+    const navigate = useNavigate();
     const[email, setEmail] = useState('');          // 이메일
     const[pwd, setPwd] = useState('');              // 비밀번호
     const[username, setUsername] = useState('');    // 사용자 이름
@@ -10,8 +12,7 @@ function Signup() {
     const passToLogin=()=>{
             // 회원가입 후 로그인으로 이동
             // 이동시켜주는 함수 nevigate()가 미완성, 추후 완성에 따라서 수정 필요
-            nevigate('/login');
-
+            navigate('/login');
         }
 
     const submitSignup=(event)=>{   // event는 폼 작성에서 발생하는 이벤트에 대한 객체
@@ -19,7 +20,7 @@ function Signup() {
 
         try{
             // 회원가입 성공시 로그인 페이지로 이동
-            nevigate('/login');
+            navigate('/login');
         }
         catch(error){
             // 이메일 형식 오류 -> 약간 완벽하게 불가능 (임시; 현재 모습으로는 형식 검사 완전X)
@@ -57,3 +58,4 @@ function Signup() {
     );
 }
 
+export default Signup;

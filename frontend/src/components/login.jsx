@@ -1,7 +1,9 @@
 // userState는 백엔드에 적용하는 것에 맞춰서 추후 변경
 import React, {useState} from 'react';
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+    const navigate = useNavigate();
     const[email, setEmail] = useState('');  // 이메일
     const[pwd, setPwd] = useState('');      // 비밀번호
     const[error, setError] = useState('');  // 에러 메시지
@@ -35,7 +37,7 @@ function Login() {
         try{
             // 만약 로그인을 성고했다면 메인 페이지로
             // (네비게이션의 로그인 옵셕을 제외하고 프로필로 교체)
-            nevigate('/');
+            navigate('/');
         }
         catch(error){
             if(error) setError('로그인에 실패하였습니다. 다시 시도해주세요.');
@@ -45,12 +47,13 @@ function Login() {
     const passToSignup=()=>{
         // 로그인 버튼 옆에 회원가입으로 이동하는 버튼
         // 이동시켜주는 함수 nevigate() 미완성, 추후 수정 필요
-        nevigate('/singup');
+        navigate('/singup');
     }
     return (
         <div>
             {/* 로그인 폼 */}
             <form onSubmit={submitLogin}>
+
                 {/* 이메일과 패스워드값을 받고 서버에서 비교후 로그인 성공 여부 판단 */}
                 <input type="email" value={email} onChange={event=>setEmail(event.target.value)} placeholder="insert your email"/>
                 <input type="password" value={pwd} onChange={event=>setPwd(event.target.value)} placeholder="insert your password"/>
@@ -61,3 +64,5 @@ function Login() {
        </div>
     );
 }
+
+export default Login;
