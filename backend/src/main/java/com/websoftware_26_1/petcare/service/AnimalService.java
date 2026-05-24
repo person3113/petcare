@@ -5,6 +5,8 @@ import com.websoftware_26_1.petcare.domain.Shelter;
 import com.websoftware_26_1.petcare.repository.AnimalRepository;
 import com.websoftware_26_1.petcare.repository.FavoriteRepository;
 import com.websoftware_26_1.petcare.repository.ShelterRepository;
+import com.websoftware_26_1.petcare.service.GeminiIntroService.IntroPrompt;
+import com.websoftware_26_1.petcare.service.GeminiIntroService.IntroResult;
 import com.websoftware_26_1.petcare.web.dto.AnimalDetailResponse;
 import com.websoftware_26_1.petcare.web.dto.AnimalListResponse;
 import com.websoftware_26_1.petcare.web.dto.AnimalResponse;
@@ -29,15 +31,18 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final ShelterRepository shelterRepository;
     private final FavoriteRepository favoriteRepository;
+    private final GeminiIntroService geminiIntroService;
 
     public AnimalService(
         AnimalRepository animalRepository,
         ShelterRepository shelterRepository,
-        FavoriteRepository favoriteRepository
+        FavoriteRepository favoriteRepository,
+        GeminiIntroService geminiIntroService
     ) {
         this.animalRepository = animalRepository;
         this.shelterRepository = shelterRepository;
         this.favoriteRepository = favoriteRepository;
+        this.geminiIntroService = geminiIntroService;
     }
 
     @Transactional(readOnly = true)
@@ -119,7 +124,7 @@ public class AnimalService {
         return new AnimalListResponse(items, pagination);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public AnimalDetailResponse getAnimalDetail(String desertionNo, Long userId) {
         Animal animal = animalRepository.findById(desertionNo)
             .orElseThrow(() -> new IllegalArgumentException("Animal not found"));
@@ -129,12 +134,14 @@ public class AnimalService {
             shelter = shelterRepository.findById(animal.getCareRegNo());
         }
 
+        IntroResult introResult = ensureGeminiIntro(animal);
+
         boolean isLiked = false;
         if (userId != null) {
             isLiked = favoriteRepository.existsByUserIdAndDesertionNo(userId, desertionNo);
         }
 
-        return toAnimalDetailResponse(animal, shelter.orElse(null), isLiked);
+        return toAnimalDetailResponse(animal, shelter.orElse(null), isLiked, introResult);
     }
 
     private AnimalResponse toAnimalResponse(Animal animal) {
@@ -162,7 +169,12 @@ public class AnimalService {
             .build();
     }
 
-    private AnimalDetailResponse toAnimalDetailResponse(Animal animal, Shelter shelter, boolean isLiked) {
+    private AnimalDetailResponse toAnimalDetailResponse(
+        Animal animal,
+        Shelter shelter,
+        boolean isLiked,
+        IntroResult introResult
+    ) {
         String shelterName = shelter != null ? shelter.getCareNm() : animal.getCareNm();
         String shelterTel = shelter != null ? shelter.getCareTel() : animal.getCareTel();
         String shelterAddr = shelter != null ? shelter.getCareAddr() : animal.getCareAddr();
@@ -192,7 +204,34 @@ public class AnimalService {
             .jurisdiction(jurisdiction)
             .updatedAt(formatDateTime(animal.getUpdTm()))
             .isLiked(isLiked)
+            .geminiIntro(introResult.intro())
+            .geminiIntroCandidates(introResult.candidates())
             .build();
+    }
+
+    private IntroResult ensureGeminiIntro(Animal animal) {
+        if (animal.getGeminiIntro() != null && !animal.getGeminiIntro().isBlank()) {
+            return new IntroResult(animal.getGeminiIntro(), Collections.singletonList(animal.getGeminiIntro()));
+        }
+
+        IntroPrompt prompt = new IntroPrompt(
+            valueOrFallback(animal.getKindFullNm(), animal.getKindNm()),
+            convertGender(animal.getSexCd()),
+            animal.getAge(),
+            animal.getWeight(),
+            animal.getColorCd(),
+            animal.getHappenPlace(),
+            animal.getSpecialMark(),
+            animal.getSfeSoci(),
+            valueOrFallback(animal.getSfeHealth(), animal.getHealthChk())
+        );
+
+        IntroResult result = geminiIntroService.generateIntro(prompt);
+        if (result.intro() != null && result.intro().trim().length() >= 12) {
+            animal.updateGeminiIntro(result.intro(), LocalDateTime.now());
+            animalRepository.save(animal);
+        }
+        return result;
     }
 
     private List<String> parseImages(String popfiles, String fallback) {

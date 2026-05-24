@@ -31,4 +31,6 @@ public class AnimalDetailResponse {
     private String jurisdiction;
     private String updatedAt;
     private boolean isLiked;
+    private String geminiIntro;
+    private List<String> geminiIntroCandidates;
 }

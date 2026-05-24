@@ -19,6 +19,8 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
         discoveryDate, //발견날짜
         discoveryPlace, //발견장소
         isLiked,
+        geminiIntro,
+        geminiIntroCandidates,
     } = animal;
 
     const [favoriteLoading, setFavoriteLoading] = useState(false);
@@ -75,6 +77,20 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
                 <p>보호소: {shelterName}</p>
                 <p>발견 날짜: {discoveryDate}</p>
                 <p>발견 장소: {discoveryPlace}</p>
+            </div>
+
+            {/*AI 1줄 소개*/}
+            <h2>AI 1줄 소개</h2>
+            <div style={{ color: '#444', fontSize: '16px', margin: '0 0 40px 0' }}>
+                <p>{geminiIntro || '이 아이의 소개글을 준비 중이에요.'}</p>
+                {Array.isArray(geminiIntroCandidates) && geminiIntroCandidates.length > 1 && (
+                    <div style={{ marginTop: '10px', color: '#666' }}>
+                        <p>다른 버전</p>
+                        {geminiIntroCandidates.slice(1, 3).map((item) => (
+                            <p key={item}>- {item}</p>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* 태그 부분: 데이터에 배열 형식의 태그가 없으므로, 핵심 정보를 태그 형태로 시각화 */}
