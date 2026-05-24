@@ -1,5 +1,6 @@
 import {useState, useRef} from 'react';
 import { useNavigate } from "react-router-dom";
+import './question.css';
 
 // 질문 목록
 // 1. 내가 반려동물을 기르려는 이유 = 원하는 관계
@@ -36,14 +37,14 @@ function Question({answers, setAnswers}) {
 
     function Submit() {
         if(!finish){
-            console.log('응답하지 않은 문항이 있습니다. 모든 문항에 답해주십시오.');
+            alert('응답하지 않은 문항이 있습니다. 모든 문항에 답해주십시오.');
             // 미응답 질문중 가장 빠른 번호로 스크롤
             const fastBlank=answers.findIndex(a=>a===null);
             boxRefs.current[fastBlank]?.scrollIntoView({behavior:'smooth', block:'nearest'});
             return;
         }
         // 설문제출이 성고했으니 매칭 결과페이지로
-        navigate('/MatchResult');
+        navigate('/match-result');
     }
 
     // 전체 질문 목록 및 버튼에 대한 출력
@@ -66,25 +67,34 @@ function Question({answers, setAnswers}) {
                         isOpen?'question-box-opened':''].filter(Boolean).join(' ')}
                         onClick={()=>ToggleHandler(qi)}
                     >
-
-                    {/* 선택 유무에 따라서 감춰지는 부분, isOpen이 TRUE일때만 보여짐, 선택지 */}
-                    {isOpen && (
-                        <div className="question-box-options">
-                            {/* 한 질문의 선택지들을 map으로 순회 */}
-                            {q.opts.map((opt, oi)=>(
-                                // 수정할때 이미 선택한 것을 구분하기위해 '~selected'를 뒤에 추가해서 별도의 css를 부여
-                                // 클릭 이벤트가 생겼을때 ToggleHandler가 실행되지 않도록 막음, SelectHandler만 실행되게 도와줌
-                                <button key={oi} className={['question-box-opt',
-                                    answers[qi] === oi ? 'question-box-option-selected' : '',
-                                    ].filter(Boolean).join(' ')}
-                                    onClick={(event)=>{event.stopPropagation(); SelectHandler(qi, oi);}}
-                                >
+                        <div className="question-box-header">
+                            <span>{q.label}</span>
+                            <span>{q.q}</span>
+                        </div>
+                        {/* 선택 유무에 따라서 감춰지는 부분, isOpen이 TRUE일때만 보여짐, 선택지 */}
+                        {isOpen && (
+                            <div className="question-box-options">
+                                {/* 한 질문의 선택지들을 map으로 순회 */}
+                                {q.opts.map((opt, oi)=>(
+                                    // 수정할때 이미 선택한 것을 구분하기위해 '~selected'를 뒤에 추가해서 별도의 css를 부여
+                                    // 클릭 이벤트가 생겼을때 ToggleHandler가 실행되지 않도록 막음, SelectHandler만 실행되게 도와줌
+                                    <button key={oi} className={['question-box-opt',
+                                        answers[qi] === oi ? 'question-box-option-selected' : '',
+                                        ].filter(Boolean).join(' ')}
+                                        onClick={(event)=>{event.stopPropagation(); SelectHandler(qi, oi);}}
+                                    >
                                 {opt}
                                 </button>
                             ))}
+
                         </div>
                     )}
+                {!isOpen && isAnswer &&(
+                    <div className="question-box-selected">
+                        <span>{q.opts[answers[qi]]}</span>
                     </div>
+                )}
+                </div>
                 );
             })}
             {/* 이전, 다음, 제출 버튼 */}
@@ -100,7 +110,7 @@ function Question({answers, setAnswers}) {
                         if(target < 5)ToggleHandler(target);}}
                     >다음</button>
                 <button className={
-                    finish?"question-buttons-finish":"question-buttons-nofinish"}
+                    finish?"question-buttons-finish":"question-buttons-noFinish"}
                     onClick={Submit}>
                     제출</button>
             </div>
