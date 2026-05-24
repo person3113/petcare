@@ -9,6 +9,7 @@ import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Survey from './pages/Survey.jsx';
+import ShelterMapPage from './pages/ShelterMapPage.jsx';
 import './App.css';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                 <Route path="match-result" element={<MatchResult />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
+                <Route path="map" element={<ShelterMapPage />} /> {/*보호소 지도*/}
             </Route>
             {/* 레이아웃이 필요없거나 다른 상속을 받을 페이지들은 이곳에 */}
         </Routes>
