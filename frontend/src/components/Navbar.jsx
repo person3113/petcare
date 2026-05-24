@@ -30,6 +30,7 @@ function Navbar() {
                     <Link to="/survey">인연찾기</Link>
                     <Link to="#">지도</Link>
                     <Link to="#">통계</Link>
+                    <Link to="/community">커뮤니티</Link>
                     <Link to="/mypage">마이페이지</Link>
                 </div>
             </nav>

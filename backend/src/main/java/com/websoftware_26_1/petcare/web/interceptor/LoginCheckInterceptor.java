@@ -22,6 +22,13 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        String method = request.getMethod();
+        String uri = request.getRequestURI();
+
+        if ("GET".equalsIgnoreCase(method) && uri.startsWith("/api/posts")) {
+            return true;
+        }
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute(LOGIN_USER) == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

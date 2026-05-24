@@ -1,0 +1,31 @@
+{
+  "data": [
+    {
+      "id": 11,
+      "postId": 1,
+      "userId": 2,
+      "userNickname": "테스터2",
+      "content": "축하드립니다!",
+      "createdAt": "2026-05-20 11:00:00",
+      "updatedAt": "2026-05-20 11:00:00"
+    },
+    {
+      "id": 12,
+      "postId": 1,
+      "userId": 3,
+      "userNickname": "테스터3",
+      "content": "저도 입양 고민 중이에요.",
+      "createdAt": "2026-05-20 11:05:00",
+      "updatedAt": "2026-05-20 11:05:00"
+    },
+    {
+      "id": 21,
+      "postId": 2,
+      "userId": 1,
+      "userNickname": "테스터1",
+      "content": "위치 정보 더 알려주세요!",
+      "createdAt": "2026-05-21 18:30:00",
+      "updatedAt": "2026-05-21 18:30:00"
+    }
+  ]
+}
