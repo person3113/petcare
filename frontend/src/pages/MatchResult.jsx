@@ -57,6 +57,12 @@ function MatchResult() {
           >
             ← 설문 다시하기
           </Link>
+          <Link
+            to="/mypage"
+            className="ml-2 inline-block rounded-xl border border-gray-300 px-6 py-2 text-sm font-semibold text-gray-600 transition hover:bg-gray-50"
+          >
+            설문 기록 보기
+          </Link>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { matchQuiz, buildMatchParams } from '../api/match.js';
+import { saveSurvey } from '../api/survey.js';
 import { fetchSido } from '../api/animals.js';
 
 // 설문 5문항 페이지
@@ -45,6 +46,11 @@ function Survey() {
       // 빈 값 제거 후 payload 변환
       const payload = buildMatchParams(form);
       const data = await matchQuiz(payload);
+      try {
+        await saveSurvey(payload);
+      } catch (saveError) {
+        // 설문 저장 실패는 결과 화면을 막지 않음
+      }
       // 결과 페이지로 데이터 전달
       navigate('/match-result', { state: data?.data || data });
     } catch (err) {

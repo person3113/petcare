@@ -11,6 +11,7 @@ import Register from './pages/Register.jsx';
 import Survey from './pages/Survey.jsx';
 import ShelterMapPage from './pages/ShelterMapPage.jsx';
 import LostAnimalPage from './pages/LostAnimalPage.jsx';
+import MyPage from './pages/MyPage.jsx';
 import './App.css';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/animalswipe/:id" element={<AnimalSwipepage />} />{/*동물 스와이프페이지*/}
                 <Route path="animals" element={<AnimalFeedPage />} /> {/*구조동물 피드*/}
                 <Route path="survey" element={<Survey />} />
+                <Route path="mypage" element={<MyPage />} />
                 <Route path="match-result" element={<MatchResult />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
