@@ -36,4 +36,14 @@ async function fetchShelters(sigunguCode) {
   return list.filter((item) => item.sigunguCode === sigunguCode);
 }
 
-export { fetchAnimals, fetchSido, fetchSigungu, fetchShelters };
+// 분실동물 목록 불러오기 (Mock JSON)
+async function fetchLostAnimals() {
+  const response = await fetch('/mock/lost_animals.json');
+  if (!response.ok) {
+    throw new Error('분실동물 데이터를 불러오지 못했습니다.');
+  }
+  const data = await response.json();
+  return data?.data?.items || [];
+}
+
+export { fetchAnimals, fetchSido, fetchSigungu, fetchShelters, fetchLostAnimals };
