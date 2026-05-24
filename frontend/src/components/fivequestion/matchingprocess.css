@@ -1,0 +1,9 @@
+/* 전체 진행바를 넘어가지 않도록 범위 제한 */
+.matchingprocess-bar-background{
+    overflow:hidden;
+}
+/* 진행사항의 변동이 생길때 애니메이션 효과(빠르게 시작, 느리게 멈춤) */
+.matchingprocess-bar-filled{
+    height:100%;
+    transition:width 0.5s cubic-bezier(0.4, 0, 1, 1);
+}

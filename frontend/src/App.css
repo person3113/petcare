@@ -1,3 +1,17 @@
+#root{
+    /* 디폴트를 데스크탑에 맞춰서 세팅 */
+    max-width:1200px;
+    margin: 0 auto;
+}
+/* 태블릿 */
+@media(max-width: 768px){
+
+}
+/* 모바일 */
+@media(max-width: 480px){
+
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;
