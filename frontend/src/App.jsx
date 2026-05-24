@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './layout/Layout.jsx';
 import AnimalDetailpage from './pages/AnimalDetailpage.jsx';
 import AnimalSwipepage from "./pages/AnimalSwipepage.jsx";
+import AnimalFeedPage from './pages/AnimalFeedPage.jsx';
 import MatchResult from './pages/MatchResult.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
@@ -18,6 +19,7 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="animal/:id" element={<AnimalDetailpage />} /> {/*동물 상세페이지*/}
                 <Route path="/animalswipe/:id" element={<AnimalSwipepage />} />{/*동물 스와이프페이지*/}
+                <Route path="animals" element={<AnimalFeedPage />} /> {/*구조동물 피드*/}
                 <Route path="survey" element={<Survey />} />
                 <Route path="match-result" element={<MatchResult />} />
                 <Route path="login" element={<Login />} />

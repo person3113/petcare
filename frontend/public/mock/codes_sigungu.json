@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "data": [
+    { "code": "4711000", "name": "의성군", "sidoCode": "6470000" },
+    { "code": "4223000", "name": "삼척시", "sidoCode": "6530000" },
+    { "code": "2817000", "name": "남동구", "sidoCode": "6280000" },
+    { "code": "4689000", "name": "완도군", "sidoCode": "6460000" },
+    { "code": "4374000", "name": "영동군", "sidoCode": "6430000" }
+  ]
+}
