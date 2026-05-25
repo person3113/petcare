@@ -205,13 +205,13 @@ public class AnimalService {
             .updatedAt(formatDateTime(animal.getUpdTm()))
             .isLiked(isLiked)
             .geminiIntro(introResult.intro())
-            .geminiIntroCandidates(introResult.candidates())
             .build();
     }
 
     private IntroResult ensureGeminiIntro(Animal animal) {
-        if (animal.getGeminiIntro() != null && !animal.getGeminiIntro().isBlank()) {
-            return new IntroResult(animal.getGeminiIntro(), Collections.singletonList(animal.getGeminiIntro()));
+        if (animal.getGeminiIntro() != null && !animal.getGeminiIntro().isBlank()
+                && animal.getGeminiIntro().trim().length() >= 12) {
+            return new IntroResult(animal.getGeminiIntro());
         }
 
         IntroPrompt prompt = new IntroPrompt(

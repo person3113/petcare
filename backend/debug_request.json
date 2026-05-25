@@ -1,0 +1,12 @@
+{
+  "kind": "[고양이] 한국 고양이",
+  "gender": "암컷",
+  "age": "2026(60일미만)(년생)",
+  "weight": "0.10(Kg)",
+  "color": "레몬색&흰색",
+  "discoveryPlace": "북구 버들로 8",
+  "description": "밤톨이처럼 작고 귀여움, 조금은 예민한 아이",
+  "socialization": "조심스럽지만 사람에게 관심",
+  "healthStatus": "양호",
+  "strict": true
+}

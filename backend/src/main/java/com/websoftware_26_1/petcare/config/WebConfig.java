@@ -29,7 +29,8 @@ public class WebConfig implements WebMvcConfigurer {
                 "/api/codes/**",
                 "/api/shelters",
                 "/api/stats/**",
-                "/api/admin/sync"
+                "/api/admin/sync",
+                "/api/debug/**"
             );
     }
 

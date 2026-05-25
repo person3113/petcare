@@ -2,8 +2,6 @@ package com.websoftware_26_1.petcare.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -52,89 +50,61 @@ public class GeminiIntroService {
     }
 
     private IntroResult requestIntro(IntroPrompt prompt, boolean strict) {
+        ResponsePayload payload = requestIntroWithPrompt(buildPrompt(prompt, strict));
+        return payload.result();
+    }
+
+    private ResponsePayload requestIntroWithPrompt(String promptText) {
         try {
             Map<String, Object> payload = Map.of(
                 "contents", List.of(
                     Map.of(
                         "role", "user",
-                        "parts", List.of(Map.of("text", buildPrompt(prompt, strict)))
+                        "parts", List.of(Map.of("text", promptText))
                     )
                 ),
                 "generationConfig", Map.of(
                     "temperature", 0.9,
                     "topP", 0.9,
-                    "maxOutputTokens", 80
+                    "maxOutputTokens", 200
                 )
             );
 
             String url = GEMINI_BASE_URL + model + ":generateContent?key=" + apiKey;
             String response = restTemplate.postForObject(url, payload, String.class);
             if (response == null || response.isBlank()) {
-                return IntroResult.empty();
+                return ResponsePayload.empty();
             }
             JsonNode root = objectMapper.readTree(response);
-            List<String> candidates = extractCandidates(root);
-            if (candidates.isEmpty()) {
-                return IntroResult.empty();
-            }
-            String best = pickBest(candidates);
-            return new IntroResult(best, candidates);
+            String intro = extractBestIntro(root);
+            Usage usage = parseUsage(root);
+            return new ResponsePayload(new IntroResult(intro), usage);
         } catch (Exception ex) {
             logger.warn("Gemini intro call failed: {}", ex.getMessage());
-            return IntroResult.empty();
+            return ResponsePayload.empty();
         }
     }
 
-    private String pickBest(List<String> candidates) {
-        if (candidates == null || candidates.isEmpty()) {
-            return null;
-        }
-        for (String candidate : candidates) {
-            if (isValidIntro(candidate)) {
-                return candidate;
-            }
-        }
-        return candidates.get(0);
+    public DebugResult debugGenerate(IntroPrompt prompt, boolean strict) {
+        String promptText = buildPrompt(prompt, strict);
+        ResponsePayload payload = requestIntroWithPrompt(promptText);
+        return new DebugResult(promptText, payload.result().intro(), payload.usage());
     }
 
     private boolean isValidIntro(String intro) {
         return intro != null && intro.trim().length() >= 12;
     }
 
-    private List<String> extractCandidates(JsonNode root) {
+    private String extractBestIntro(JsonNode root) {
         JsonNode candidates = root.path("candidates");
-        if (!candidates.isArray()) {
-            return Collections.emptyList();
+        if (!candidates.isArray() || candidates.isEmpty()) {
+            return null;
         }
-
-        List<String> results = new ArrayList<>();
-        for (JsonNode candidate : candidates) {
-            String text = candidate.path("content").path("parts").path(0).path("text").asText(null);
-            results.addAll(splitCandidates(text));
-        }
-        return results;
-    }
-
-    private List<String> splitCandidates(String text) {
+        String text = candidates.path(0).path("content").path("parts").path(0).path("text").asText(null);
         if (text == null || text.isBlank()) {
-            return Collections.emptyList();
+            return null;
         }
-        String normalized = text.replace("\r", "").trim();
-        String[] lines = normalized.split("\n");
-        List<String> results = new ArrayList<>();
-        for (String line : lines) {
-            String cleaned = cleanupLine(line);
-            if (cleaned != null && !cleaned.isBlank()) {
-                results.add(cleaned);
-            }
-        }
-        if (results.isEmpty()) {
-            String single = cleanupLine(normalized);
-            if (single != null && !single.isBlank()) {
-                results.add(single);
-            }
-        }
-        return results;
+        return cleanupLine(text.replace("\r", "").trim());
     }
 
     private String cleanupLine(String line) {
@@ -145,10 +115,21 @@ public class GeminiIntroService {
             .replaceAll("^[0-9]+[).\\s]+", "")
             .replaceAll("^[\\-•]+\\s*", "")
             .trim();
-        if (trimmed.length() > 50) {
-            return trimmed.substring(0, 50);
-        }
         return trimmed;
+    }
+
+    private Usage parseUsage(JsonNode root) {
+        JsonNode usageNode = root.path("usageMetadata");
+        if (usageNode.isMissingNode() || usageNode.isNull()) {
+            return null;
+        }
+        int promptTokens = usageNode.path("promptTokenCount").asInt(0);
+        int candidateTokens = usageNode.path("candidatesTokenCount").asInt(0);
+        int totalTokens = usageNode.path("totalTokenCount").asInt(0);
+        if (promptTokens == 0 && candidateTokens == 0 && totalTokens == 0) {
+            return null;
+        }
+        return new Usage(promptTokens, candidateTokens, totalTokens);
     }
 
     private String buildPrompt(IntroPrompt prompt, boolean strict) {
@@ -157,16 +138,14 @@ public class GeminiIntroService {
         builder.append("아래 정보를 바탕으로 입양 가족에게 1줄 자기소개를 해줘. ");
         builder.append("말투는 귀엽고 개성 있게, 의인화된 느낌. ");
         if (strict) {
-            builder.append("15~30자, 1문장으로. ");
-            builder.append("아주 짧은 인사말 금지. ");
+            builder.append("15~40자, 1문장으로. ");
+            builder.append("단순 인사말만 하지 말고 종이나 성격 정보를 꼭 넣어줘. ");
         } else {
-            builder.append("12~30자, 1문장으로. ");
+            builder.append("15~40자, 1문장으로. ");
         }
         builder.append("종/성격/특징 중 최소 1개는 꼭 포함해줘. ");
-        builder.append("서로 다른 버전 3개를 만들어줘. ");
-        builder.append("각 줄은 서로 다른 말투로 써줘.\n");
         builder.append("성격 후보: 발랄함, 소심함, 애교많음, 느긋함, 호기심, 의젓함, 장난꾸러기, 수줍음\n");
-        builder.append("위 성격 후보 중 2~3개를 랜덤으로 골라 반영해줘.\n");
+        builder.append("위 성격 후보 중 1~2개를 랜덤으로 골라 반영해줘.\n");
         builder.append("- 종: ").append(prompt.kind()).append("\n");
         builder.append("- 성별: ").append(prompt.gender()).append("\n");
         builder.append("- 나이: ").append(prompt.age()).append("\n");
@@ -176,6 +155,7 @@ public class GeminiIntroService {
         builder.append("- 특징: ").append(prompt.description()).append("\n");
         builder.append("- 사회성: ").append(prompt.socialization()).append("\n");
         builder.append("- 건강 상태: ").append(prompt.healthStatus()).append("\n");
+        builder.append("자기소개 문장 1개만 출력하고, 번호나 부연 설명은 넣지 마.\n");
         return builder.toString();
     }
 
@@ -192,10 +172,24 @@ public class GeminiIntroService {
     ) {
     }
 
-    public record IntroResult(String intro, List<String> candidates) {
+    public record IntroResult(String intro) {
 
         public static IntroResult empty() {
-            return new IntroResult(null, Collections.emptyList());
+            return new IntroResult(null);
         }
     }
+
+    public record Usage(int promptTokens, int candidateTokens, int totalTokens) {
+    }
+
+    public record DebugResult(String prompt, String intro, Usage usage) {
+    }
+
+    private record ResponsePayload(IntroResult result, Usage usage) {
+
+        private static ResponsePayload empty() {
+            return new ResponsePayload(IntroResult.empty(), null);
+        }
+    }
+
 }
