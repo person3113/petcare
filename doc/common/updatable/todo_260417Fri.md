@@ -145,28 +145,28 @@
   - [ ] `chart1` 기반 가로 막대그래프 (처분 유형별)
   - [ ] `chart2` 기반 도넛 또는 막대그래프 (지역별)
   - [ ] Navbar "통계" 링크를 해당 경로로 연결
-- [ ] `LandingPage.jsx` vs `Home.jsx` 역할 정리
-  - [ ] `/` 홈(Home.jsx)을 실질적 랜딩으로 확정하거나, LandingPage를 완성하거나 결정 후 정리
+- [x] `LandingPage.jsx` vs `Home.jsx` 역할 정리
+  - [x] `/` 홈(Home.jsx)을 실질적 랜딩으로 확정하거나, LandingPage를 완성하거나 결정 후 정리
 - [ ] **Login.jsx / Register.jsx UI 스타일** 추가 (현재 bare HTML 수준)
 
 ---
 
 ## 🔵 마감 전 품질 점검
 
-- [ ] **중복 파일 정리**
-  - [ ] `src/components/nav.jsx` 삭제 (Navbar.jsx와 중복)
-  - [ ] `src/components/login.jsx` 삭제 (pages/Login.jsx와 중복)
-  - [ ] `src/components/signup.jsx` 삭제 (pages/Register.jsx와 중복)
-  - [ ] `src/cardclide.jsx` 삭제 (src/components/cardclide.jsx와 중복)
-- [ ] **인라인 `style={{}}` → Tailwind 클래스 교체**
-  - [ ] `AnimalDetailpage.jsx` 인라인 style 제거
-  - [ ] `AnimalSwipepage.jsx` 인라인 style 제거
-  - [ ] `Home.jsx` 인라인 style 제거
-  - [ ] `ShelterMapPage.jsx` 인라인 style 제거
-- [ ] **console.log / console.error 영어 메시지 → 한국어 변경 또는 제거**
-  - [ ] `AnimalSwipepage.jsx` ("데이터 로딩 실패", "이미 찜한 동물" 등)
-  - [ ] `AnimalDetailpage.jsx` ("err:데이터로드 실패")
-  - [ ] 백엔드 로그 메시지 확인 및 정리
+- [x] **중복 파일 정리**
+  - [x] `src/components/nav.jsx` 삭제 (Navbar.jsx와 중복)
+  - [x] `src/components/login.jsx` 삭제 (pages/Login.jsx와 중복)
+  - [x] `src/components/signup.jsx` 삭제 (pages/Register.jsx와 중복)
+  - [x] `src/cardclide.jsx` 삭제 (src/components/cardclide.jsx와 중복)
+- [x] **인라인 `style={{}}` → Tailwind 클래스 교체**
+  - [x] `AnimalDetailpage.jsx` 인라인 style 제거
+  - [x] `AnimalSwipepage.jsx` 인라인 style 제거
+  - [x] `Home.jsx` 인라인 style 제거
+  - [x] `ShelterMapPage.jsx` 인라인 style 제거
+- [x] **console.log / console.error 영어 메시지 → 한국어 변경 또는 제거**
+  - [x] `AnimalSwipepage.jsx` ("데이터 로딩 실패", "이미 찜한 동물" 등)
+  - [x] `AnimalDetailpage.jsx` ("err:데이터로드 실패")
+  - [x] 백엔드 로그 메시지 확인 및 정리
 - [ ] **공공 API 응답 실패/빈값 대응 로직 추가** (재시도 or 기본값 fallback)
 - [ ] **CORS 설정 최종 확인** (배포 환경 도메인 포함)
 - [ ] **`application.yaml` `show-sql: true` → 발표 전 false 변경**

@@ -33,7 +33,7 @@ public class GeminiIntroService {
 
     public IntroResult generateIntro(IntroPrompt prompt) {
         if (apiKey == null || apiKey.isBlank()) {
-            logger.warn("GEMINI_API_KEY is missing. Gemini intro skipped.");
+            logger.warn("GEMINI_API_KEY가 없음. Gemini 소개 생성을 건너뜀.");
             return IntroResult.empty();
         }
 
@@ -80,7 +80,7 @@ public class GeminiIntroService {
             Usage usage = parseUsage(root);
             return new ResponsePayload(new IntroResult(intro), usage);
         } catch (Exception ex) {
-            logger.warn("Gemini intro call failed: {}", ex.getMessage());
+            logger.warn("Gemini 소개 호출 실패: {}", ex.getMessage());
             return ResponsePayload.empty();
         }
     }

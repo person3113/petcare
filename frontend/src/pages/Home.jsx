@@ -78,48 +78,48 @@ function Home() {
     : '';
 
   return (
-    <div style={{ padding: '24px' }}>
-      <h1 style={{ fontSize: '28px', marginBottom: '8px' }}>펫케어 홈</h1>
-      <p style={{ marginBottom: '20px', color: '#555' }}>
+    <div className="px-4 py-6">
+      <h1 className="text-2xl font-bold text-gray-900">펫케어 홈</h1>
+      <p className="mt-2 text-sm text-gray-600">
         로그인 상태에 따라 기능이 열립니다.
       </p>
-      <div style={{ marginBottom: '20px' }}>
+      <div className="mt-4 text-sm text-gray-700">
         <p>{user ? '로그인됨' : '로그인 필요'}</p>
       </div>
 
-      <section style={{ marginTop: '24px' }}>
-        <h2 style={{ fontSize: '20px', marginBottom: '12px' }}>랜딩 통계</h2>
+      <section className="mt-6">
+        <h2 className="text-lg font-semibold text-gray-900">랜딩 통계</h2>
         {periodText && (
-          <p style={{ color: '#666', marginBottom: '16px' }}>
+          <p className="mt-2 text-sm text-gray-600">
             집계기간: {periodText}
           </p>
         )}
         {loading && <p>통계 로딩중...</p>}
-        {error && <p style={{ color: '#b91c1c' }}>{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
 
         {summary && !loading && (
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-            <div style={{ minWidth: '160px', padding: '12px', border: '1px solid #eee', borderRadius: '8px' }}>
-              <p style={{ margin: '0 0 6px 0', color: '#666' }}>총 구조</p>
-              <strong style={{ fontSize: '22px' }}>
+          <div className="mt-5 flex flex-wrap gap-4">
+            <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-3">
+              <p className="text-sm text-gray-600">총 구조</p>
+              <strong className="text-xl">
                 <CountUp end={summary.totalRescued || 0} duration={1.2} />
               </strong>
             </div>
-            <div style={{ minWidth: '160px', padding: '12px', border: '1px solid #eee', borderRadius: '8px' }}>
-              <p style={{ margin: '0 0 6px 0', color: '#666' }}>입양</p>
-              <strong style={{ fontSize: '22px' }}>
+            <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-3">
+              <p className="text-sm text-gray-600">입양</p>
+              <strong className="text-xl">
                 <CountUp end={summary.totalAdopted || 0} duration={1.2} />
               </strong>
             </div>
-            <div style={{ minWidth: '160px', padding: '12px', border: '1px solid #eee', borderRadius: '8px' }}>
-              <p style={{ margin: '0 0 6px 0', color: '#666' }}>보호중</p>
-              <strong style={{ fontSize: '22px' }}>
+            <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-3">
+              <p className="text-sm text-gray-600">보호중</p>
+              <strong className="text-xl">
                 <CountUp end={summary.totalProtecting || 0} duration={1.2} />
               </strong>
             </div>
-            <div style={{ minWidth: '160px', padding: '12px', border: '1px solid #eee', borderRadius: '8px' }}>
-              <p style={{ margin: '0 0 6px 0', color: '#666' }}>안락사</p>
-              <strong style={{ fontSize: '22px' }}>
+            <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-3">
+              <p className="text-sm text-gray-600">안락사</p>
+              <strong className="text-xl">
                 <CountUp end={summary.totalEuthanized || 0} duration={1.2} />
               </strong>
             </div>
@@ -127,7 +127,7 @@ function Home() {
         )}
 
         {statusChartData && !loading && (
-          <div style={{ marginTop: '24px', maxWidth: '420px' }}>
+          <div className="mt-6 max-w-[420px]">
             <Doughnut data={statusChartData} />
           </div>
         )}

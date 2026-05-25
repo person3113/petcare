@@ -111,7 +111,7 @@ public class OpenApiClient {
 
     private JsonNode get(String baseUrl, String path, Map<String, String> params) {
         if (serviceKey == null || serviceKey.isBlank()) {
-            logger.warn("PUBLIC_DATA_API_KEY is missing. Open API call skipped.");
+            logger.warn("PUBLIC_DATA_API_KEY가 없음. Open API 호출을 건너뜀.");
             return objectMapper.createObjectNode();
         }
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(baseUrl + path)
@@ -131,12 +131,12 @@ public class OpenApiClient {
                 return objectMapper.createObjectNode();
             }
             if (response.startsWith("<")) {
-                logger.warn("Open API returned non-JSON response.");
+                logger.warn("Open API가 JSON이 아닌 응답 반환");
                 return objectMapper.createObjectNode();
             }
             return objectMapper.readTree(response);
         } catch (Exception ex) {
-            logger.warn("Open API call failed: {}", ex.getMessage());
+            logger.warn("Open API 호출 실패: {}", ex.getMessage());
             return objectMapper.createObjectNode();
         }
     }

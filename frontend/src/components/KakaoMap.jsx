@@ -7,7 +7,7 @@ function KakaoMap({ shelters }) {
   useEffect(() => {
     // kakao 객체가 아직 로드되지 않았으면 종료
     if (!window.kakao || !window.kakao.maps) {
-      console.log('KakaoMap: kakao 객체가 없습니다. SDK 스크립트 로드 여부를 확인하세요.');
+      console.log('카카오맵 객체가 없습니다. SDK 스크립트 로드 여부를 확인하세요.');
       return;
     }
 
@@ -42,9 +42,9 @@ function KakaoMap({ shelters }) {
   }, [shelters]); // shelters 배열이 바뀔 때마다 지도 다시 그리기
 
   return (
-    <div
+      <div
       ref={mapRef}
-      style={{ width: '100%', height: '400px', borderRadius: '8px' }}
+      className="h-[400px] w-full rounded-lg"
     />
   );
 }

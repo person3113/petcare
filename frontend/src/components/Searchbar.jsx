@@ -13,7 +13,7 @@ function Searchbar(){
             return;
         }
 
-        console.log("검색 내용:", searchText);
+        console.log("검색 내용", searchText);
 
         //todo:검색결과 페이지로 이동하는 부분
     }

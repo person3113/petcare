@@ -5,11 +5,11 @@ import sheltersDummy from '../mock/sheltersDummy';
 // 나중에 sheltersDummy -> /api/shelters API 응답으로 교체 예정
 function ShelterMapPage() {
   return (
-    <div style={{ padding: '24px 0' }}>
-      <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: 'bold' }}>
+    <div className="px-4 py-6">
+      <h2 className="text-xl font-bold text-gray-900">
         전국 보호소 지도
       </h2>
-      <p style={{ marginBottom: '16px', color: '#666', fontSize: '14px' }}>
+      <p className="mt-2 text-sm text-gray-600">
         마커를 클릭하면 보호소 이름을 확인할 수 있습니다.
       </p>
       {/* 더미 보호소 데이터로 마커 렌더링 */}

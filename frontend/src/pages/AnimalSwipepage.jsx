@@ -33,7 +33,7 @@ function AnimalSwipePage() {
                     setAnimals(mockData.data.items); //진짜 존재하면 넣기
                 }
             })
-            .catch((err) => console.error("데이터 로딩 실패:", err));
+            .catch((err) => console.log("데이터 로딩 실패", err));
     }, []);
 
 
@@ -49,7 +49,7 @@ function AnimalSwipePage() {
 
     //데이터 안들어왔으면
     if (animals.length === 0) {
-        return <div style={{ textAlign: 'center', margin: '50px' }}>데이터 로딩 중...</div>;
+        return <div className="py-12 text-center text-sm text-gray-500">데이터 로딩 중...</div>;
     }
 
     //동물 카드 무한루프를 위한 index(다 봤으면 index 0부터 다시)
@@ -65,61 +65,49 @@ function AnimalSwipePage() {
                 return prev;
             }
             //중복이 아닌 경우
-            console.log("찜한 동물 추가:", Id);
+            console.log("찜한 동물 추가", Id);
             return [...prev,Id];
         });
     }
 
     return (
-        <div className="Swipe-page" style={{
-            height: '100%',
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            overflow: 'hidden', //부모 넘어가면 없애기
-            backgroundColor: '#f9fafb'
-        }}>
-            <h2 className="Swipe-title" style={{color:"black", margin:'20px'}}>동물 친구 찾기</h2>
+        <div className="min-h-screen bg-gray-50 px-4 py-10">
+            <div className="mx-auto flex w-full max-w-5xl flex-col items-center">
+                <h2 className="mb-6 text-2xl font-bold text-gray-900">동물 친구 찾기</h2>
 
-            <div style={{ 
-                width: '100%', 
-                maxWidth: '1200px', 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center',
-            }}>
+                <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
                 {/* 카드 부분 */}
-                <div style={{ flex:1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ position: 'relative', width: '340px', height: '520px' }}>
-                        <AnimatePresence custom={exitX}>
-                            <SwipeCard
-                                //key가 바뀌어야 AnimatePresence(바로 아래자식의)가 카드 교체로 인식하고 애니메이션을 실행
-                                key={currentAnimal.id + '-' + nowIndex}
-                                currentAnimal={currentAnimal} //카드의 현재 동물
-                                exitX={exitX} //어느 방향으로 밀었는지 나타낼값
-                                setexitX={setexitX}
-                                setnowIndex={setnowIndex}
-                                onLike={LikeCnt}
-                            />
-                        </AnimatePresence>
-                    </div>
-                    {/* 하단 방향 설명 부분*/}
-                    <div style={{ marginTop: '30px', display: 'flex', gap: '60px', justifyContent: 'center' }}>
-                        <div style={{ textAlign: 'center', opacity: 0.4 }}>
-                            <div>👈</div>
-                            <div style={{marginTop: '5px' }}>PASS</div>
+                    <div className="flex flex-1 flex-col items-center">
+                        <div className="relative h-[520px] w-[340px]">
+                            <AnimatePresence custom={exitX}>
+                                <SwipeCard
+                                    //key가 바뀌어야 AnimatePresence(바로 아래자식의)가 카드 교체로 인식하고 애니메이션을 실행
+                                    key={currentAnimal.id + '-' + nowIndex}
+                                    currentAnimal={currentAnimal} //카드의 현재 동물
+                                    exitX={exitX} //어느 방향으로 밀었는지 나타낼값
+                                    setexitX={setexitX}
+                                    setnowIndex={setnowIndex}
+                                    onLike={LikeCnt}
+                                />
+                            </AnimatePresence>
                         </div>
-                        <div style={{ textAlign: 'center', opacity: 0.4 }}>
-                            <div>👉</div>
-                            <div style={{ marginTop: '5px'}}>LIKE</div>
+                        {/* 하단 방향 설명 부분*/}
+                        <div className="mt-8 flex gap-16 text-center text-sm text-gray-500">
+                            <div>
+                                <div>👈</div>
+                                <div className="mt-1">PASS</div>
+                            </div>
+                            <div>
+                                <div>👉</div>
+                                <div className="mt-1">LIKE</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* 사이드바 컴포넌트 */}
-                <div style={{ width:'350px', right:'20px'}}>
-                    <SwipeSideBox LikeCnt={likeAnimal.length}/>
+                    {/* 사이드바 컴포넌트 */}
+                    <div className="w-full max-w-xs">
+                        <SwipeSideBox LikeCnt={likeAnimal.length}/>
+                    </div>
                 </div>
             </div>
 

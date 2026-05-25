@@ -9,19 +9,19 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
         //info.offset.x: 카드가 처음 위치에서 가로로 이동한 픽셀 값
         if (info.offset.x > 100) { //오른쪽으로 100픽셀 이상 밀었을때
             setexitX(500); // 오른쪽으로 날아가기 설정
-            console.log(`${animal.kind} 찜하기!`); //찜하기
+            console.log(`${animal.kind} 찜하기`); //찜하기
             onLike(currentAnimal.id); //찜 개수 증가
             try {
                 await addFavorite(animal.id);
             } catch (err) {
-                console.log("찜하기 API 호출 실패 (로그인 필요)",err);
+                console.log("찜하기 API 호출 실패", err);
             }
             //카드 인덱스 증가
             setnowIndex((prev) => prev + 1);
 
         } else if (info.offset.x < -100) {//왼쪽으로 100픽셀이상 밀었을때
             setexitX(-500); // 왼쪽으로 날아가기 설정
-            console.log(`${animal.kind} 패스!`);
+            console.log(`${animal.kind} 패스`);
             // 다음 카드로 넘어가기 (인덱스 증가)
             setnowIndex((prev) => prev + 1);
         }
@@ -30,12 +30,7 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
 
     return(
         <motion.div
-            style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                cursor: 'grab'
-            }}
+            className="absolute h-full w-full cursor-grab"
             drag="x" //가로로 이동
             dragConstraints={{ left: 0, right: 0 }} //드래그 범위:드래그후 놓으면 돌아올 자리
             //사용자가 카드를 놓았을때
@@ -54,30 +49,15 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
             }}
         >
             {/* 카드 UI 디자인 */}
-            <div style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'white',
-                borderRadius: '28px',//모서리 둥글게
-                boxShadow: '0 15px 35px rgba(0,0,0,0.12)',//그림자
-                overflow: 'hidden',
-                border: '1px solid #f1f5f9',
-                display: 'flex',
-                flexDirection: 'column'
-            }}>
+            <div className="flex h-full w-full flex-col overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
                 <img
                     src={currentAnimal.images[0]}
                     alt={currentAnimal.kind}
-                    style={{
-                        width: '100%',
-                        height: '360px',
-                        objectFit: 'cover',
-                        pointerEvents: 'none' //브라우져의 이미지파일 드래그 기능없애기
-                    }}
+                    className="h-[360px] w-full object-cover pointer-events-none"
                 />
-                <div style={{ padding: '24px', flex:1, display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h3 style={{ margin: 0, fontSize: '24px'}}>{currentAnimal.kind}</h3>
+                <div className="flex flex-1 flex-col p-6">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-semibold">{currentAnimal.kind}</h3>
                         <span>{currentAnimal.gender}</span>
                     </div>
                     <p>나이: {currentAnimal.age}</p>
