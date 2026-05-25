@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { getStatsSummary } from '../../api/stats.js';
+import CountUp from '../CountUp.jsx';
 
 const ShowValue = () => {
     const navigate = useNavigate();
@@ -18,8 +19,7 @@ const ShowValue = () => {
                 rescued:data.totalRescued||0,
                 connected:data.totalAdopted||0,
                 });
-            }).catch(()=>console.log('데이터 로딩 실패'))
-            .finally(()=>setLoading(false));
+            }).catch(()=>console.log('데이터 로딩 실패'));
         // test용 더미데이터
         /*setState({
             protecting:123,

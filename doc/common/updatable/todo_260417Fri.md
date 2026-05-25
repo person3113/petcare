@@ -115,12 +115,12 @@
 
 ## 🔴 즉시 수정 — 버그 / UX 단절
 
-- [ ] `ShowValue.jsx` — `setLoading` 미선언 상태로 호출 → **런타임 에러** 수정
-- [ ] `ChartData.jsx` — `import` 한 줄만 있는 미완성 파일 처리 (빈 컴포넌트 or 파일 삭제)
-- [ ] `Navbar.jsx` — "입양하기" `to="#"` → `/animals` 경로 연결
-- [ ] `Navbar.jsx` — "지도" `to="#"` → `/map` 경로 연결
-- [ ] `Navbar.jsx` — "통계" `to="#"` → 통계 페이지 경로 연결 (S-1 완성 전까지 임시 처리)
-- [ ] `AnimalCard.jsx` — 카드 클릭 시 `/animal/:id` 상세 페이지로 이동하는 링크 없음 → `<Link>` 감싸기
+- [x] `ShowValue.jsx` — `setLoading` 미선언 상태로 호출 → **런타임 에러** 수정
+- [x] `ChartData.jsx` — `import` 한 줄만 있는 미완성 파일 처리 (빈 컴포넌트 or 파일 삭제)
+- [x] `Navbar.jsx` — "입양하기" `to="#"` → `/animals` 경로 연결
+- [x] `Navbar.jsx` — "지도" `to="#"` → `/map` 경로 연결
+- [x] `Navbar.jsx` — "통계" `to="#"` → 통계 페이지 경로 연결 (S-1 완성 전까지 임시 처리)
+- [x] `AnimalCard.jsx` — 카드 클릭 시 `/animal/:id` 상세 페이지로 이동하는 링크 없음 → `<Link>` 감싸기
 
 ---
 
@@ -170,7 +170,6 @@
 - [ ] **공공 API 응답 실패/빈값 대응 로직 추가** (재시도 or 기본값 fallback)
 - [ ] **CORS 설정 최종 확인** (배포 환경 도메인 포함)
 - [ ] **`application.yaml` `show-sql: true` → 발표 전 false 변경**
-- [ ] **Supabase PostgreSQL 이전** (H2 → Supabase, 접속 정보 환경변수 교체)
 - [ ] 모바일(375px) / 데스크탑 크로스 브라우징 최종 확인
 
 ---

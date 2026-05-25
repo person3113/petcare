@@ -25,11 +25,11 @@ function Navbar() {
             </div>
             <nav>
                 <div id="menu"> {/* 메뉴 부분 */}
-                    <Link to="#">입양하기</Link>  {/* 다른페이지로 가기 위한 링크 현재는 빈경로 */}
+                    <Link to="/animals">입양하기</Link>  {/* 다른페이지로 가기 위한 링크 현재는 빈경로 */}
                     <Link to="/lost-animals">분실동물</Link>
                     <Link to="/survey">인연찾기</Link>
-                    <Link to="#">지도</Link>
-                    <Link to="#">통계</Link>
+                    <Link to="/map">지도</Link>
+                    <Link to="/">통계</Link>
                     <Link to="/community">커뮤니티</Link>
                     <Link to="/mypage">마이페이지</Link>
                 </div>
