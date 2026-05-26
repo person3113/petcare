@@ -178,9 +178,6 @@
 
 - [ ] **`index.css` `@theme` 색상 토큰 확정** (펫케어 톤 — amber/orange 따뜻한 계열 정리)
 - [ ] **Google Fonts Noto Sans KR 적용** (한국어 최적화 폰트)
-- [ ] **Navbar 스타일 정비** — 로고 자리 + 메뉴 배치 + 인증 버튼 위치
-- [ ] **Footer 스타일 정비**
 - [ ] **공통 버튼 스타일 통일** (primary / secondary / danger)
 - [ ] **공통 폼 인풋 스타일 통일** (Login, Register, Survey 동일 스타일)
-- [ ] **AnimalCard hover 효과** 추가 (cursor-pointer + 그림자 강조)
 

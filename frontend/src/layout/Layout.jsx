@@ -8,7 +8,7 @@ function Layout() {
     //max-w-[1200px]:pc화면 최대 크기
     //mx-auto:마진오토 px-4:패딩 x축(좌우) 16px"
   return (
-    <div className="min-w-[375px] max-w-[1200px] mx-auto px-4">
+    <div className="w-full min-w-[375px] max-w-[1200px] mx-auto px-4">
       <header>
           <Navbar /> {/* 네비게이션 바 컴포넌트 */}
       </header>

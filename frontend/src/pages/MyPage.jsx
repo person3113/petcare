@@ -52,8 +52,8 @@ function MyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="mx-auto max-w-3xl">
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="mx-auto max-w-5xl">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">마이페이지</h1>
           <p className="mt-1 text-sm text-gray-500">내 기록을 확인할 수 있어요.</p>

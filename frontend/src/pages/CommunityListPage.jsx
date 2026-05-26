@@ -51,8 +51,8 @@ function CommunityListPage() {
   }, [posts.length, category]);
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6">
-      <div className="mx-auto flex max-w-4xl flex-col gap-6">
+    <div className="min-h-screen bg-gray-50 py-6">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold text-gray-900">커뮤니티 게시판</h1>
           <p className="text-sm text-gray-500">입양 후기와 분실 목격 정보를 나눠주세요.</p>

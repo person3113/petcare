@@ -11,8 +11,8 @@ function MatchResult() {
   const pagination = data.pagination;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="mx-auto max-w-2xl">
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="mx-auto max-w-5xl">
         {/* 헤더 */}
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-gray-900">🐾 설문 결과</h1>

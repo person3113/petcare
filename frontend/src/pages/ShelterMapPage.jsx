@@ -5,7 +5,7 @@ import sheltersDummy from '../mock/sheltersDummy';
 // 나중에 sheltersDummy -> /api/shelters API 응답으로 교체 예정
 function ShelterMapPage() {
   return (
-    <div className="px-4 py-6">
+    <div className="py-6">
       <h2 className="text-xl font-bold text-gray-900">
         전국 보호소 지도
       </h2>
