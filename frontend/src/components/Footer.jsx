@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Footer() {
   return (
@@ -22,6 +23,7 @@ function Footer() {
             <h3 className="text-sm font-semibold text-gray-900 mb-3">서비스</h3>
             <ul className="space-y-2 text-xs text-gray-600">
               <li><a href="#" className="hover:underline">인연 찾기</a></li>
+              <li><Link to="/animalswipe/1" className="hover:underline">동물 스와이프</Link></li>
               <li><a href="#" className="hover:underline">입양하기</a></li>
               <li><a href="#" className="hover:underline">매칭 테스트</a></li>
               <li><a href="#" className="hover:underline">보호소 지도</a></li>

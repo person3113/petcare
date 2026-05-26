@@ -31,6 +31,7 @@ function Navbar() {
                     <NavLink to="/animals" className={({ isActive }) => isActive ? 'active' : ''}>입양하기</NavLink>
                     <NavLink to="/lost-animals" className={({ isActive }) => isActive ? 'active' : ''}>분실동물</NavLink>
                     <NavLink to="/survey" className={({ isActive }) => isActive ? 'active' : ''}>인연찾기</NavLink>
+                    <NavLink to="/animalswipe/1" className={({ isActive }) => isActive ? 'active' : ''}>동물 스와이프</NavLink>
                     <NavLink to="/map" className={({ isActive }) => isActive ? 'active' : ''}>지도</NavLink>
                     <NavLink to="/community" className={({ isActive }) => isActive ? 'active' : ''}>커뮤니티</NavLink>
                     <NavLink to="/mypage" className={({ isActive }) => isActive ? 'active' : ''}>마이페이지</NavLink>
