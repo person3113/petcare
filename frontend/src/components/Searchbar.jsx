@@ -19,16 +19,18 @@ function Searchbar(){
     }
 
 
-    return(
-        <form onSubmit={SearchHandle}>
-            <input 
-                type="text" 
+    return (
+        <form onSubmit={SearchHandle} className="header-search">
+            <input
+                type="text"
                 value={searchText}
-                onChange={(event)=>setSearchText(event.target.value)}
+                onChange={(event) => setSearchText(event.target.value)}
+                placeholder="검색어를 입력하세요..."
+                className="search-input"
             />
-            <button type="submit">Search</button>
+            <button type="submit" className="search-btn">검색</button>
         </form>
-    )
+    );
 }
 
 export default Searchbar;

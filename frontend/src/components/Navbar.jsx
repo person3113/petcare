@@ -1,7 +1,8 @@
-import React from 'react'; //리엑트 파일이라는 의미
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react'; //리액트 파일이라는 의미
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { logout } from '../api/auth.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import Searchbar from './Searchbar.jsx';
 
 function Navbar() {
     const navigate = useNavigate();
@@ -18,38 +19,46 @@ function Navbar() {
         }
     }
 
-    return(
-        <header>
-            <div id="nav_logo">  {/* 로고 부분 */}
-                <p>Logo</p>
-            </div>
-            <nav>
-                <div id="menu"> {/* 메뉴 부분 */}
-                    <Link to="/animals">입양하기</Link>  {/* 다른페이지로 가기 위한 링크 현재는 빈경로 */}
-                    <Link to="/lost-animals">분실동물</Link>
-                    <Link to="/survey">인연찾기</Link>
-                    <Link to="/map">지도</Link>
-                    <Link to="/">통계</Link>
-                    <Link to="/community">커뮤니티</Link>
-                    <Link to="/mypage">마이페이지</Link>
+    return (
+        <div className="custom-header">
+            <div className="header-left">
+                {/* 로고 부분 */}
+                <div className="logo" onClick={() => navigate('/')}>
+                    Logo
                 </div>
-            </nav>
-            <div>
-                {user ? (
-                    <>
-                        <span>{user.nickname || user.email}</span>
-                        <button type="button" onClick={handleLogout}>로그아웃</button>
-                    </>
-                ) : (
-                    <>
-                        <Link to="/login">로그인</Link>
-                        <Link to="/register">회원가입</Link>
-                    </>
-                )}
+                {/* 메뉴 부분 */}
+                <nav className="header-nav">
+                    <NavLink to="/animals" className={({ isActive }) => isActive ? 'active' : ''}>입양하기</NavLink>
+                    <NavLink to="/lost-animals" className={({ isActive }) => isActive ? 'active' : ''}>분실동물</NavLink>
+                    <NavLink to="/survey" className={({ isActive }) => isActive ? 'active' : ''}>인연찾기</NavLink>
+                    <NavLink to="/map" className={({ isActive }) => isActive ? 'active' : ''}>지도</NavLink>
+                    <NavLink to="/community" className={({ isActive }) => isActive ? 'active' : ''}>커뮤니티</NavLink>
+                    <NavLink to="/mypage" className={({ isActive }) => isActive ? 'active' : ''}>마이페이지</NavLink>
+                </nav>
             </div>
 
-        </header>
-    )
+            <div className="header-right">
+                {/* 검색창 */}
+                <Searchbar />
+
+                {user ? (
+                    /* 로그인 상태 */
+                    <div className="user-actions">
+                        <span className="dot"></span>
+                        <button type="button" className="nickname-btn">{user.nickname || user.email} ▼</button>
+                        <button type="button" onClick={handleLogout} className="logout-btn">로그아웃</button>
+                    </div>
+                ) : (
+                    /* 비로그인 상태 */
+                    <div className="guest-actions">
+                        <Link to="/login" className="login-btn">로그인</Link>
+                        <Link to="/register" className="register-btn">시작하기</Link>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default Navbar;
+

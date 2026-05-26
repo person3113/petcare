@@ -196,3 +196,146 @@
     border-right-color: var(--border);
   }
 }
+
+/* Header */
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e4e7;
+  background-color: white;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  color: black;
+}
+
+.header-nav {
+  display: flex;
+  gap: 20px;
+}
+
+.header-nav a {
+  text-decoration: none;
+  color: #555;
+  font-size: 16px;
+}
+
+.header-nav a:hover {
+  color: black;
+}
+
+.header-nav a.active {
+  color: black;
+  font-weight: bold;
+  border-bottom: 2px solid black;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.guest-actions,
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Searchbar 스타일 */
+.header-search {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  width: 150px;
+}
+
+.search-btn {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background-color: #555;
+}
+
+/* Guest (비로그인) 스타일 */
+.guest-actions .login-btn {
+  text-decoration: none;
+  font-size: 14px;
+  color: #333;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.guest-actions .login-btn:hover {
+  border-color: black;
+}
+
+.guest-actions .register-btn {
+  text-decoration: none;
+  font-size: 14px;
+  background-color: black;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+/* User (로그인) 스타일 */
+.user-actions .dot {
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.user-actions .nickname-btn {
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+  cursor: pointer;
+}
+
+.user-actions .logout-btn {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #555;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.user-actions .logout-btn:hover {
+  border-color: black;
+  color: black;
+}
+
+

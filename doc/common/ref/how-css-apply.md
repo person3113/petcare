@@ -32,13 +32,9 @@ violet-50 으로 수정하시면 됩니다.
 
 • index.css
     • 설명: 프로젝트의 핵심 디자인 시스템 및 기본 태그 스타일을 정의합니다.
-    • 특징:  @import "tailwindcss"; 를 포함하고 있어서 Tailwind CSS
-    프레임워크의 스타일이 전역에 제공됩니다. 또한  :root ,  body ,  h1 ,  h2 ,
-    p  등 기본 HTML 태그들에 대한 폰트, 색상값(라이트/다크 모드 포함) 등이
-    적용되어 있어, Footer 내부의 태그들도 이 규칙을 상속받습니다.
+    • 특징:  Tailwind CSS v4( @import "tailwindcss"; )가 도입되어 있으며, 테마 설정(폰트, 다크모드 색상 등)과 기본적인 태그 스타일이 정의되어 있습니다.
 • App.css
-    • 설명: React 애플리케이션의 세부 요소 스타일을 정의하는 공통 CSS 파일로
-    App.jsx 에서 임포트하여 사용합니다.
+    • 설명: React 애플리케이션의 세부 요소 스타일을 정의하는 공통 CSS 파일로 App.jsx 에서 임포트하여 사용합니다. 미디어 쿼리(태블릿/모바일 반응형 대응 레이아웃 틀)와 개별 컴포넌트들의 커스텀 스타일 규칙들이 작성되어 있습니다.
 • Inline Tailwind Classes in Layout
     • 설명: Layout.jsx의 최상단 래퍼  div 에서  className="min-w-[375px]
     max-w-[1200px] mx-auto px-4" 와 같이 Tailwind CSS 유틸리티 클래스를
