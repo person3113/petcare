@@ -176,8 +176,8 @@
 
 ## 📐 디자인 시스템 (공통 레이아웃/스타일 정비)
 
-- [ ] **`index.css` `@theme` 색상 토큰 확정** (펫케어 톤 — amber/orange 따뜻한 계열 정리)
-- [ ] **Google Fonts Noto Sans KR 적용** (한국어 최적화 폰트)
-- [ ] **공통 버튼 스타일 통일** (primary / secondary / danger)
-- [ ] **공통 폼 인풋 스타일 통일** (Login, Register, Survey 동일 스타일)
+- [x] **`index.css` `@theme` 색상 토큰 확정** (펫케어 톤 — amber/orange 따뜻한 계열 정리)
+- [x] **Google Fonts Noto Sans KR 적용** (한국어 최적화 폰트)
+- [x] **공통 버튼 스타일 통일** (primary / secondary / danger)
+- [x] **공통 폼 인풋 스타일 통일** (Login, Register, Survey 동일 스타일)
 
