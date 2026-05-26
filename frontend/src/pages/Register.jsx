@@ -36,41 +36,44 @@ function Register() {
     <div>
       <h1>회원가입</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="register-email">이메일</label>
+        <div className="form-group">
+          <label htmlFor="register-email" className="form-label">이메일</label>
           <input
             id="register-email"
             name="email"
             type="email"
+            className="form-input"
             value={form.email}
             onChange={handleChange}
             required
           />
         </div>
-        <div>
-          <label htmlFor="register-password">비밀번호</label>
+        <div className="form-group">
+          <label htmlFor="register-password" className="form-label">비밀번호</label>
           <input
             id="register-password"
             name="password"
             type="password"
+            className="form-input"
             value={form.password}
             onChange={handleChange}
             required
           />
         </div>
-        <div>
-          <label htmlFor="register-nickname">닉네임</label>
+        <div className="form-group">
+          <label htmlFor="register-nickname" className="form-label">닉네임</label>
           <input
             id="register-nickname"
             name="nickname"
             type="text"
+            className="form-input"
             value={form.nickname}
             onChange={handleChange}
             required
           />
         </div>
-        {error && <p>{error}</p>}
-        <button type="submit" disabled={loading}>
+        {error && <p className="form-error">{error}</p>}
+        <button type="submit" className="form-submit-btn" disabled={loading}>
           {loading ? '가입 중...' : '회원가입'}
         </button>
       </form>

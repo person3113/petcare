@@ -36,30 +36,32 @@ function Login() {
     <div>
       <h1>로그인</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="login-email">이메일</label>
+        <div className="form-group">
+          <label htmlFor="login-email" className="form-label">이메일</label>
           <input
             id="login-email"
             name="email"
             type="email"
+            className="form-input"
             value={form.email}
             onChange={handleChange}
             required
           />
         </div>
-        <div>
-          <label htmlFor="login-password">비밀번호</label>
+        <div className="form-group">
+          <label htmlFor="login-password" className="form-label">비밀번호</label>
           <input
             id="login-password"
             name="password"
             type="password"
+            className="form-input"
             value={form.password}
             onChange={handleChange}
             required
           />
         </div>
-        {error && <p>{error}</p>}
-        <button type="submit" disabled={loading}>
+        {error && <p className="form-error">{error}</p>}
+        <button type="submit" className="form-submit-btn" disabled={loading}>
           {loading ? '로그인 중...' : '로그인'}
         </button>
       </form>
