@@ -1,7 +1,7 @@
 import React from 'react';
 import ShowValue from '../components/landing/ShowValue.jsx';
 import { useNavigate } from "react-router-dom";
-import Nav from '../components/nav.jsx';
+import Nav from '../components/Navbar.jsx';
 
 function Landing () {
     const navigate = useNavigate();

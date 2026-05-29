@@ -42,7 +42,7 @@ function Navbar() {
                     </>
                 ) : (
                     <>
-                        <Link className="ext-sm text-gray-600 hover:bg-gray-300" to="/login">로그인</Link>
+                        <Link className="text-sm text-gray-600 hover:bg-gray-300" to="/login">로그인</Link>
                         <Link className="text-sm px-4 py-2 text-gray-600 hover:bg-gray-300" to="/register">회원가입</Link>
                     </>
                 )}

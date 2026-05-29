@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+/*
 @theme {
   --color-text: #6b6375;
   --color-text-h: #08060d;
@@ -8,7 +8,7 @@
   --color-accent: #aa3bff;
   --color-accent-bg: rgba(170, 59, 255, 0.1);
   --color-accent-border: rgba(170, 59, 255, 0.5);
-  
+
   --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-mono: ui-monospace, Consolas, monospace;
 }
@@ -110,3 +110,5 @@ code {
   background: var(--code-bg);
 }
 
+
+*/

@@ -2,12 +2,12 @@ import React from 'react'; //리엑트 파일이라는 의미
 
 function Footer(){
     return(
-    <footer className="border-t auto">
+    <footer className="border-t mx-auto">
         <div id="footer_logo" className="flex justify-between gap-2">  {/* 로고 부분 */}
             <h1 className="text-xl text-gray-600 mt-2">Logo</h1>
-            <p className="text-sm text-gray">유기동물과 새 가족을 연결하는 매칭 서비스</p>
+            <p className="text-sm text-gray-600">유기동물과 새 가족을 연결하는 매칭 서비스</p>
         </div>
-        <div className="flex flex-col gap-3">  {/* footer내용 부분 */}
+        <div className="flex flex-raw gap-3">  {/* footer내용 부분 */}
             <h4 className="text-sm font-medium text-gray-900">서비스</h4>
             <ul className="flex flex-col gap-1 list-none m-0 p-0">
                 <li className="text-sm text-gray-600 cursor-pointer hover:text-gray-900">입양하기</li>
@@ -34,9 +34,7 @@ function Footer(){
             </ul>
         </div>
     </footer>
-
     )
-
 }
 
 export default Footer;
