@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -79,59 +80,65 @@ function Home() {
 
   return (
     <div className="px-4 py-6">
-      <h1 className="text-2xl font-bold text-gray-900">펫케어 홈</h1>
-      <p className="mt-2 text-sm text-gray-600">
-        로그인 상태에 따라 기능이 열립니다.
-      </p>
-      <div className="mt-4 text-sm text-gray-700">
-        <p>{user ? '로그인됨' : '로그인 필요'}</p>
-      </div>
 
-      <section className="mt-6">
-        <h2 className="text-lg font-semibold text-gray-900">랜딩 통계</h2>
-        {periodText && (
-          <p className="mt-2 text-sm text-gray-600">
-            집계기간: {periodText}
-          </p>
-        )}
+      <section className="bg-pink-50 rounded-2xl p-10 mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">펫케어 홈</h1>
+        <p className="mt-2 text-sm text-gray-600">로그인 상태에 따라 기능이 열립니다.</p>
+        <div className="mt-4 text-sm text-gray-700">
+          <p>{user ? '로그인됨' : '로그인 필요'}</p>
+        </div>
+
         {loading && <p>통계 로딩중...</p>}
         {error && <p className="text-sm text-red-600">{error}</p>}
-
         {summary && !loading && (
           <div className="mt-5 flex flex-wrap gap-4">
             <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-3">
               <p className="text-sm text-gray-600">총 구조</p>
-              <strong className="text-xl">
-                <CountUp end={summary.totalRescued || 0} duration={1.2} />
-              </strong>
+              <strong className="text-xl"><CountUp end={summary.totalRescued || 0} duration={1.2} /></strong>
             </div>
             <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-3">
               <p className="text-sm text-gray-600">입양</p>
-              <strong className="text-xl">
-                <CountUp end={summary.totalAdopted || 0} duration={1.2} />
-              </strong>
+              <strong className="text-xl"><CountUp end={summary.totalAdopted || 0} duration={1.2} /></strong>
             </div>
             <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-3">
               <p className="text-sm text-gray-600">보호중</p>
-              <strong className="text-xl">
-                <CountUp end={summary.totalProtecting || 0} duration={1.2} />
-              </strong>
+              <strong className="text-xl"><CountUp end={summary.totalProtecting || 0} duration={1.2} /></strong>
             </div>
             <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-3">
               <p className="text-sm text-gray-600">안락사</p>
-              <strong className="text-xl">
-                <CountUp end={summary.totalEuthanized || 0} duration={1.2} />
-              </strong>
+              <strong className="text-xl"><CountUp end={summary.totalEuthanized || 0} duration={1.2} /></strong>
             </div>
           </div>
         )}
+      </section>
 
+      <section className="mb-6">
+        <div className="flex gap-4">
+            {/* 여기 아이디는 임시로 1로 둔것입니다. */}
+          <Link to="/animalswipe/1" className="flex-1 border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+            <p className="text-xs text-gray-400">인연 찾기</p>
+            <h3 className="text-lg font-bold text-gray-900">스와이프</h3>
+          </Link>
+          <Link to="/animals" className="flex-1 border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+            <p className="text-xs text-gray-400">입양하기</p>
+            <h3 className="text-lg font-bold text-gray-900">필터 목록</h3>
+          </Link>
+          <Link to="/survey" className="flex-1 border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+            <p className="text-xs text-gray-400">매칭테스트</p>
+            <h3 className="text-lg font-bold text-gray-900">5문항 설문</h3>
+          </Link>
+        </div>
+      </section>
+
+      <section className="border border-gray-200 rounded-xl p-6">
+        {periodText && <p className="text-sm text-gray-600">집계기간: {periodText}</p>}
         {statusChartData && !loading && (
           <div className="mt-6 max-w-[420px]">
             <Doughnut data={statusChartData} />
           </div>
         )}
       </section>
+
     </div>
   );
 }
