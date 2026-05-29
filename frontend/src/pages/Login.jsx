@@ -18,6 +18,24 @@ function Login() {
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
+
+    // 이메일 정규식 검사
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setError('이메일 형식이 올바르지 않습니다.');
+        return;
+    }
+    // 비밀번호 형식 오류 -> 8자 이상
+    if(pwd.length < 8) {
+        setError('비밀번호는 8자 이상이여야 합니다.');
+        return;
+    }
+    // 특수문자 포함
+    if(!/[!@#$%^&*]/.test(pwd)) {
+        setError('비밀번호는 특수문자를 포함해야 합니다.');
+                    return;
+    }
+    // 매칭되는 이메일 및 비밀번호 없음 -> 옵션 결정해주기
+
     setLoading(true);
 
     try {

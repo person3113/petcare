@@ -1,12 +1,14 @@
 import React from 'react';
 import ShowValue from '../components/landing/ShowValue.jsx';
 import { useNavigate } from "react-router-dom";
+import Nav from '../components/nav.jsx';
 
 function Landing () {
     const navigate = useNavigate();
     return (
         <>
             <div className="landing-wrapper">
+                <Nav />
                 {/* 만들어지고 나서 위치 수정하기, 일단 몰라서 임의로 작성해둠 */}
                 <button onClick={()=>navigate('/matching')}>인연찾기</button>
                 <button onClick={()=>navigate('/animals')}>목록보기</button>

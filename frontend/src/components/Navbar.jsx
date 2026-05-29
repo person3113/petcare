@@ -19,31 +19,31 @@ function Navbar() {
     }
 
     return(
-        <header>
+        <header className="flex items-center justify-between px-10 py-5 border-b border-gray-200">
             <div id="nav_logo">  {/* 로고 부분 */}
-                <p>Logo</p>
+                <p className="text-xl font-medium cursor-pointer">Logo</p>
             </div>
             <nav>
-                <div id="menu"> {/* 메뉴 부분 */}
-                    <Link to="#">입양하기</Link>  {/* 다른페이지로 가기 위한 링크 현재는 빈경로 */}
-                    <Link to="/lost-animals">분실동물</Link>
-                    <Link to="/survey">인연찾기</Link>
-                    <Link to="#">지도</Link>
-                    <Link to="#">통계</Link>
-                    <Link to="/community">커뮤니티</Link>
-                    <Link to="/mypage">마이페이지</Link>
+                <div id="menu" className="flex gap-8"> {/* 메뉴 부분 */}
+                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="#">입양하기</Link>  {/* 다른페이지로 가기 위한 링크 현재는 빈경로 */}
+                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="/lost-animals">분실동물</Link>
+                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="/survey">인연찾기</Link>
+                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="#">지도</Link>
+                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="#">통계</Link>
+                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="/community">커뮤니티</Link>
+                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="/mypage">마이페이지</Link>
                 </div>
             </nav>
-            <div>
+            <div className="flex gap-3 items-center">
                 {user ? (
                     <>
-                        <span>{user.nickname || user.email}</span>
-                        <button type="button" onClick={handleLogout}>로그아웃</button>
+                        <span className="text-sm text-gray-600">{user.nickname || user.email}</span>
+                        <button className="text-sm px-4 py-2 text-gray-600 rounded-md hover:bg-gray-50" type="button" onClick={handleLogout}>로그아웃</button>
                     </>
                 ) : (
                     <>
-                        <Link to="/login">로그인</Link>
-                        <Link to="/register">회원가입</Link>
+                        <Link className="ext-sm text-gray-600 hover:bg-gray-300" to="/login">로그인</Link>
+                        <Link className="text-sm px-4 py-2 text-gray-600 hover:bg-gray-300" to="/register">회원가입</Link>
                     </>
                 )}
             </div>

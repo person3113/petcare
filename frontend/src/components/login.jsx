@@ -62,7 +62,7 @@ function Login() {
                 <input type="password" value={pwd} onChange={event=>setPwd(event.target.value)} placeholder="insert your password"/>
                 {error && <p>{error}</p>}
                 <button type="submit" disabled={loading}>Submit</button>   {/* 로그인 버튼 */}
-                <button type="button" onClick={()=>navigate('/signup')}>회워가입으로 이동</button>   {/* 회원가입으로 페이지를 이동해주는 버튼 */}
+                <button type="button" onClick={()=>navigate('/signup')}>회원가입으로 이동</button>   {/* 회원가입으로 페이지를 이동해주는 버튼 */}
             </form>
        </div>
     );
