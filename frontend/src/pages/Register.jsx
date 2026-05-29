@@ -7,6 +7,7 @@ function Register() {
   const [form, setForm] = useState({
     email: '',
     password: '',
+    passwordConfirm: '',
     nickname: '',
   });
   const [error, setError] = useState('');
@@ -46,7 +47,11 @@ function Register() {
         setError('닉네임에는 특수문자를 포함되면 안됩니다.');
         return;
     }
-
+    // 비밀번호 확인
+    if(form.password !== form.passwordConfirm){
+        setError('비밀번호가 일치하지 않습니다.');
+        return;
+    }
     setLoading(true);
 
     try {
