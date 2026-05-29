@@ -8,16 +8,17 @@ function Layout() {
     //max-w-[1200px]:pc화면 최대 크기
     //mx-auto:마진오토 px-4:패딩 x축(좌우) 16px"
   return (
-    <div className="w-full min-w-[375px] max-w-[1200px] mx-auto px-4">
-      <header>
+    <div className="w-full min-w-[375px] ">
+      <header className="max-w-[1200px] mx-auto px-4">
           <Navbar /> {/* 네비게이션 바 컴포넌트 */}
       </header>
 
-      <main>       {/*상세 페이지의 내용이 바뀔 부분*/}
+      {/*상세 페이지의 내용이 바뀔 부분*/}
+      <main className="max-w-[1200px] mx-auto px-4">
           <Outlet />
       </main>
 
-      <footer>
+      <footer className="max-w-[1200px] mx-auto px-4">
         <Footer /> {/*  푸터 컴포넌트 */}
 
       </footer>

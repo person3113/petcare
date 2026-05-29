@@ -3,13 +3,36 @@
     max-width:1200px;
     margin: 0 auto;
 }
+
+
 /* 태블릿 */
 @media(max-width: 768px){
 
 }
 /* 모바일 */
+.mobile-nav{
+    display: none;
+}
 @media(max-width: 480px){
-
+    /* 데스크탑 네비게이션을 숨김으로 처리 */
+    .custom-header{
+        display: none !important;
+    }
+    /* 모바일 버전 네비게이션바 */
+    .mobile-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background: white;
+        border-top: 1px solid black;
+        justify-content: space-around;
+        align-items: center;
+        height: 60px;
+        z-index: 50;
+    }
 }
 
 .counter {
@@ -337,5 +360,4 @@
   border-color: black;
   color: black;
 }
-
 
