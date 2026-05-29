@@ -82,8 +82,8 @@ function CommunityFormPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <div className="min-h-screen bg-gray-50 py-6">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900">
             {isEdit ? '게시글 수정' : '게시글 작성'}

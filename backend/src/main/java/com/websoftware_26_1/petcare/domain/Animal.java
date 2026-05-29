@@ -161,4 +161,9 @@ public class Animal {
 
     @Column(name = "cached_at")
     private LocalDateTime cachedAt;
+
+    public void updateGeminiIntro(String geminiIntro, LocalDateTime cachedAt) {
+        this.geminiIntro = geminiIntro;
+        this.cachedAt = cachedAt;
+    }
 }

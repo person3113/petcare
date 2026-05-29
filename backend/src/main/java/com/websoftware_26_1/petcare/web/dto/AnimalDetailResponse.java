@@ -1,8 +1,9 @@
 package com.websoftware_26_1.petcare.web.dto;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -31,4 +32,5 @@ public class AnimalDetailResponse {
     private String jurisdiction;
     private String updatedAt;
     private boolean isLiked;
+    private String geminiIntro;
 }

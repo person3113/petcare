@@ -338,7 +338,7 @@ public class OpenApiSyncService {
             }
             return LocalDate.parse(value, DATE_FORMATTER);
         } catch (Exception ex) {
-            logger.warn("Date parse failed: {}", value);
+            logger.warn("날짜 파싱 실패: {}", value);
             return null;
         }
     }

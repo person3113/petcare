@@ -24,14 +24,32 @@ function AnimalInfoTab({ animal }) {
     }=animal;
 
     return(
-        <div>
+        <div className="mt-10">
             {/*탭 버튼 부분*/}
-            <nav style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
-                <button style={{flex:1}} onClick={() => setNowTab('health')}>건강 정보</button>
-                <button style={{flex:1}} onClick={() => setNowTab('shelter')}>보호소 정보</button>
-                <button style={{flex:1}} onClick={() => setNowTab('personality')}>성향 정보</button>
+            <nav className="flex gap-3">
+                <button
+                    type="button"
+                    className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                    onClick={() => setNowTab('health')}
+                >
+                    건강 정보
+                </button>
+                <button
+                    type="button"
+                    className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                    onClick={() => setNowTab('shelter')}
+                >
+                    보호소 정보
+                </button>
+                <button
+                    type="button"
+                    className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                    onClick={() => setNowTab('personality')}
+                >
+                    성향 정보
+                </button>
             </nav>
-            <section>
+            <section className="mt-5 rounded-xl border border-gray-100 bg-white p-4 text-sm text-gray-700">
             {/*자바스크립트의 &&연산자는 앞이 참이면 뒤를 그리고, 거짓이면 무시함*/}
             {/*건강탭 내용*/}
             {nowTab === 'health' && (

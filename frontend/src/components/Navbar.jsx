@@ -1,7 +1,8 @@
-import React from 'react'; //리엑트 파일이라는 의미
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react'; //리액트 파일이라는 의미
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { logout } from '../api/auth.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import Searchbar from './Searchbar.jsx';
 
 function Navbar() {
     const navigate = useNavigate();
@@ -18,38 +19,47 @@ function Navbar() {
         }
     }
 
-    return(
-        <header className="flex items-center justify-between px-10 py-5 border-b border-gray-200">
-            <div id="nav_logo">  {/* 로고 부분 */}
-                <p className="text-xl font-medium cursor-pointer">Logo</p>
-            </div>
-            <nav>
-                <div id="menu" className="flex gap-8"> {/* 메뉴 부분 */}
-                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="#">입양하기</Link>  {/* 다른페이지로 가기 위한 링크 현재는 빈경로 */}
-                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="/lost-animals">분실동물</Link>
-                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="/survey">인연찾기</Link>
-                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="#">지도</Link>
-                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="#">통계</Link>
-                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="/community">커뮤니티</Link>
-                    <Link className="text-sm text-gray-600 cursor-pointer hover:text-gray-900" to="/mypage">마이페이지</Link>
+    return (
+        <div className="custom-header">
+            <div className="header-left">
+                {/* 로고 부분 */}
+                <div className="logo" onClick={() => navigate('/')}>
+                    Logo
                 </div>
-            </nav>
-            <div className="flex gap-3 items-center">
-                {user ? (
-                    <>
-                        <span className="text-sm text-gray-600">{user.nickname || user.email}</span>
-                        <button className="text-sm px-4 py-2 text-gray-600 rounded-md hover:bg-gray-50" type="button" onClick={handleLogout}>로그아웃</button>
-                    </>
-                ) : (
-                    <>
-                        <Link className="text-sm text-gray-600 hover:bg-gray-300" to="/login">로그인</Link>
-                        <Link className="text-sm px-4 py-2 text-gray-600 hover:bg-gray-300" to="/register">회원가입</Link>
-                    </>
-                )}
+                {/* 메뉴 부분 */}
+                <nav className="header-nav">
+                    <NavLink to="/animals" className={({ isActive }) => isActive ? 'active' : ''}>입양하기</NavLink>
+                    <NavLink to="/lost-animals" className={({ isActive }) => isActive ? 'active' : ''}>분실동물</NavLink>
+                    <NavLink to="/survey" className={({ isActive }) => isActive ? 'active' : ''}>인연찾기</NavLink>
+                    <NavLink to="/animalswipe/1" className={({ isActive }) => isActive ? 'active' : ''}>동물 스와이프</NavLink>
+                    <NavLink to="/map" className={({ isActive }) => isActive ? 'active' : ''}>지도</NavLink>
+                    <NavLink to="/community" className={({ isActive }) => isActive ? 'active' : ''}>커뮤니티</NavLink>
+                    <NavLink to="/mypage" className={({ isActive }) => isActive ? 'active' : ''}>마이페이지</NavLink>
+                </nav>
             </div>
 
-        </header>
-    )
+            <div className="header-right">
+                {/* 검색창 */}
+                <Searchbar />
+
+                {user ? (
+                    /* 로그인 상태 */
+                    <div className="user-actions">
+                        <span className="dot"></span>
+                        <button type="button" className="nickname-btn">{user.nickname || user.email} ▼</button>
+                        <button type="button" onClick={handleLogout} className="logout-btn">로그아웃</button>
+                    </div>
+                ) : (
+                    /* 비로그인 상태 */
+                    <div className="guest-actions">
+                        <Link to="/login" className="login-btn">로그인</Link>
+                        <Link to="/register" className="register-btn">시작하기</Link>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default Navbar;
+

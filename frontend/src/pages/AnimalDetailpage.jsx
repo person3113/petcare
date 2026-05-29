@@ -18,7 +18,7 @@ function AnimalDetailpage(){
                 const data = await request(`/api/animals/${id}`, { method: 'GET' });
                 SetAnimal(data?.data || data);
             } catch (err) {
-                console.log("err:데이터로드 실패" , err)
+                console.log("데이터 로딩 실패", err)
             } finally {
                 SetLoding(false); //로딩 끝내기
             }
@@ -32,21 +32,16 @@ function AnimalDetailpage(){
 
 
     return(
-        <div>
-            <h1>동물 상세 페이지 확인용</h1>
-            <p>동물의 id:{id}</p>
+        <div className="mx-auto max-w-5xl py-6">
+            <h1 className="text-xl font-bold text-gray-900">동물 상세 페이지 확인용</h1>
+            <p className="text-sm text-gray-600">동물의 id: {id}</p>
             {/*todo:현재 페이지 위치 나타내는부분 ex)메인화면>입양하기>동물상세정보 */}
             {/*여기에 동물 상세페이지 컴포넌트들 넣기*/}
-            <div style={{
-                display: 'flex',
-                gap: '40px',     //좌우 컴포넌트 사이 간격
-                marginBottom: '40px',
-                flexWrap: 'wrap', //화면이 좁아질 때 컴포넌트가 아래로 내려가도록
-            }}>
-                <div style={{ flex: 1, minWidth: '320px' }}>
+            <div className="mt-6 flex flex-col gap-10 lg:flex-row">
+                <div className="min-w-[320px] flex-1">
                     <AnimalImg images={animal.images} />
                 </div>
-                <div style={{ flex: 1, minWidth: '320px' }}>
+                <div className="min-w-[320px] flex-1">
                     <AnimalInfoBox animal={animal} onFavoriteChange={SetAnimal} />
                 </div>
 

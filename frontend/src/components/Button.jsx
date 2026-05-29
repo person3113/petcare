@@ -1,21 +1,34 @@
 import React from 'react';
 
+// variant: 'primary' | 'secondary' | 'danger'
+// variant를 쓰면 미리 정해진 색상 스타일이 적용됨.
+// 기존처럼 bgColor/textColor/border를 직접 넘기면 variant보다 우선 적용됨 (하위 호환).
+const variantStyles = {
+    primary:   { backgroundColor: '#f59e0b', color: '#fff',     border: 'none' },
+    secondary: { backgroundColor: '#fff',    color: '#f59e0b',  border: '1px solid #f59e0b' },
+    danger:    { backgroundColor: '#ef4444', color: '#fff',     border: 'none' },
+};
+
 function Button({
-         text,           // 버튼에 들어갈 글자
-         onClick,        // 클릭 시 실행할 함수
-         bgColor = '#222',    // 배경색 (기본값 설정)
-         textColor = '#fff',  // 글자색 (기본값 설정)
+         text,                // 버튼에 들어갈 글자
+         onClick,             // 클릭 시 실행할 함수
+         variant,             // 'primary' | 'secondary' | 'danger' (선택)
+         bgColor,             // 배경색 (직접 지정 시 variant보다 우선)
+         textColor,           // 글자색 (직접 지정 시 variant보다 우선)
          width = 'auto',      // 가로 너비
          flex = 'none',       // flex (none이면 글자크기만큼 버튼)
-         border = 'none'      // 테두리
+         border,              // 테두리 (직접 지정 시 variant보다 우선)
      }) {
 
+    // variant 기본값: bgColor나 textColor를 직접 넘기면 variant 없이도 동작
+    const base = variant ? variantStyles[variant] : { backgroundColor: bgColor ?? '#222', color: textColor ?? '#fff', border: border ?? 'none' };
+
     const buttonStyle = {
-        backgroundColor: bgColor,
-        color: textColor,
+        backgroundColor: bgColor ?? base.backgroundColor,
+        color: textColor ?? base.color,
+        border: border ?? base.border,
         width: width,
         flex: flex,
-        border: border,
         padding: '15px',
         borderRadius: '8px',
         fontWeight: 'bold',
@@ -24,19 +37,19 @@ function Button({
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transition: 'opacity 0.2s'
+        transition: 'opacity 0.2s',
     };
-
 
     return (
         <button
-        style={buttonStyle}
-        onClick={onClick}
-        onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
-        onMouseOut={(e) => e.currentTarget.style.opacity = '1'}>
+            style={buttonStyle}
+            onClick={onClick}
+            onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
+            onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+        >
             {text}
         </button>
-    )
+    );
 }
 
-export default Button;
+export default Button;

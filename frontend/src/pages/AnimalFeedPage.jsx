@@ -128,7 +128,7 @@ function AnimalFeedPage() {
   const isShelterDisabled = !filters.sigungu;
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6">
+    <div className="min-h-screen bg-gray-50 py-6">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold text-gray-900">구조동물 피드</h1>

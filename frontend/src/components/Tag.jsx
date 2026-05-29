@@ -6,7 +6,7 @@ function Tag(props){
     if(props.result)result="_"+props.result; //만약에 #성별 과 같은 태그일 경우 _필요없어서 나중에 붙여주는 방식 사용
 
     return(
-        <span style={{ background: '#f3f4f6', color: '#4b5563', padding: '6px 12px', borderRadius: '20px', fontSize: '14px' }}>
+        <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600">
             #{keyword}{result}
         </span>
     )
