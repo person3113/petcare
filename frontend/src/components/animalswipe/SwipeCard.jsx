@@ -49,7 +49,7 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
             }}
         >
             {/* 카드 UI 디자인 */}
-            <div className="flex h-full w-full flex-col overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
+            <div className="flex h-[520px] w-full flex-col overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
                 <img
                     src={currentAnimal.images[0]}
                     alt={currentAnimal.kind}
