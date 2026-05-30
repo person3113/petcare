@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { fetchAnimals, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
+import { fetchAnimalsPage, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
 import FilterBar from '../components/FilterBar.jsx';
 import AnimalCard from '../components/AnimalCard.jsx';
 
@@ -61,16 +61,24 @@ function AnimalFeedPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const debounceRef = useRef(null);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
+  const pageLimit = 20;
 
   useEffect(() => {
     let isMounted = true;
 
     async function init() {
       try {
-        const [animals, sido] = await Promise.all([fetchAnimals(), fetchSido()]);
+        const [animalsData, sido] = await Promise.all([
+          fetchAnimalsPage({ page, limit: pageLimit }),
+          fetchSido(),
+        ]);
         if (!isMounted) return;
-        setAllAnimals(animals);
-        setFilteredAnimals(animals);
+        const items = animalsData.items || [];
+        setAllAnimals(items);
+        setFilteredAnimals(applyFilter(items, filters));
+        setPagination(animalsData.pagination || null);
         setSidoList(sido);
       } catch (err) {
         if (!isMounted) return;
@@ -90,10 +98,14 @@ function AnimalFeedPage() {
         clearTimeout(debounceRef.current);
       }
     };
-  }, []);
+  }, [page]);
 
   function handleFilterChange(nextFilters) {
     setFilters(nextFilters);
+
+    if (page !== 1) {
+      setPage(1);
+    }
 
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -148,7 +160,7 @@ function AnimalFeedPage() {
         />
 
         <section className="flex items-center justify-between text-sm text-gray-600">
-          <span>총 {filteredAnimals.length}마리</span>
+          <span>총 {pagination?.totalCount ?? filteredAnimals.length}마리</span>
           {(filters.onlySocialized || filters.onlyHealthy) && (
             <span className="text-emerald-600">선택 조건 적용됨</span>
           )}
@@ -168,6 +180,30 @@ function AnimalFeedPage() {
             <AnimalCard key={animal.id} animal={animal} />
           ))}
         </div>
+
+        {pagination && pagination.totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-3 text-sm">
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page <= 1}
+              className="rounded-lg border border-gray-200 px-3 py-2 text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              이전
+            </button>
+            <span className="text-gray-500">
+              {page} / {pagination.totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.min(prev + 1, pagination.totalPages))}
+              disabled={page >= pagination.totalPages}
+              className="rounded-lg border border-gray-200 px-3 py-2 text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              다음
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

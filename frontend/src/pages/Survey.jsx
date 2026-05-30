@@ -45,14 +45,21 @@ function Survey() {
     try {
       // 빈 값 제거 후 payload 변환
       const payload = buildMatchParams(form);
-      const data = await matchQuiz(payload);
+      const response = await matchQuiz(payload);
+      const data = response?.data || {};
       try {
         await saveSurvey(payload);
       } catch (saveError) {
         // 설문 저장 실패는 결과 화면을 막지 않음
       }
       // 결과 페이지로 데이터 전달
-      navigate('/match-result', { state: data?.data || data });
+      navigate('/match-result', {
+        state: {
+          items: data.items || [],
+          pagination: data.pagination || null,
+          criteria: payload,
+        },
+      });
     } catch (err) {
       setError(err?.message || '설문 매칭에 실패했습니다.');
     } finally {

@@ -1,49 +1,49 @@
-async function fetchAnimals() {
-  const response = await fetch('/mock/animals.json');
-  if (!response.ok) {
-    throw new Error('동물 데이터를 불러오지 못했습니다.');
-  }
-  const data = await response.json();
+import { request } from './http.js';
+
+function buildQuery(params = {}) {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      searchParams.set(key, value);
+    }
+  });
+  const query = searchParams.toString();
+  return query ? `?${query}` : '';
+}
+
+async function fetchAnimals(params = {}) {
+  const query = buildQuery(params);
+  const data = await request(`/api/animals${query}`);
   return data?.data?.items || [];
 }
 
+async function fetchAnimalsPage(params = {}) {
+  const query = buildQuery(params);
+  const data = await request(`/api/animals${query}`);
+  return data?.data || { items: [], pagination: null };
+}
+
 async function fetchSido() {
-  const response = await fetch('/mock/codes_sido.json');
-  if (!response.ok) {
-    throw new Error('시도 데이터를 불러오지 못했습니다.');
-  }
-  const data = await response.json();
+  const data = await request('/api/codes/sido');
   return data?.data || [];
 }
 
 async function fetchSigungu(sidoCode) {
-  const response = await fetch('/mock/codes_sigungu.json');
-  if (!response.ok) {
-    return [];
-  }
-  const data = await response.json();
-  const list = data?.data || [];
-  return list.filter((item) => item.sidoCode === sidoCode);
+  const query = buildQuery({ uprCd: sidoCode });
+  const data = await request(`/api/codes/sigungu${query}`);
+  return data?.data || [];
 }
 
 async function fetchShelters(sigunguCode) {
-  const response = await fetch('/mock/shelters.json');
-  if (!response.ok) {
-    return [];
-  }
-  const data = await response.json();
-  const list = data?.data || [];
-  return list.filter((item) => item.sigunguCode === sigunguCode);
+  const query = buildQuery({ orgCd: sigunguCode });
+  const data = await request(`/api/codes/shelters${query}`);
+  return data?.data || [];
 }
 
 // 분실동물 목록 불러오기 (Mock JSON)
 async function fetchLostAnimals() {
-  const response = await fetch('/mock/lost_animals.json');
-  if (!response.ok) {
-    throw new Error('분실동물 데이터를 불러오지 못했습니다.');
-  }
-  const data = await response.json();
-  return data?.data?.items || [];
+  const data = await request('/api/lost-animals');
+  return data?.data || [];
 }
 
-export { fetchAnimals, fetchSido, fetchSigungu, fetchShelters, fetchLostAnimals };
+export { fetchAnimals, fetchAnimalsPage, fetchSido, fetchSigungu, fetchShelters, fetchLostAnimals };

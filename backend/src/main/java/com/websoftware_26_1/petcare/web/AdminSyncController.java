@@ -39,6 +39,12 @@ public class AdminSyncController {
             OpenApiSyncService.SyncResult result = openApiSyncService.syncRescueStats(bgndeDate, enddeDate, numOfRows);
             return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(result.getSavedCount(), result.getTotalCount())));
         }
+        if ("lost".equalsIgnoreCase(type)) {
+            LocalDate bgndeDate = parseDateOrDefault(bgnde, LocalDate.of(2024, 1, 1));
+            LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.of(2026, 1, 1));
+            OpenApiSyncService.SyncResult result = openApiSyncService.syncLostAnimals(bgndeDate, enddeDate, numOfRows);
+            return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(result.getSavedCount(), result.getTotalCount())));
+        }
         OpenApiSyncService.SyncResult result = openApiSyncService.syncAnimals(numOfRows);
         return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(result.getSavedCount(), result.getTotalCount())));
     }

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import SwipeCard from '../components/animalswipe/SwipeCard';
 import SwipeSideBox from '../components/animalswipe/SwipeSideBox.jsx';
+import { fetchAnimals } from '../api/animals.js';
+import { addFavorite, getFavorites } from '../api/favorites.js';
 
 function AnimalSwipePage() {
     const [animals, setAnimals] = useState([]);//전체 동물 정보 받을 곳
@@ -12,17 +14,10 @@ function AnimalSwipePage() {
     const [exitX, setexitX] = useState(0); // 카드가 어느 방향으로 날아갈지 결정 (500 또는 -500)
     const [likeAnimal,setlikeAnimal]=useState(()=>{  //찜한 동물id 리스트 저장
         const saved = localStorage.getItem('likedId_list');
-        const savedDate = localStorage.getItem('liked_date'); //찜한 날짜 저장
-        const today = new Date().toLocaleDateString(); //오늘 날짜
-
-        //데이터 존재하고, 오늘날짜랑 저장된 날짜 같으면(**오늘** 찜한 동물 있으면 이어서)
-        if(saved && savedDate === today){
+        if(saved){
             return JSON.parse(saved); //문자열로 저장된 배열을 배열로 변환해서 리턴
         }
-        //데이터 없거나 오늘날짜랑 저장된 날짜 다르면 빈배열(오늘 찜한 동물 없는 경우 또는 다음날 되면)
-        else{
-            return [];
-        }
+        return [];
     });
     const [filter, setFilter] = useState({ //사이드 박스의 필터를 위한것
         //필터링 조건들 저장할 곳 (예시로 시도, 시군구 넣어봄)
@@ -40,26 +35,33 @@ function AnimalSwipePage() {
 
     // 데이터 읽어오는 코드
     useEffect(() => {
-        fetch('/mock/animals.json') //mock데이터 가져오기
-            .then((res) => res.json())
-            .then((mockData) => {
-                //데이터 요청 성공했는지 and mockData의 data안의 items이 진짜 존재하는지
-                if (mockData.success && mockData.data.items) {
-                    setAnimals(mockData.data.items); //진짜 존재하면 넣기
-                    setFilterAnimals(mockData.data.items); //처음에는 필터링 안된 전체 목록
-                }
+        fetchAnimals()
+            .then((items) => {
+                setAnimals(items);
+                setFilterAnimals(items);
             })
             .catch((err) => console.log("데이터 로딩 실패", err));
+    }, []);
+
+    useEffect(() => {
+        getFavorites()
+            .then((data) => {
+                const list = data?.data || [];
+                const ids = list.map((item) => item.desertionNo).filter(Boolean);
+                setlikeAnimal(ids);
+            })
+            .catch((err) => {
+                if (err?.status !== 401) {
+                    console.log("찜 목록 불러오기 실패", err);
+                }
+            });
     }, []);
 
 
     //찜한 동물을 저장한 배열이 바뀌었을때 이를 localstorage에 저장
     useEffect(() => {
-        const today = new Date().toLocaleDateString();
-
         //배열 문자열로 변환해서 저장
         localStorage.setItem('likedId_list', JSON.stringify(likeAnimal));
-        localStorage.setItem('liked_date', today); //찜한 날짜도 저장
     }, [likeAnimal]); //찜한 동물 내용이 바뀔때마다 실행
 
 
@@ -86,6 +88,17 @@ function AnimalSwipePage() {
             return [...prev,Id];
         });
     }
+
+    const handleLike = async (Id) => {
+        try {
+            await addFavorite(Id);
+            LikeCnt(Id);
+        } catch (err) {
+            if (err?.status !== 401) {
+                console.log("찜하기 API 호출 실패", err);
+            }
+        }
+    };
 
     //==========================필터를 위한 부분================================
 
@@ -138,7 +151,7 @@ function AnimalSwipePage() {
                                     exitX={exitX} //어느 방향으로 밀었는지 나타낼값
                                     setexitX={setexitX}
                                     setnowIndex={setnowIndex}
-                                    onLike={LikeCnt}
+                                    onLike={handleLike}
                                 />
                             </AnimatePresence>
                         </div>
@@ -161,7 +174,7 @@ function AnimalSwipePage() {
                             LikeCnt={likeAnimal.length}
                             filter={filter}
                             onFilterChange={(e)=>{
-                                const {name,value} = e.target;
+                                const {name, value, type, checked} = e.target;
                                 const finalValue = type === 'checkbox' ? checked : value;
                                 FilterChange({...filter, [name]: finalValue});
                             }}

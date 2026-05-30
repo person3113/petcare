@@ -1,6 +1,5 @@
 //motion:html태그에 애니메이션 사용가능
 import { motion } from 'framer-motion';
-import { addFavorite } from '../../api/favorites.js';
 
 function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
 
@@ -11,11 +10,6 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
             setexitX(500); // 오른쪽으로 날아가기 설정
             console.log(`${animal.kind} 찜하기`); //찜하기
             onLike(currentAnimal.id); //찜 개수 증가
-            try {
-                await addFavorite(animal.id);
-            } catch (err) {
-                console.log("찜하기 API 호출 실패", err);
-            }
             //카드 인덱스 증가
             setnowIndex((prev) => prev + 1);
 

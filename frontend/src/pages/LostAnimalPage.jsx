@@ -67,6 +67,8 @@ function LostAnimalPage() {
   // 로딩 및 에러 상태
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [page, setPage] = useState(1);
+  const pageLimit = 20;
   // 300ms debounce용 타이머 ref
   const debounceRef = useRef(null);
 
@@ -105,6 +107,10 @@ function LostAnimalPage() {
   function handleFilterChange(nextFilters) {
     setFilters(nextFilters);
 
+    if (page !== 1) {
+      setPage(1);
+    }
+
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
@@ -138,6 +144,9 @@ function LostAnimalPage() {
   // 시도 미선택 시 시군구/보호소 비활성화
   const isSigunguDisabled = !filters.sido;
   const isShelterDisabled = !filters.sigungu;
+  const totalPages = Math.max(1, Math.ceil(filteredAnimals.length / pageLimit));
+  const startIndex = (page - 1) * pageLimit;
+  const pagedAnimals = filteredAnimals.slice(startIndex, startIndex + pageLimit);
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
@@ -176,10 +185,34 @@ function LostAnimalPage() {
         )}
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredAnimals.map((animal) => (
+          {pagedAnimals.map((animal) => (
             <AnimalCard key={animal.id} animal={animal} />
           ))}
         </div>
+
+        {filteredAnimals.length > 0 && totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-3 text-sm">
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page <= 1}
+              className="rounded-lg border border-gray-200 px-3 py-2 text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              이전
+            </button>
+            <span className="text-gray-500">
+              {page} / {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={page >= totalPages}
+              className="rounded-lg border border-gray-200 px-3 py-2 text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              다음
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
