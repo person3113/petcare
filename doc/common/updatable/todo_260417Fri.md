@@ -168,8 +168,6 @@
   - [x] `AnimalDetailpage.jsx` ("err:데이터로드 실패")
   - [x] 백엔드 로그 메시지 확인 및 정리
 - [ ] **공공 API 응답 실패/빈값 대응 로직 추가** (재시도 or 기본값 fallback)
-- [ ] **CORS 설정 최종 확인** (배포 환경 도메인 포함)
-- [ ] **`application.yaml` `show-sql: true` → 발표 전 false 변경**
 - [ ] 모바일(375px) / 데스크탑 크로스 브라우징 최종 확인
 
 ---
