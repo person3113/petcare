@@ -1,17 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Doughnut } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import { useAuth } from '../context/AuthContext.jsx';
-import { getStatsSummary, getStatsChart, getRealtimeSummary } from '../api/stats.js';
+import { getStatsSummary, getRealtimeSummary } from '../api/stats.js';
 import CountUp from '../components/CountUp.jsx';
-
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Home() {
   const { user } = useAuth();
@@ -25,9 +16,8 @@ function Home() {
 
     async function fetchStats() {
       try {
-        const [summaryRes, chartRes, realtimeRes] = await Promise.all([
+        const [summaryRes, realtimeRes] = await Promise.all([
           getStatsSummary(),
-          getStatsChart(),
           getRealtimeSummary()
         ]);
         if (!isMounted) return;
@@ -41,7 +31,6 @@ function Home() {
           ...(summaryRes?.data || summaryRes),
           realtime: realData
         });
-        setChart(chartRes?.data || chartRes);
       } catch (err) {
         if (!isMounted) return;
         setError('통계 데이터를 불러오지 못했습니다.');
@@ -59,34 +48,7 @@ function Home() {
     };
   }, []);
 
-  const statusChartData = useMemo(() => {
-    if (!chart?.statusCounts?.length) {
-      return null;
-    }
-    const labels = chart.statusCounts.map((item) => item.label);
-    const values = chart.statusCounts.map((item) => item.value);
-    return {
-      labels,
-      datasets: [
-        {
-          data: values,
-          backgroundColor: [
-            '#f97316',
-            '#e11d48',
-            '#0ea5e9',
-            '#10b981',
-            '#64748b',
-            '#f59e0b',
-          ],
-          borderWidth: 1,
-        },
-      ],
-    };
-  }, [chart]);
 
-  const periodText = summary?.period
-    ? `${summary.period.from} ~ ${summary.period.to}`
-    : '';
 
   return (
     <div className="px-4 py-6">
@@ -98,9 +60,14 @@ function Home() {
         {error && <p className="text-sm text-red-600">{error}</p>}
         {summary && summary.realtime && !loading && (
           <div className="mt-5">
-            <h2 className="text-lg font-bold text-gray-700 mb-4">
-              최근 한달간 유기동물 통계 (기준: {summary.realtime.todayDate})
-            </h2>
+            <div className="flex justify-between items-end mb-4">
+              <h2 className="text-lg font-bold text-gray-700">
+                최근 한달간 유기동물 통계 (기준: {summary.realtime.todayDate})
+              </h2>
+              <Link to="/stats" className="text-sm font-medium text-blue-600 hover:text-blue-800 transition">
+                상세 통계 보기 &rarr;
+              </Link>
+            </div>
             <div className="flex flex-wrap gap-4">
               <div className="min-w-[140px] rounded-lg border border-gray-200 bg-white p-3">
                 <p className="text-sm text-gray-600">구조</p>
@@ -158,14 +125,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="border border-gray-200 rounded-xl p-6">
-        {periodText && <p className="text-sm text-gray-600">집계기간: {periodText}</p>}
-        {statusChartData && !loading && (
-          <div className="mt-6 max-w-[420px]">
-            <Doughnut data={statusChartData} />
-          </div>
-        )}
-      </section>
+
 
     </div>
   );

@@ -104,13 +104,20 @@ public class OpenApiClient {
     }
 
     public PagedResult fetchRescueStats(String bgnde, String endde, String se, int pageNo, int numOfRows) {
-        JsonNode root = get(STATS_BASE_URL, "/rescueAnimalStats", Map.of(
-            "bgnde", bgnde,
-            "endde", endde,
-            "se", se,
-            "pageNo", String.valueOf(pageNo),
-            "numOfRows", String.valueOf(numOfRows)
-        ));
+        return fetchRescueStats(bgnde, endde, se, null, pageNo, numOfRows);
+    }
+
+    public PagedResult fetchRescueStats(String bgnde, String endde, String se, String uprCd, int pageNo, int numOfRows) {
+        java.util.Map<String, String> params = new java.util.HashMap<>();
+        params.put("bgnde", bgnde);
+        params.put("endde", endde);
+        params.put("se", se);
+        params.put("pageNo", String.valueOf(pageNo));
+        params.put("numOfRows", String.valueOf(numOfRows));
+        if (uprCd != null && !uprCd.isBlank()) {
+            params.put("upr_cd", uprCd);
+        }
+        JsonNode root = get(STATS_BASE_URL, "/rescueAnimalStats", params);
         return toPagedResult(root);
     }
 

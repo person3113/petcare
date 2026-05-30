@@ -5,10 +5,14 @@ import com.websoftware_26_1.petcare.web.dto.ApiResponse;
 import com.websoftware_26_1.petcare.web.dto.StatsChartResponse;
 import com.websoftware_26_1.petcare.web.dto.StatsSummaryResponse;
 import com.websoftware_26_1.petcare.web.dto.StatsRealtimeResponse;
+import com.websoftware_26_1.petcare.web.dto.RegionalRateResponse;
+import com.websoftware_26_1.petcare.web.dto.StatsChartResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/stats")
@@ -33,5 +37,19 @@ public class StatsController {
     @GetMapping("/realtime-summary")
     public ResponseEntity<ApiResponse<StatsRealtimeResponse>> getRealtimeSummary() {
         return ResponseEntity.ok(ApiResponse.ok(statsService.getRealtimeSummary()));
+    }
+
+    @GetMapping("/regional-rates")
+    public ResponseEntity<ApiResponse<List<RegionalRateResponse>>> getRegionalRates(
+            @RequestParam(name = "startDate") String startDate,
+            @RequestParam(name = "endDate") String endDate) {
+        return ResponseEntity.ok(ApiResponse.ok(statsService.getRegionalRates(startDate, endDate)));
+    }
+
+    @GetMapping("/national-status")
+    public ResponseEntity<ApiResponse<List<StatsChartResponse.StatusCount>>> getNationalStatus(
+            @RequestParam(name = "startDate") String startDate,
+            @RequestParam(name = "endDate") String endDate) {
+        return ResponseEntity.ok(ApiResponse.ok(statsService.getNationalStatus(startDate, endDate)));
     }
 }

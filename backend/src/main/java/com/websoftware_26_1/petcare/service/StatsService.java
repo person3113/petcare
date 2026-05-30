@@ -6,11 +6,15 @@ import com.websoftware_26_1.petcare.repository.RescueStatsCacheRepository;
 import com.websoftware_26_1.petcare.web.dto.StatsChartResponse;
 import com.websoftware_26_1.petcare.web.dto.StatsSummaryResponse;
 import com.websoftware_26_1.petcare.web.dto.StatsRealtimeResponse;
+import com.websoftware_26_1.petcare.web.dto.RegionalRateResponse;
+import com.websoftware_26_1.petcare.web.dto.CodeResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +28,12 @@ public class StatsService {
 
     private final RescueStatsCacheRepository rescueStatsCacheRepository;
     private final OpenApiClient openApiClient;
+    private final CodeCacheService codeCacheService;
 
-    public StatsService(RescueStatsCacheRepository rescueStatsCacheRepository, OpenApiClient openApiClient) {
+    public StatsService(RescueStatsCacheRepository rescueStatsCacheRepository, OpenApiClient openApiClient, CodeCacheService codeCacheService) {
         this.rescueStatsCacheRepository = rescueStatsCacheRepository;
         this.openApiClient = openApiClient;
+        this.codeCacheService = codeCacheService;
     }
 
     @Transactional(readOnly = true)
@@ -183,5 +189,89 @@ public class StatsService {
         } catch (Exception ex) {
             return 0;
         }
+    }
+
+    public List<RegionalRateResponse> getRegionalRates(String startDate, String endDate) {
+        List<CodeResponse> sidoList = codeCacheService.getSidoList();
+        if (sidoList == null || sidoList.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<CompletableFuture<RegionalRateResponse>> futures = sidoList.stream()
+                .map(sido -> CompletableFuture.supplyAsync(() -> fetchRegionalRate(sido, startDate, endDate)))
+                .collect(Collectors.toList());
+
+        return futures.stream()
+                .map(CompletableFuture::join)
+                .filter(res -> res != null)
+                .sorted((a, b) -> Double.compare(b.getAdoptionRate(), a.getAdoptionRate())) // 내림차순 정렬
+                .collect(Collectors.toList());
+    }
+
+    private RegionalRateResponse fetchRegionalRate(CodeResponse sido, String bgnde, String endde) {
+        int totalRescued = 0;
+        int totalAdopted = 0;
+        int totalEuthanized = 0;
+
+        int pageNo = 1;
+        int numOfRows = 1000;
+
+        while (true) {
+            OpenApiClient.PagedResult result = openApiClient.fetchRescueStats(bgnde, endde, "chart1", sido.getCode(), pageNo, numOfRows);
+            if (result == null || result.getItems().isEmpty()) {
+                break;
+            }
+
+            for (JsonNode item : result.getItems()) {
+                String prcsNm = item.path("prcsNm").asText("");
+                int tot = parseNumber(item.path("tot").asText("0"));
+
+                totalRescued += tot;
+                if (prcsNm.contains("입양")) {
+                    totalAdopted += tot;
+                } else if (prcsNm.contains("안락")) {
+                    totalEuthanized += tot;
+                }
+            }
+
+            if (pageNo * numOfRows >= result.getTotalCount()) {
+                break;
+            }
+            pageNo++;
+        }
+
+        double adoptionRate = totalRescued > 0 ? (double) totalAdopted / totalRescued * 100 : 0.0;
+        double euthanasiaRate = totalRescued > 0 ? (double) totalEuthanized / totalRescued * 100 : 0.0;
+        
+        // 소수점 1자리까지 반올림
+        adoptionRate = Math.round(adoptionRate * 10.0) / 10.0;
+        euthanasiaRate = Math.round(euthanasiaRate * 10.0) / 10.0;
+
+        return new RegionalRateResponse(sido.getName(), totalRescued, totalAdopted, totalEuthanized, adoptionRate, euthanasiaRate);
+    }
+
+    public List<StatsChartResponse.StatusCount> getNationalStatus(String startDate, String endDate) {
+        List<StatsChartResponse.StatusCount> statusCounts = new ArrayList<>();
+        int pageNo = 1;
+        int numOfRows = 1000;
+
+        while (true) {
+            OpenApiClient.PagedResult result = openApiClient.fetchRescueStats(startDate, endDate, "chart1", null, pageNo, numOfRows);
+            if (result == null || result.getItems().isEmpty()) {
+                break;
+            }
+
+            for (JsonNode item : result.getItems()) {
+                String prcsNm = item.path("prcsNm").asText("");
+                int tot = parseNumber(item.path("tot").asText("0"));
+                statusCounts.add(new StatsChartResponse.StatusCount(prcsNm, tot));
+            }
+
+            if (pageNo * numOfRows >= result.getTotalCount()) {
+                break;
+            }
+            pageNo++;
+        }
+        return statusCounts;
     }
 }
