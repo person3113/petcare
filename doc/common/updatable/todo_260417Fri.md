@@ -126,14 +126,15 @@
 
 ## 🟠 핵심 연동 — Mock JSON → 실 API 교체
 
-- [ ] `api/animals.js` — `fetchAnimals()` → `/api/animals` 실 API 교체
-- [ ] `api/animals.js` — `fetchSido()` → `/api/codes/sido` 실 API 교체
-- [ ] `api/animals.js` — `fetchSigungu()` → `/api/codes/sigungu` 실 API 교체
-- [ ] `api/animals.js` — `fetchShelters()` → `/api/codes/shelters` 실 API 교체
-- [ ] `api/animals.js` — `fetchLostAnimals()` → 분실동물 실 API 교체 (엔드포인트 확인 필요)
-- [ ] `ShelterMapPage.jsx` — `sheltersDummy.js` 하드코딩 → `/api/shelters` 실 API 교체
-- [ ] `AnimalSwipepage.jsx` — `/mock/animals.json` 직접 fetch → `/api/animals` 실 API 교체
-- [ ] `AnimalSwipepage.jsx` — 하트(좋아요) 버튼 → LocalStorage 전용에서 `/api/likes` 실 API 연동으로 교체
+- [x] `api/animals.js` — `fetchAnimals()` → `/api/animals` 실 API 교체
+- [x] `api/animals.js` — `fetchSido()` → `/api/codes/sido` 실 API 교체
+- [x] `api/animals.js` — `fetchSigungu()` → `/api/codes/sigungu` 실 API 교체
+- [x] `api/animals.js` — `fetchShelters()` → `/api/codes/shelters` 실 API 교체
+- [x] `api/animals.js` — `fetchLostAnimals()` → 분실동물 실 API 교체 (엔드포인트 확정/검증 필요)
+- [x] `ShelterMapPage.jsx` — `sheltersDummy.js` 하드코딩 → `/api/shelters` 실 API 교체
+- [x] `AnimalSwipepage.jsx` — `/mock/animals.json` 직접 fetch → `/api/animals` 실 API 교체
+- [x] `AnimalSwipepage.jsx` — 하트(좋아요) 버튼 → `/api/likes` 연동 이후 LocalStorage 의존 제거
+- [x] `AnimalSwipepage.jsx` — 필터 드롭다운 옵션 Mock → 실제 코드 API 연동
 
 ---
 

@@ -2,24 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../Button.jsx';
 
-function SwipeSideBox({LikeCnt,filter,onFilterChange}) {
-
-    //샘플
-    const sidoList=[
-        {code:'1', name:"서울광역시"},
-        {code:'2', name:"부산광역시"},
-        {code:'3', name:"대전광역시"}
-    ];
-    const sigunguList=[
-        {code:'1', name:"종로구"},
-        {code:'2', name:"용산구"},
-        {code:'3', name:"마포구"},
-    ];
-    const shelterList=[
-        {id:'1', name:"서울보호소"},
-        {id:'2', name:"부산보호소"},
-        {id:'3', name:"대전보호소"},
-    ];
+function SwipeSideBox({LikeCnt, filter, onFilterChange, sidoList, sigunguList, shelterList}) {
 
     const disabledSigungu = !filter.sido; // 시도를 선택하지 않았으면, 시군구는 비활성화
     const disabledShelter = !filter.sigungu; // 시군구를 선택하지 않았으면, 보호소는 비활성화
@@ -92,7 +75,7 @@ function SwipeSideBox({LikeCnt,filter,onFilterChange}) {
                             >
                                 <option value="">전체</option>
                                 {shelterList.map((item) => (
-                                    <option key={item.id} value={item.name}>
+                                    <option key={item.code ?? item.id} value={item.name}>
                                         {item.name}
                                     </option>
                                 ))}
