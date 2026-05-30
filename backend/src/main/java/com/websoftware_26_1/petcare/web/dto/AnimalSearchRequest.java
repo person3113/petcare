@@ -10,6 +10,7 @@ public class AnimalSearchRequest {
     private String upkind;
     private String uprCd;
     private String orgCd;
+    private String careRegNo;
     private String state;
     private Integer page;
     private Integer limit;

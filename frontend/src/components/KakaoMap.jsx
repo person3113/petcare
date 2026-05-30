@@ -1,50 +1,92 @@
 import { useEffect, useRef } from 'react';
 
 // props: shelters = [{ id, name, lat, lng }, ...]
-function KakaoMap({ shelters }) {
-  const mapRef = useRef(null); // 지도를 렌더링할 div를 가리키는 ref
+function KakaoMap({ shelters, currentLocation, onMarkerClick }) {
+  const mapRef = useRef(null);
+  const mapInstance = useRef(null);
+  const markersRef = useRef([]);
 
   useEffect(() => {
-    // kakao 객체가 아직 로드되지 않았으면 종료
     if (!window.kakao || !window.kakao.maps) {
       console.log('카카오맵 객체가 없습니다. SDK 스크립트 로드 여부를 확인하세요.');
       return;
     }
 
-    const container = mapRef.current; // 지도 컨테이너 div
+    const container = mapRef.current;
+    
+    // Default center
+    let centerPosition = new window.kakao.maps.LatLng(36.5, 127.5);
+    let level = 7;
+    
+    if (currentLocation) {
+        centerPosition = new window.kakao.maps.LatLng(currentLocation.lat, currentLocation.lng);
+        level = 5; // Zoom in closer if we have a location
+    }
 
-    // 지도 초기 옵션: 대한민국 중심, 줌 레벨 7 (전국 보호소 분포 확인용)
     const options = {
-      center: new window.kakao.maps.LatLng(36.5, 127.5),
-      level: 7,
+      center: centerPosition,
+      level: level,
     };
 
-    // 지도 생성
-    const map = new window.kakao.maps.Map(container, options);
+    if (!mapInstance.current) {
+        mapInstance.current = new window.kakao.maps.Map(container, options);
+    }
+  }, [currentLocation]); // Re-center on first location load
 
-    // 보호소 목록을 순회하며 마커 생성
+  useEffect(() => {
+    if (!mapInstance.current) return;
+    const map = mapInstance.current;
+
+    // Clear existing markers
+    markersRef.current.forEach(m => m.setMap(null));
+    markersRef.current = [];
+
+    // Current location marker (Custom overlay)
+    if (currentLocation) {
+        const currentPos = new window.kakao.maps.LatLng(currentLocation.lat, currentLocation.lng);
+        const content = '<div class="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-md animate-pulse"></div>';
+        const customOverlay = new window.kakao.maps.CustomOverlay({
+            position: currentPos,
+            content: content,
+            xAnchor: 0.5,
+            yAnchor: 0.5
+        });
+        customOverlay.setMap(map);
+        markersRef.current.push(customOverlay);
+    }
+
+    // Shelter markers
     shelters.forEach((shelter) => {
       const position = new window.kakao.maps.LatLng(shelter.lat, shelter.lng);
 
-      // 마커 생성 및 지도에 표시
       const marker = new window.kakao.maps.Marker({ position });
       marker.setMap(map);
+      markersRef.current.push(marker);
 
-      // 마커 클릭 시 보호소 이름을 InfoWindow로 표시
       const infowindow = new window.kakao.maps.InfoWindow({
-        content: `<div style="padding:6px 10px; font-size:13px;">${shelter.name}</div>`,
+        content: `<div style="padding:6px 10px; font-size:13px; color:black;">${shelter.name}</div>`,
+      });
+
+      window.kakao.maps.event.addListener(marker, 'mouseover', function () {
+        infowindow.open(map, marker);
+      });
+      window.kakao.maps.event.addListener(marker, 'mouseout', function () {
+        infowindow.close();
       });
 
       window.kakao.maps.event.addListener(marker, 'click', function () {
-        infowindow.open(map, marker);
+        if (onMarkerClick) {
+            onMarkerClick(shelter);
+            map.panTo(position); // Smooth pan to clicked marker
+        }
       });
     });
-  }, [shelters]); // shelters 배열이 바뀔 때마다 지도 다시 그리기
+  }, [shelters, currentLocation, onMarkerClick]);
 
   return (
-      <div
+    <div
       ref={mapRef}
-      className="h-[400px] w-full rounded-lg"
+      className="w-full h-full rounded-lg"
     />
   );
 }

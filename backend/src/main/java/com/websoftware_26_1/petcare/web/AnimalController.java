@@ -31,12 +31,13 @@ public class AnimalController {
         @RequestParam(name = "upkind", required = false) String upkind,
         @RequestParam(name = "upr_cd", required = false) String uprCd,
         @RequestParam(name = "org_cd", required = false) String orgCd,
+        @RequestParam(name = "care_reg_no", required = false) String careRegNo,
         @RequestParam(name = "state", required = false) String state,
         @RequestParam(name = "page", required = false) Integer page,
         @RequestParam(name = "limit", required = false) Integer limit,
         @RequestParam(name = "keyword", required = false) String keyword
     ) {
-        AnimalSearchRequest request = new AnimalSearchRequest(upkind, uprCd, orgCd, state, page, limit, keyword);
+        AnimalSearchRequest request = new AnimalSearchRequest(upkind, uprCd, orgCd, careRegNo, state, page, limit, keyword);
         AnimalListResponse response = animalService.getAnimalList(request);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }

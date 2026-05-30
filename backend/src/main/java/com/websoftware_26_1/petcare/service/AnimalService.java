@@ -53,7 +53,7 @@ public class AnimalService {
 
         String upKindCd = request.getUpkind();
         String orgNm = request.getOrgCd();
-        String careRegNo = null;
+        String careRegNo = request.getCareRegNo();
         String processState = request.getState();
         String keyword = request.getKeyword();
 
