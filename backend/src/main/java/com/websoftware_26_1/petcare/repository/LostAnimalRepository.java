@@ -30,6 +30,16 @@ public class LostAnimalRepository {
         return entityManager.createQuery(jpql, LostAnimal.class).getResultList();
     }
 
+    public List<LostAnimal> findAllWithKeyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return findAll();
+        }
+        String jpql = "select l from LostAnimal l where l.kindCd like :keyword or l.orgNm like :keyword or l.specialMark like :keyword or l.happenPlace like :keyword order by l.id desc";
+        return entityManager.createQuery(jpql, LostAnimal.class)
+            .setParameter("keyword", "%" + keyword + "%")
+            .getResultList();
+    }
+
     public int deleteAll() {
         String jpql = "delete from LostAnimal l";
         return entityManager.createQuery(jpql).executeUpdate();

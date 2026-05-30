@@ -55,16 +55,18 @@ public class AnimalService {
         String orgNm = request.getOrgCd();
         String careRegNo = null;
         String processState = request.getState();
+        String keyword = request.getKeyword();
 
         List<Animal> animals = animalRepository.findAllWithFilters(
             upKindCd,
             orgNm,
             careRegNo,
             processState,
+            keyword,
             offset,
             limit
         );
-        int totalCount = animalRepository.countAllWithFilters(upKindCd, orgNm, careRegNo, processState);
+        int totalCount = animalRepository.countAllWithFilters(upKindCd, orgNm, careRegNo, processState, keyword);
         int totalPages = (int) Math.ceil((double) totalCount / limit);
 
         List<AnimalResponse> items = new ArrayList<>();

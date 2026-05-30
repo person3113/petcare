@@ -21,8 +21,10 @@ public class LostAnimalController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<LostAnimalResponse>>> getLostAnimals() {
-        return ResponseEntity.ok(ApiResponse.ok(lostAnimalService.getLostAnimals()));
+    public ResponseEntity<ApiResponse<List<LostAnimalResponse>>> getLostAnimals(
+        @org.springframework.web.bind.annotation.RequestParam(name = "keyword", required = false) String keyword
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok(lostAnimalService.getLostAnimals(keyword)));
     }
 
     @GetMapping("/{id}")

@@ -13,4 +13,5 @@ public class AnimalSearchRequest {
     private String state;
     private Integer page;
     private Integer limit;
+    private String keyword;
 }

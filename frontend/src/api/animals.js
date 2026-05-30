@@ -40,9 +40,10 @@ async function fetchShelters(sigunguCode) {
   return data?.data || [];
 }
 
-// 분실동물 목록 불러오기 (Mock JSON)
-async function fetchLostAnimals() {
-  const data = await request('/api/lost-animals');
+// 분실동물 목록 불러오기
+async function fetchLostAnimals(params = {}) {
+  const query = buildQuery(params);
+  const data = await request(`/api/lost-animals${query}`);
   return data?.data || [];
 }
 

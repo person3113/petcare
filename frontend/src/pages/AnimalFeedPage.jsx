@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { fetchAnimalsPage, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
 import FilterBar from '../components/FilterBar.jsx';
 import AnimalCard from '../components/AnimalCard.jsx';
@@ -52,6 +53,9 @@ function applyFilter(animals, filters) {
 }
 
 function AnimalFeedPage() {
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword') || '';
+
   const [allAnimals, setAllAnimals] = useState([]);
   const [filteredAnimals, setFilteredAnimals] = useState([]);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
@@ -71,7 +75,7 @@ function AnimalFeedPage() {
     async function init() {
       try {
         const [animalsData, sido] = await Promise.all([
-          fetchAnimalsPage({ page, limit: pageLimit }),
+          fetchAnimalsPage({ page, limit: pageLimit, keyword }),
           fetchSido(),
         ]);
         if (!isMounted) return;

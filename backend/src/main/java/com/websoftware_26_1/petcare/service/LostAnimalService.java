@@ -22,8 +22,8 @@ public class LostAnimalService {
     }
 
     @Transactional(readOnly = true)
-    public List<LostAnimalResponse> getLostAnimals() {
-        List<LostAnimal> animals = lostAnimalRepository.findAll();
+    public List<LostAnimalResponse> getLostAnimals(String keyword) {
+        List<LostAnimal> animals = lostAnimalRepository.findAllWithKeyword(keyword);
         List<LostAnimalResponse> results = new ArrayList<>();
         for (LostAnimal animal : animals) {
             results.add(toResponse(animal));

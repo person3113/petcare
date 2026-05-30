@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { fetchLostAnimals, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
 import FilterBar from '../components/FilterBar.jsx';
 import AnimalCard from '../components/AnimalCard.jsx';
@@ -54,6 +55,9 @@ function applyFilter(animals, filters) {
 }
 
 function LostAnimalPage() {
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword') || '';
+
   // 분실동물 전체 목록
   const [allAnimals, setAllAnimals] = useState([]);
   // 필터 적용 후 보여줄 목록
@@ -78,7 +82,7 @@ function LostAnimalPage() {
 
     async function init() {
       try {
-        const [animals, sido] = await Promise.all([fetchLostAnimals(), fetchSido()]);
+        const [animals, sido] = await Promise.all([fetchLostAnimals({ keyword }), fetchSido()]);
         if (!isMounted) return;
         setAllAnimals(animals);
         setFilteredAnimals(animals);

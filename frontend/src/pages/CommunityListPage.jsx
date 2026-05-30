@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { fetchPosts } from '../api/posts.js';
 
 const CATEGORY_OPTIONS = [
@@ -9,6 +9,9 @@ const CATEGORY_OPTIONS = [
 ];
 
 function CommunityListPage() {
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword') || '';
+
   const [category, setCategory] = useState('');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +24,7 @@ function CommunityListPage() {
       setLoading(true);
       setError('');
       try {
-        const data = await fetchPosts(category);
+        const data = await fetchPosts(category, keyword);
         if (!isMounted) return;
         setPosts(data);
       } catch (err) {

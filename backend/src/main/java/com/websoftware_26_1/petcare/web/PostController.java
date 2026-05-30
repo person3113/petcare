@@ -35,9 +35,10 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<PostResponse>>> getPosts(
-        @RequestParam(name = "category", required = false) String category
+        @RequestParam(name = "category", required = false) String category,
+        @RequestParam(name = "keyword", required = false) String keyword
     ) {
-        List<PostResponse> responses = postService.getPosts(category);
+        List<PostResponse> responses = postService.getPosts(category, keyword);
         return ResponseEntity.ok(ApiResponse.ok(responses));
     }
 

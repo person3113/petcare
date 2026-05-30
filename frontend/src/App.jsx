@@ -16,6 +16,7 @@ import MyPage from './pages/MyPage.jsx';
 import CommunityListPage from './pages/CommunityListPage.jsx';
 import CommunityDetailPage from './pages/CommunityDetailPage.jsx';
 import CommunityFormPage from './pages/CommunityFormPage.jsx';
+import SearchPage from './pages/SearchPage.jsx';
 import './App.css';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
                 <Route path="community/new" element={<CommunityFormPage />} />
                 <Route path="community/:id" element={<CommunityDetailPage />} />
                 <Route path="community/:id/edit" element={<CommunityFormPage />} />
+                <Route path="search" element={<SearchPage />} />
             </Route>
             {/* 레이아웃이 필요없거나 다른 상속을 받을 페이지들은 이곳에 */}
         </Routes>

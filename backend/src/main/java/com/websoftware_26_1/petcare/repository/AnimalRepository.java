@@ -40,6 +40,7 @@ public class AnimalRepository {
         String orgNm,
         String careRegNo,
         String processState,
+        String keyword,
         int offset,
         int limit
     ) {
@@ -61,6 +62,10 @@ public class AnimalRepository {
         if (processState != null && !processState.isBlank()) {
             jpql.append(" and a.processState = :processState");
             params.put("processState", processState);
+        }
+        if (keyword != null && !keyword.isBlank()) {
+            jpql.append(" and (a.kindCd like :keyword or a.careNm like :keyword or a.specialMark like :keyword or a.kindNm like :keyword)");
+            params.put("keyword", "%" + keyword + "%");
         }
 
         jpql.append(" order by a.noticeEdt asc");
@@ -175,7 +180,8 @@ public class AnimalRepository {
         String upKindCd,
         String orgNm,
         String careRegNo,
-        String processState
+        String processState,
+        String keyword
     ) {
         StringBuilder jpql = new StringBuilder("select count(a) from Animal a where 1=1");
         Map<String, Object> params = new HashMap<>();
@@ -195,6 +201,10 @@ public class AnimalRepository {
         if (processState != null && !processState.isBlank()) {
             jpql.append(" and a.processState = :processState");
             params.put("processState", processState);
+        }
+        if (keyword != null && !keyword.isBlank()) {
+            jpql.append(" and (a.kindCd like :keyword or a.careNm like :keyword or a.specialMark like :keyword or a.kindNm like :keyword)");
+            params.put("keyword", "%" + keyword + "%");
         }
 
         TypedQuery<Long> query = entityManager.createQuery(jpql.toString(), Long.class);

@@ -37,6 +37,28 @@ public class PostRepository {
         return entityManager.createQuery(jpql, Post.class).getResultList();
     }
 
+    public List<Post> findAllWithFilters(String category, String keyword) {
+        StringBuilder jpql = new StringBuilder("select p from Post p where 1=1");
+        java.util.Map<String, Object> params = new java.util.HashMap<>();
+
+        if (category != null && !category.isBlank()) {
+            jpql.append(" and p.category = :category");
+            params.put("category", category);
+        }
+        if (keyword != null && !keyword.isBlank()) {
+            jpql.append(" and (p.title like :keyword or p.content like :keyword)");
+            params.put("keyword", "%" + keyword + "%");
+        }
+
+        jpql.append(" order by p.createdAt desc");
+        
+        jakarta.persistence.TypedQuery<Post> query = entityManager.createQuery(jpql.toString(), Post.class);
+        for (java.util.Map.Entry<String, Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        return query.getResultList();
+    }
+
     public void delete(Post post) {
         entityManager.remove(post);
     }
