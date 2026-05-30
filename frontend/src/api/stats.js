@@ -8,4 +8,8 @@ function getStatsChart() {
   return request('/api/stats/chart', { method: 'GET' });
 }
 
-export { getStatsSummary, getStatsChart };
+function getRealtimeSummary() {
+  return request('/api/stats/realtime-summary', { method: 'GET' });
+}
+
+export { getStatsSummary, getStatsChart, getRealtimeSummary };
