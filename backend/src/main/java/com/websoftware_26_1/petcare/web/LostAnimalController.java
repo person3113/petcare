@@ -6,6 +6,7 @@ import com.websoftware_26_1.petcare.web.dto.LostAnimalResponse;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,5 +23,10 @@ public class LostAnimalController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<LostAnimalResponse>>> getLostAnimals() {
         return ResponseEntity.ok(ApiResponse.ok(lostAnimalService.getLostAnimals()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<LostAnimalResponse>> getLostAnimalDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.ok(lostAnimalService.getLostAnimalDetail(id)));
     }
 }

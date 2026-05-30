@@ -186,7 +186,7 @@ function LostAnimalPage() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {pagedAnimals.map((animal) => (
-            <AnimalCard key={animal.id} animal={animal} />
+            <AnimalCard key={animal.id} animal={animal} to={`/lost-animals/${animal.id}`} />
           ))}
         </div>
 

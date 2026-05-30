@@ -64,7 +64,7 @@ function FavoriteList() {
                     age: '정보 없음'     //기본값 설정
                 };
                 return(
-                    <AnimalCard animal={animalForCard}/>
+                    <AnimalCard animal={animalForCard} to={`/animal/${animalForCard.id}`} />
                 )
             })}
         </div>

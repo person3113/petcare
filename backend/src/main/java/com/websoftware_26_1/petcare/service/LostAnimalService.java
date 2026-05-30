@@ -31,6 +31,13 @@ public class LostAnimalService {
         return results;
     }
 
+    @Transactional(readOnly = true)
+    public LostAnimalResponse getLostAnimalDetail(Long id) {
+        LostAnimal animal = lostAnimalRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Lost animal not found"));
+        return toResponse(animal);
+    }
+
     private LostAnimalResponse toResponse(LostAnimal animal) {
         List<String> images = new ArrayList<>();
         if (animal.getPopfile() != null && !animal.getPopfile().isBlank()) {

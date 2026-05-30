@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function AnimalCard({ animal }) {
+function AnimalCard({ animal, to }) {
   const image = animal?.images?.[0];
+  const linkTo = to || (animal?.id ? `/animal/${animal.id}` : '#');
 
   return (
-    <Link to={`/animal/${animal.id}`} className="block">
+    <Link to={linkTo} className="block">
       <article className="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
         <div className="aspect-[4/3] w-full bg-gray-100">
           {image ? (

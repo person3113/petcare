@@ -30,6 +30,8 @@ function AnimalDetailpage(){
     if(loding){return(<div>...로딩중...</div>)}
     if(!animal){return(<div>데이터가 없습니다</div>)}
 
+    const safeImages = Array.isArray(animal.images) ? animal.images : [];
+
 
     return(
         <div className="mx-auto max-w-5xl py-6">
@@ -39,7 +41,7 @@ function AnimalDetailpage(){
             {/*여기에 동물 상세페이지 컴포넌트들 넣기*/}
             <div className="mt-6 flex flex-col gap-10 lg:flex-row">
                 <div className="min-w-[320px] flex-1">
-                    <AnimalImg images={animal.images} />
+                    <AnimalImg images={safeImages} />
                 </div>
                 <div className="min-w-[320px] flex-1">
                     <AnimalInfoBox animal={animal} onFavoriteChange={SetAnimal} />

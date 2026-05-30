@@ -83,10 +83,6 @@ function Home() {
 
       <section className="bg-pink-50 rounded-2xl p-10 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">펫케어 홈</h1>
-        <p className="mt-2 text-sm text-gray-600">로그인 상태에 따라 기능이 열립니다.</p>
-        <div className="mt-4 text-sm text-gray-700">
-          <p>{user ? '로그인됨' : '로그인 필요'}</p>
-        </div>
 
         {loading && <p>통계 로딩중...</p>}
         {error && <p className="text-sm text-red-600">{error}</p>}
