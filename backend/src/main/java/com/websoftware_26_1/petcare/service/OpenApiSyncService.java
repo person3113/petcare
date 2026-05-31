@@ -47,14 +47,37 @@ public class OpenApiSyncService {
         this.rescueStatsCacheRepository = rescueStatsCacheRepository;
     }
 
+    @org.springframework.scheduling.annotation.Async
     @Transactional
-    public SyncResult syncAnimals(int numOfRows) {
+    public void syncAllDataAsync(LocalDate startDate, LocalDate endDate, int numOfRows) {
+        logger.info("background sync 시작: from {} to {} ", startDate, endDate);
+        LocalDate current = startDate;
+        while (!current.isAfter(endDate)) {
+            LocalDate next = current.plusMonths(1).minusDays(1);
+            if (next.isAfter(endDate)) {
+                next = endDate;
+            }
+            logger.info("Syncing chunk: {} to {}", current, next);
+            syncAnimalsForPeriod(current, next, numOfRows);
+            syncLostAnimals(current, next, numOfRows);
+            syncRescueStats(current, next, numOfRows);
+            current = current.plusMonths(1);
+        }
+        logger.info("Background sync 완료: from {} to {}", startDate, endDate);
+    }
+
+    @Transactional
+    public SyncResult syncAnimalsForPeriod(LocalDate bgnde, LocalDate endde, int numOfRows) {
         int pageNo = 1;
         int totalCount = 0;
         int savedCount = 0;
 
         while (true) {
-            OpenApiClient.PagedResult result = openApiClient.fetchAnimals(pageNo, numOfRows);
+            OpenApiClient.PagedResult result = openApiClient.fetchAnimals(
+                bgnde == null ? null : bgnde.format(DATE_FORMATTER),
+                endde == null ? null : endde.format(DATE_FORMATTER),
+                pageNo, numOfRows
+            );
             if (result.getItems().isEmpty()) {
                 break;
             }
@@ -117,8 +140,6 @@ public class OpenApiSyncService {
         int totalCount = 0;
         int savedCount = 0;
 
-        lostAnimalRepository.deleteAll();
-
         while (true) {
             OpenApiClient.PagedResult result = openApiClient.fetchLostAnimals(
                 bgnde == null ? null : bgnde.format(DATE_FORMATTER),
@@ -134,9 +155,14 @@ public class OpenApiSyncService {
             }
 
             for (JsonNode item : result.getItems()) {
-                LostAnimal lostAnimal = toLostAnimal(item);
-                if (lostAnimal != null) {
-                    lostAnimalRepository.save(lostAnimal);
+                LostAnimal parsed = toLostAnimal(item);
+                if (parsed != null) {
+                    LostAnimal existing = lostAnimalRepository.findExisting(parsed).orElse(null);
+                    if (existing != null) {
+                        parsed.setId(existing.getId());
+                        parsed.setCachedAt(existing.getCachedAt());
+                    }
+                    lostAnimalRepository.save(parsed);
                     savedCount++;
                 }
             }

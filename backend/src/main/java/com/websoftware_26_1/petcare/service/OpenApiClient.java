@@ -77,11 +77,13 @@ public class OpenApiClient {
         return results;
     }
 
-    public PagedResult fetchAnimals(int pageNo, int numOfRows) {
-        JsonNode root = get(ABANDONMENT_BASE_URL, "/abandonmentPublic_v2", Map.of(
-            "pageNo", String.valueOf(pageNo),
-            "numOfRows", String.valueOf(numOfRows)
-        ));
+    public PagedResult fetchAnimals(String bgnde, String endde, int pageNo, int numOfRows) {
+        java.util.Map<String, String> params = new java.util.HashMap<>();
+        params.put("pageNo", String.valueOf(pageNo));
+        params.put("numOfRows", String.valueOf(numOfRows));
+        if (bgnde != null && !bgnde.isBlank()) params.put("bgnde", bgnde);
+        if (endde != null && !endde.isBlank()) params.put("endde", endde);
+        JsonNode root = get(ABANDONMENT_BASE_URL, "/abandonmentPublic_v2", params);
         return toPagedResult(root);
     }
 

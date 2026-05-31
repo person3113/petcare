@@ -25,6 +25,24 @@ public class LostAnimalRepository {
         return Optional.ofNullable(entityManager.find(LostAnimal.class, id));
     }
 
+    public Optional<LostAnimal> findExisting(LostAnimal parsed) {
+        if (parsed.getRfidCd() != null && !parsed.getRfidCd().isBlank()) {
+            String jpql = "select l from LostAnimal l where l.rfidCd = :rfidCd";
+            List<LostAnimal> res = entityManager.createQuery(jpql, LostAnimal.class)
+                .setParameter("rfidCd", parsed.getRfidCd()).getResultList();
+            if (!res.isEmpty()) return Optional.of(res.get(0));
+        }
+        if (parsed.getHappenDt() != null && parsed.getKindCd() != null) {
+            String jpql = "select l from LostAnimal l where l.happenDt = :happenDt and l.kindCd = :kindCd";
+            List<LostAnimal> res = entityManager.createQuery(jpql, LostAnimal.class)
+                .setParameter("happenDt", parsed.getHappenDt())
+                .setParameter("kindCd", parsed.getKindCd())
+                .getResultList();
+            if (!res.isEmpty()) return Optional.of(res.get(0));
+        }
+        return Optional.empty();
+    }
+
     public List<LostAnimal> findAll() {
         String jpql = "select l from LostAnimal l order by l.id desc";
         return entityManager.createQuery(jpql, LostAnimal.class).getResultList();
