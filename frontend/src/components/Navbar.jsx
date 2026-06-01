@@ -24,7 +24,7 @@ function Navbar() {
             <div className="header-left">
                 {/* 로고 부분 */}
                 <div className="logo" onClick={() => navigate('/')}>
-                    Logo
+                    PETCARE
                 </div>
                 {/* 메뉴 부분 */}
                 <nav className="header-nav">
