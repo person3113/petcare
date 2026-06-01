@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { matchQuiz, buildMatchParams } from '../api/match.js';
 import { saveSurvey } from '../api/survey.js';
-import { fetchSido } from '../api/animals.js';
+import { SIDO_LIST } from '../constants.js';
 
 // 설문 5문항 페이지
 // 각 문항 응답을 모아 buildMatchParams로 변환 후 API 호출
@@ -18,17 +18,8 @@ function Survey() {
     state: '',     // 보호 상태
   });
 
-  // 시도 목록 상태 (드롭다운 옵션용)
-  const [sidoList, setSidoList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  // 마운트 시 시도 목록 불러오기
-  useEffect(() => {
-    fetchSido()
-      .then((list) => setSidoList(list))
-      .catch(() => setSidoList([])); // 실패해도 빈 배열로 graceful 처리
-  }, []);
 
   // 드롭다운/셀렉트 변경 핸들러
   function handleChange(event) {
@@ -152,8 +143,7 @@ function Survey() {
                 className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
               >
                 <option value="">선택 안함 (전국)</option>
-                {/* 시도 목록을 mock JSON에서 불러와서 옵션으로 렌더링 */}
-                {sidoList.map((sido) => (
+                {SIDO_LIST.map((sido) => (
                   <option key={sido.code} value={sido.code}>
                     {sido.name}
                   </option>

@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import SwipeCard from '../components/animalswipe/SwipeCard';
 import SwipeSideBox from '../components/animalswipe/SwipeSideBox.jsx';
-import { fetchAnimals, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
+import { fetchAnimals, fetchSigungu, fetchShelters } from '../api/animals.js';
 import { addFavorite, getFavorites } from '../api/favorites.js';
+import { SIDO_LIST } from '../constants.js';
 
 function AnimalSwipePage() {
     const [animals, setAnimals] = useState([]);//전체 동물 정보 받을 곳
@@ -15,7 +16,6 @@ function AnimalSwipePage() {
     const [likeAnimal, setlikeAnimal] = useState([]); //찜한 동물id 리스트 저장 (서버에서 불러옴)
 
     // 필터 드롭다운 옵션 목록
-    const [sidoList, setSidoList] = useState([]);
     const [sigunguList, setSigunguList] = useState([]);
     const [shelterList, setShelterList] = useState([]);
 
@@ -58,13 +58,6 @@ function AnimalSwipePage() {
             });
     }, []);
 
-    // 시도 목록 초기 로딩
-    useEffect(() => {
-        fetchSido()
-            .then((list) => setSidoList(list))
-            .catch((err) => console.log('시도 목록 불러오기 실패', err));
-    }, []);
-
     // 시도가 바뀌면 시군구 목록 새로 불러오기
     useEffect(() => {
         if (!filter.sido) {
@@ -72,7 +65,7 @@ function AnimalSwipePage() {
             setShelterList([]);
             return;
         }
-        const sidoCode = sidoList.find((item) => item.name === filter.sido)?.code || '';
+        const sidoCode = SIDO_LIST.find((item) => item.name === filter.sido)?.code || '';
         fetchSigungu(sidoCode)
             .then((list) => setSigunguList(list))
             .catch((err) => console.log('시군구 목록 불러오기 실패', err));
@@ -235,7 +228,7 @@ function AnimalSwipePage() {
                         <SwipeSideBox
                             LikeCnt={likeAnimal.length}
                             filter={filter}
-                            sidoList={sidoList}
+                            sidoList={SIDO_LIST}
                             sigunguList={sigunguList}
                             shelterList={shelterList}
                             onFilterChange={(e) => {

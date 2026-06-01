@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fetchLostAnimals, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
+import { fetchLostAnimals, fetchSigungu, fetchShelters } from '../api/animals.js';
 import FilterBar from '../components/FilterBar.jsx';
 import AnimalCard from '../components/AnimalCard.jsx';
+import { SIDO_LIST } from '../constants.js';
 
 // 필터 초기값
 const DEFAULT_FILTERS = {
@@ -65,7 +66,6 @@ function LostAnimalPage() {
   // 현재 필터 상태
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   // 시도/시군구/보호소 드롭다운 목록
-  const [sidoList, setSidoList] = useState([]);
   const [sigunguList, setSigunguList] = useState([]);
   const [shelterList, setShelterList] = useState([]);
   // 로딩 및 에러 상태
@@ -82,11 +82,10 @@ function LostAnimalPage() {
 
     async function init() {
       try {
-        const [animals, sido] = await Promise.all([fetchLostAnimals({ keyword }), fetchSido()]);
+        const animals = await fetchLostAnimals({ keyword });
         if (!isMounted) return;
         setAllAnimals(animals);
         setFilteredAnimals(animals);
-        setSidoList(sido);
       } catch (err) {
         if (!isMounted) return;
         setError('분실동물 데이터를 불러오지 못했습니다.');
@@ -128,7 +127,7 @@ function LostAnimalPage() {
   // 시도 → 시군구 → 보호소 연쇄 드롭다운 처리
   async function handleCascadeChange(nextFilters) {
     if (nextFilters.sido !== filters.sido) {
-      const sidoCode = sidoList.find((item) => item.name === nextFilters.sido)?.code || '';
+      const sidoCode = SIDO_LIST.find((item) => item.name === nextFilters.sido)?.code || '';
       const sigungu = nextFilters.sido ? await fetchSigungu(sidoCode) : [];
       setSigunguList(sigungu);
       setShelterList([]);
@@ -163,7 +162,7 @@ function LostAnimalPage() {
         </div>
 
         <FilterBar
-          sidoList={sidoList}
+          sidoList={SIDO_LIST}
           sigunguList={sigunguList}
           shelterList={shelterList}
           filters={filters}

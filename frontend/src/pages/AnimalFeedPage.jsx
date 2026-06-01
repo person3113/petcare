@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fetchAnimalsPage, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
+import { fetchAnimalsPage, fetchSigungu, fetchShelters } from '../api/animals.js';
 import FilterBar from '../components/FilterBar.jsx';
 import AnimalCard from '../components/AnimalCard.jsx';
+import { SIDO_LIST } from '../constants.js';
 
 const DEFAULT_FILTERS = {
   sido: '',
@@ -59,7 +60,6 @@ function AnimalFeedPage() {
   const [allAnimals, setAllAnimals] = useState([]);
   const [filteredAnimals, setFilteredAnimals] = useState([]);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [sidoList, setSidoList] = useState([]);
   const [sigunguList, setSigunguList] = useState([]);
   const [shelterList, setShelterList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,16 +74,12 @@ function AnimalFeedPage() {
 
     async function init() {
       try {
-        const [animalsData, sido] = await Promise.all([
-          fetchAnimalsPage({ page, limit: pageLimit, keyword }),
-          fetchSido(),
-        ]);
+        const animalsData = await fetchAnimalsPage({ page, limit: pageLimit, keyword });
         if (!isMounted) return;
         const items = animalsData.items || [];
         setAllAnimals(items);
         setFilteredAnimals(applyFilter(items, filters));
         setPagination(animalsData.pagination || null);
-        setSidoList(sido);
       } catch (err) {
         if (!isMounted) return;
         setError('동물 데이터를 불러오지 못했습니다.');
@@ -123,7 +119,7 @@ function AnimalFeedPage() {
 
   async function handleCascadeChange(nextFilters) {
     if (nextFilters.sido !== filters.sido) {
-      const sidoCode = sidoList.find((item) => item.name === nextFilters.sido)?.code || '';
+      const sidoCode = SIDO_LIST.find((item) => item.name === nextFilters.sido)?.code || '';
       const sigungu = nextFilters.sido ? await fetchSigungu(sidoCode) : [];
       setSigunguList(sigungu);
       setShelterList([]);
@@ -154,7 +150,7 @@ function AnimalFeedPage() {
         </div>
 
         <FilterBar
-          sidoList={sidoList}
+          sidoList={SIDO_LIST}
           sigunguList={sigunguList}
           shelterList={shelterList}
           filters={filters}

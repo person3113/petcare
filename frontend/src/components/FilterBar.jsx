@@ -1,4 +1,5 @@
 import React from 'react';
+import { PROCESS_STATES } from '../constants.js';
 
 function FilterBar({
   sidoList,
@@ -97,9 +98,11 @@ function FilterBar({
             className="rounded-lg border border-gray-200 px-3 py-2 text-sm"
           >
             <option value="">전체</option>
-            <option value="보호중">보호중</option>
-            <option value="종료(입양)">종료(입양)</option>
-            <option value="종료(반환)">종료(반환)</option>
+            {PROCESS_STATES.map((st) => (
+              <option key={st} value={st}>
+                {st}
+              </option>
+            ))}
           </select>
         </label>
 
