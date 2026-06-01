@@ -1,24 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 //AnimatePresence:컴포넌트가 사라질 때 애니메이션 효과 주는 컴포넌트
 import { AnimatePresence } from 'framer-motion';
 import SwipeCard from '../components/animalswipe/SwipeCard';
 import SwipeSideBox from '../components/animalswipe/SwipeSideBox.jsx';
-import { fetchAnimals, fetchSigungu, fetchShelters } from '../api/animals.js';
+import { fetchAnimals, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
 import { addFavorite, getFavorites } from '../api/favorites.js';
-import { SIDO_LIST } from '../constants.js';
 
 function AnimalSwipePage() {
     const [animals, setAnimals] = useState([]);//전체 동물 정보 받을 곳
-    const [filterAnimals, setFilterAnimals] = useState([]);//필터링되서 실제 화면에 나오는 동물 정보
-
-    const [nowIndex, setnowIndex] = useState(0); // 현재 보고 있는 카드의 인덱스
-    const [exitX, setexitX] = useState(0); // 카드가 어느 방향으로 날아갈지 결정 (500 또는 -500)
-    const [likeAnimal, setlikeAnimal] = useState([]); //찜한 동물id 리스트 저장 (서버에서 불러옴)
-
-    // 필터 드롭다운 옵션 목록
-    const [sigunguList, setSigunguList] = useState([]);
-    const [shelterList, setShelterList] = useState([]);
-
     const [filter, setFilter] = useState({ //사이드 박스의 필터를 위한것
         //필터링 조건들 저장할 곳
         sido: '',       //시도
@@ -32,13 +21,65 @@ function AnimalSwipePage() {
         onlyHealthy: false,    //건강상태 양호
     });
 
+    const [nowIndex, setnowIndex] = useState(0); // 현재 보고 있는 카드의 인덱스
+    const [exitX, setexitX] = useState(0); // 카드가 어느 방향으로 날아갈지 결정 (500 또는 -500)
+    const [likeAnimal, setlikeAnimal] = useState([]); //찜한 동물id 리스트 저장 (서버에서 불러옴)
+
+    // 필터 드롭다운 옵션 목록
+    const [sidoList, setSidoList] = useState([]);
+    const [sigunguList, setSigunguList] = useState([]);
+    const [shelterList, setShelterList] = useState([]);
+
+
+    const filterAnimals = useMemo(() => {
+        return animals.filter(animal => {
+            // kind는 "믹스견", "[개] 믹스견" 형태라 includes로 체크
+            if (filter.kind !== '' && !animal.kind?.includes(filter.kind)) {
+                return false;
+            }
+            // status 필드명은 API 응답 기준
+            if (filter.status !== '' && animal.status !== filter.status) {
+                return false;
+            }
+            // gender 필드명은 API 응답 기준
+            if (filter.gender !== '' && animal.gender !== filter.gender) {
+                return false;
+            }
+            // 시도는 jurisdiction(관할) 필드에 포함 여부로 체크
+            if (filter.sido !== '' && !animal.jurisdiction?.includes(filter.sido)) {
+                return false;
+            }
+            // 시군구도 jurisdiction 필드에 포함 여부로 체크
+            if (filter.sigungu !== '' && !animal.jurisdiction?.includes(filter.sigungu)) {
+                return false;
+            }
+            // 보호소 이름 일치 여부
+            if (filter.shelterName !== '' && animal.shelterName !== filter.shelterName) {
+                return false;
+            }
+            // 중성화 일치 여부
+            if (filter.isNeutered !== '' && animal.isNeutered !== filter.isNeutered) {
+                return false;
+            }
+            // 사회화 정보 여부
+            if (filter.onlySocialized && (!animal.socialization || animal.socialization.trim() === '')) {
+                return false;
+            }
+            // 건강 상태 양호 여부
+            if (filter.onlyHealthy && animal.healthStatus !== '양호') {
+                return false;
+            }
+
+            return true; // 모든 조건 통과
+        });
+    }, [animals, filter]); //전체 동물 데이터 또는 필터 조건이 바뀔때마다 랜더링
+
 
     // 데이터 읽어오는 코드
     useEffect(() => {
         fetchAnimals({ limit: 500 })
             .then((items) => {
                 setAnimals(items);
-                setFilterAnimals(items);
             })
             .catch((err) => console.log("데이터 로딩 실패", err));
     }, []);
@@ -58,30 +99,13 @@ function AnimalSwipePage() {
             });
     }, []);
 
-    // 시도가 바뀌면 시군구 목록 새로 불러오기
+    // 시도 목록 초기 로딩
     useEffect(() => {
-        if (!filter.sido) {
-            setSigunguList([]);
-            setShelterList([]);
-            return;
-        }
-        const sidoCode = SIDO_LIST.find((item) => item.name === filter.sido)?.code || '';
-        fetchSigungu(sidoCode)
-            .then((list) => setSigunguList(list))
-            .catch((err) => console.log('시군구 목록 불러오기 실패', err));
-    }, [filter.sido]);
+        fetchSido()
+            .then((list) => setSidoList(list))
+            .catch((err) => console.log('시도 목록 불러오기 실패', err));
+    }, []);
 
-    // 시군구가 바뀌면 보호소 목록 새로 불러오기
-    useEffect(() => {
-        if (!filter.sigungu) {
-            setShelterList([]);
-            return;
-        }
-        const sigunguCode = sigunguList.find((item) => item.name === filter.sigungu)?.code || '';
-        fetchShelters(sigunguCode)
-            .then((list) => setShelterList(list))
-            .catch((err) => console.log('보호소 목록 불러오기 실패', err));
-    }, [filter.sigungu]);
 
     //동물 카드 무한루프를 위한 index(다 봤으면 index 0부터 다시)
     // usestate인 nowindex값이 바뀌면 컴포넌트 다시 시작하고 여기서 바뀐 currentAnimal로 dom그림
@@ -91,11 +115,6 @@ function AnimalSwipePage() {
     // 최초 로딩 전 (동물 데이터 자체가 아직 없음)
     if (animals.length === 0) {
         return <div className="py-12 text-center text-sm text-gray-500">데이터 로딩 중...</div>;
-    }
-
-    // 필터 결과가 없는 경우 (데이터는 있지만 조건에 맞는 동물이 없음)
-    if (!currentAnimal) {
-        return <div className="py-12 text-center text-sm text-gray-500">조건에 맞는 동물이 없습니다.</div>;
     }
 
     //찜하기를 했을때 찜 개수 올려줄 함수
@@ -126,62 +145,55 @@ function AnimalSwipePage() {
     //==========================필터를 위한 부분================================
 
     //필터를 위해 데이터를 다시 불러오거나(API 호출), 목록을 걸러주는 함수
-    const FilterChange = (newFilter) => {
-        // 시도가 바뀌면 하위 시군구·보호소 선택값 초기화
+    const FilterChange = async (newFilter) => {
+        //시도가 바뀌면
         if (newFilter.sido !== filter.sido) {
+            //시군구·보호소 초기화
             newFilter = { ...newFilter, sigungu: '', shelterName: '' };
-        }
-        // 시군구가 바뀌면 하위 보호소 선택값 초기화
+
+            // 시도가 전체일때 하위 목록 초기화
+            if (!newFilter.sido) {
+                setSigunguList([]);
+                setShelterList([]);
+            }
+            else {
+                //시도를 선택했다면 그 시도의 시군구 목록을 바로 가져옴
+                const sidoCode = sidoList.find((item) => item.name === newFilter.sido)?.code || '';
+                if (sidoCode) {
+                    try {
+                        const list = await fetchSigungu(sidoCode);
+                        setSigunguList(list);
+                    }
+                    catch (err) {
+                        console.log('시군구 목록 불러오기 실패', err);
+                    }
+                }
+                setShelterList([]); // 시도를 바꿨으니 보호소는 일단 비움
+                }
+            }
+
+        //시군구가 바뀌었을 때
         if (newFilter.sigungu !== filter.sigungu) {
+            //보호소 초기화
             newFilter = { ...newFilter, shelterName: '' };
-        }
+
+            if (!newFilter.sigungu) {
+                setShelterList([]);
+            } else {
+                // 특정 시군구를 선택했다면 보호소 목록을 바로 가져옴!
+                const sigunguCode = sigunguList.find((item) => item.name === newFilter.sigungu)?.code || '';
+                if (sigunguCode) {
+                    try {
+                        const list = await fetchShelters(sigunguCode);
+                        setShelterList(list);
+                        } catch (err) {
+                        console.log('보호소 목록 불러오기 실패', err);
+                        }
+                    }
+                }
+            }
 
         setFilter(newFilter);
-
-        //원본(Animals)에서 조건에 맞는 것만 걸러내기
-        const FilterList = animals.filter(animal => {
-            // kind는 "믹스견", "[개] 믹스견" 형태라 includes로 체크
-            if (newFilter.kind !== '' && !animal.kind?.includes(newFilter.kind)) {
-                return false;
-            }
-            // status 필드명은 API 응답 기준
-            if (newFilter.status !== '' && animal.status !== newFilter.status) {
-                return false;
-            }
-            // gender 필드명은 API 응답 기준
-            if (newFilter.gender !== '' && animal.gender !== newFilter.gender) {
-                return false;
-            }
-            // 시도는 jurisdiction(관할) 필드에 포함 여부로 체크
-            if (newFilter.sido !== '' && !animal.jurisdiction?.includes(newFilter.sido)) {
-                return false;
-            }
-            // 시군구도 jurisdiction 필드에 포함 여부로 체크
-            if (newFilter.sigungu !== '' && !animal.jurisdiction?.includes(newFilter.sigungu)) {
-                return false;
-            }
-            // 보호소 이름 일치 여부
-            if (newFilter.shelterName !== '' && animal.shelterName !== newFilter.shelterName) {
-                return false;
-            }
-            // 중성화 일치 여부
-            if (newFilter.isNeutered !== '' && animal.isNeutered !== newFilter.isNeutered) {
-                return false;
-            }
-            // 사회화 정보 여부
-            if (newFilter.onlySocialized && (!animal.socialization || animal.socialization.trim() === '')) {
-                return false;
-            }
-            // 건강 상태 양호 여부
-            if (newFilter.onlyHealthy && animal.healthStatus !== '양호') {
-                return false;
-            }
-
-            return true; // 모든 조건을 통과하면 합격!
-        });
-
-        //걸러진 결과만 저장
-        setFilterAnimals(FilterList);
 
         //인덱스를 다시 0으로 돌려서 첫 번째 카드부터 보여주기
         setnowIndex(0);
@@ -197,6 +209,7 @@ function AnimalSwipePage() {
                 <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
                 {/* 카드 부분 */}
                     <div className="flex flex-1 flex-col items-center">
+                        {currentAnimal ? (
                         <div className="relative h-[520px] w-[340px] items-start">
                             <AnimatePresence custom={exitX}>
                                 <SwipeCard
@@ -209,7 +222,7 @@ function AnimalSwipePage() {
                                     onLike={handleLike}
                                 />
                             </AnimatePresence>
-                        </div>
+                        </div>):(<div className="py-12 text-center text-sm text-gray-500">조건에 맞는 동물이 없습니다.</div>)}
                         {/* 하단 방향 설명 부분*/}
                         <div className="mt-8 flex gap-16 text-center text-sm text-gray-500">
                             <div>
@@ -228,7 +241,7 @@ function AnimalSwipePage() {
                         <SwipeSideBox
                             LikeCnt={likeAnimal.length}
                             filter={filter}
-                            sidoList={SIDO_LIST}
+                            sidoList={sidoList}
                             sigunguList={sigunguList}
                             shelterList={shelterList}
                             onFilterChange={(e) => {
