@@ -20,7 +20,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "lost_animals")
+@Table(name = "lost_animals", indexes = {
+    @jakarta.persistence.Index(name = "idx_lost_animal_happen_dt", columnList = "happen_dt"),
+    @jakarta.persistence.Index(name = "idx_lost_animal_org_nm", columnList = "org_nm"),
+    @jakarta.persistence.Index(name = "idx_lost_animal_kind_cd", columnList = "kind_cd")
+})
 public class LostAnimal {
 
     @Id

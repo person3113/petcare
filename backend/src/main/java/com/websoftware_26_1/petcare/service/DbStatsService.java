@@ -69,7 +69,14 @@ public class DbStatsService {
         return response;
     }
 
+    private java.util.concurrent.ConcurrentHashMap<String, Map<String, Object>> filteredStatsCache = new java.util.concurrent.ConcurrentHashMap<>();
+
     public Map<String, Object> getFilteredStats(String startDateStr, String endDateStr, String sido) {
+        String cacheKey = String.format("%s_%s_%s", startDateStr, endDateStr, sido);
+        if (filteredStatsCache.containsKey(cacheKey)) {
+            return filteredStatsCache.get(cacheKey);
+        }
+
         LocalDate start = (startDateStr != null && !startDateStr.isEmpty()) ? LocalDate.parse(startDateStr, DateTimeFormatter.ISO_DATE) : null;
         LocalDate end = (endDateStr != null && !endDateStr.isEmpty()) ? LocalDate.parse(endDateStr, DateTimeFormatter.ISO_DATE) : null;
 
@@ -81,6 +88,8 @@ public class DbStatsService {
         result.put("lostHotspots", getLostHotspots(start, end, sido));
         result.put("topLostBreeds", getTopLostBreeds(start, end, sido));
         result.put("topShelters", getTopShelters(start, end, sido));
+        
+        filteredStatsCache.put(cacheKey, result);
         return result;
     }
 

@@ -27,9 +27,20 @@ function StatsPage() {
   const [errorGlobal, setErrorGlobal] = useState('');
   const [errorFiltered, setErrorFiltered] = useState('');
 
+  const getTodayStr = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
+  const getThreeMonthsAgoStr = () => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - 3);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
   const [filters, setFilters] = useState({
-    startDate: '',
-    endDate: '',
+    startDate: getThreeMonthsAgoStr(),
+    endDate: getTodayStr(),
     sido: ''
   });
 

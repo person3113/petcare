@@ -1,23 +1,26 @@
 package com.websoftware_26_1.petcare.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "animals")
+@Table(name = "animals", indexes = {
+    @Index(name = "idx_animal_happen_dt", columnList = "happen_dt"),
+    @Index(name = "idx_animal_org_nm", columnList = "org_nm"),
+    @Index(name = "idx_animal_process_state", columnList = "process_state")
+})
 public class Animal {
 
     @Id
