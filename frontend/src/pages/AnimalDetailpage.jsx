@@ -4,6 +4,7 @@ import { request } from '../api/http.js';
 import AnimalInfoBox from '../components/animaldetail/AnimalInfoBox';
 import AnimalImg from '../components/animaldetail/AnimalImg';
 import AnimalInfoTab from '../components/animaldetail/AnimalInfoTab';
+import SimilarAnimals from '../components/animaldetail/SimilarAnimals';
 
 function AnimalDetailpage(){
 
@@ -49,6 +50,7 @@ function AnimalDetailpage(){
 
             </div>
             <AnimalInfoTab animal={animal} />
+            <SimilarAnimals currentAnimal={animal} />
         </div>
     )
 }
