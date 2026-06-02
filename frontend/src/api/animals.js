@@ -34,8 +34,8 @@ async function fetchSigungu(sidoCode) {
   return data?.data || [];
 }
 
-async function fetchShelters(sigunguCode) {
-  const query = buildQuery({ orgCd: sigunguCode });
+async function fetchShelters(sidoName, sigunguName) {
+  const query = buildQuery({ sido: sidoName, sigungu: sigunguName });
   const data = await request(`/api/codes/shelters${query}`);
   return data?.data || [];
 }

@@ -51,9 +51,6 @@ public class AnimalService {
         int limit = request.getLimit() == null || request.getLimit() < 1 ? 20 : request.getLimit();
         int offset = (page - 1) * limit;
 
-        String upKindCd = request.getUpkind();
-        String orgNm = request.getOrgCd();
-        String careRegNo = request.getCareRegNo();
         String processState = request.getState();
         if (processState == null || processState.trim().isEmpty()) {
             processState = "보호중";
@@ -63,15 +60,31 @@ public class AnimalService {
         String keyword = request.getKeyword();
 
         List<Animal> animals = animalRepository.findAllWithFilters(
-            upKindCd,
-            orgNm,
-            careRegNo,
+            request.getSido(),
+            request.getSigungu(),
+            request.getShelterName(),
+            request.getKind(),
             processState,
+            request.getGender(),
+            request.getIsNeutered(),
+            request.getOnlySocialized(),
+            request.getOnlyHealthy(),
             keyword,
             offset,
             limit
         );
-        int totalCount = animalRepository.countAllWithFilters(upKindCd, orgNm, careRegNo, processState, keyword);
+        int totalCount = animalRepository.countAllWithFilters(
+            request.getSido(),
+            request.getSigungu(),
+            request.getShelterName(),
+            request.getKind(),
+            processState,
+            request.getGender(),
+            request.getIsNeutered(),
+            request.getOnlySocialized(),
+            request.getOnlyHealthy(),
+            keyword
+        );
         int totalPages = (int) Math.ceil((double) totalCount / limit);
 
         List<AnimalResponse> items = new ArrayList<>();

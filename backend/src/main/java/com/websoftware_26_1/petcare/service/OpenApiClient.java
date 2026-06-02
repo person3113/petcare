@@ -36,7 +36,7 @@ public class OpenApiClient {
     }
 
     public List<CodeResponse> fetchSidoCodes() {
-        JsonNode root = get(ABANDONMENT_BASE_URL, "/sido_v2", Collections.emptyMap());
+        JsonNode root = get(ABANDONMENT_BASE_URL, "/sido_v2", Map.of("numOfRows", "100"));
         List<JsonNode> items = extractItems(root);
         List<CodeResponse> results = new ArrayList<>();
         for (JsonNode item : items) {
@@ -50,7 +50,7 @@ public class OpenApiClient {
     }
 
     public List<CodeResponse> fetchSigunguCodes(String uprCd) {
-        JsonNode root = get(ABANDONMENT_BASE_URL, "/sigungu_v2", Map.of("upr_cd", uprCd));
+        JsonNode root = get(ABANDONMENT_BASE_URL, "/sigungu_v2", Map.of("upr_cd", uprCd, "numOfRows", "100"));
         List<JsonNode> items = extractItems(root);
         List<CodeResponse> results = new ArrayList<>();
         for (JsonNode item : items) {
@@ -64,7 +64,13 @@ public class OpenApiClient {
     }
 
     public List<CodeResponse> fetchShelterCodes(String uprCd, String orgCd) {
-        JsonNode root = get(ABANDONMENT_BASE_URL, "/shelter_v2", Map.of("upr_cd", uprCd, "org_cd", orgCd));
+        java.util.Map<String, String> params = new java.util.HashMap<>();
+        params.put("upr_cd", uprCd);
+        params.put("numOfRows", "100");
+        if (orgCd != null && !orgCd.isBlank()) {
+            params.put("org_cd", orgCd);
+        }
+        JsonNode root = get(ABANDONMENT_BASE_URL, "/shelter_v2", params);
         List<JsonNode> items = extractItems(root);
         List<CodeResponse> results = new ArrayList<>();
         for (JsonNode item : items) {

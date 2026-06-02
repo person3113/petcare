@@ -7,12 +7,16 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AnimalSearchRequest {
 
-    private String upkind;
-    private String uprCd;
-    private String orgCd;
-    private String careRegNo;
+    private String sido;
+    private String sigungu;
+    private String shelterName;
+    private String kind;
     private String state;
     private Integer page;
     private Integer limit;
     private String keyword;
+    private String gender;
+    private String isNeutered;
+    private Boolean onlySocialized;
+    private Boolean onlyHealthy;
 }

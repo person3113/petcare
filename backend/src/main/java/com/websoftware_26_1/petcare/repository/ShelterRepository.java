@@ -29,4 +29,11 @@ public class ShelterRepository {
         String jpql = "select s from Shelter s";
         return entityManager.createQuery(jpql, Shelter.class).getResultList();
     }
+
+    public List<Shelter> findByOrgNmStartingWith(String prefix) {
+        String jpql = "select s from Shelter s where s.orgNm like :prefix";
+        return entityManager.createQuery(jpql, Shelter.class)
+            .setParameter("prefix", prefix + "%")
+            .getResultList();
+    }
 }

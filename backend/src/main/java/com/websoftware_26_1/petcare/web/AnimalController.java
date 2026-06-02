@@ -28,16 +28,22 @@ public class AnimalController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<AnimalListResponse>> getAnimals(
-        @RequestParam(name = "upkind", required = false) String upkind,
-        @RequestParam(name = "upr_cd", required = false) String uprCd,
-        @RequestParam(name = "org_cd", required = false) String orgCd,
-        @RequestParam(name = "care_reg_no", required = false) String careRegNo,
+        @RequestParam(name = "sido", required = false) String sido,
+        @RequestParam(name = "sigungu", required = false) String sigungu,
+        @RequestParam(name = "shelterName", required = false) String shelterName,
+        @RequestParam(name = "kind", required = false) String kind,
         @RequestParam(name = "state", required = false) String state,
+        @RequestParam(name = "gender", required = false) String gender,
+        @RequestParam(name = "isNeutered", required = false) String isNeutered,
+        @RequestParam(name = "onlySocialized", required = false) Boolean onlySocialized,
+        @RequestParam(name = "onlyHealthy", required = false) Boolean onlyHealthy,
         @RequestParam(name = "page", required = false) Integer page,
         @RequestParam(name = "limit", required = false) Integer limit,
         @RequestParam(name = "keyword", required = false) String keyword
     ) {
-        AnimalSearchRequest request = new AnimalSearchRequest(upkind, uprCd, orgCd, careRegNo, state, page, limit, keyword);
+        AnimalSearchRequest request = new AnimalSearchRequest(
+            sido, sigungu, shelterName, kind, state, page, limit, keyword, gender, isNeutered, onlySocialized, onlyHealthy
+        );
         AnimalListResponse response = animalService.getAnimalList(request);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
