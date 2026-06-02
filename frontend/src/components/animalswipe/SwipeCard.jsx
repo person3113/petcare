@@ -5,19 +5,31 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
 
     // 드래그가 끝났을 때 판단 async:기다려야 하는 함수임을 선언, await: 이 작업이 끝날때까지 대기
     const handleDragEnd = async (event, info, animal) => {
-        //info.offset.x: 카드가 처음 위치에서 가로로 이동한 픽셀 값
-        if (info.offset.x > 100) { //오른쪽으로 100픽셀 이상 밀었을때
-            setexitX(500); // 오른쪽으로 날아가기 설정
-            console.log(`${animal.kind} 찜하기`); //찜하기
-            onLike(currentAnimal.id); //찜 개수 증가
-            //카드 인덱스 증가
-            setnowIndex((prev) => prev + 1);
+        //좌우 스와이프 성공했을때
+        if (Math.abs(info.offset.x) > 100){
+            //오늘 스와이프 한 수 localStorage에 저장(마이페이지에 사용할 용)
+            const today = new Date().toLocaleDateString();
+            const statsStr = localStorage.getItem('daily_swipes');
+            let stats = statsStr ? JSON.parse(statsStr) : { date: '', count: 0 };
 
-        } else if (info.offset.x < -100) {//왼쪽으로 100픽셀이상 밀었을때
-            setexitX(-500); // 왼쪽으로 날아가기 설정
-            console.log(`${animal.kind} 패스`);
-            // 다음 카드로 넘어가기 (인덱스 증가)
-            setnowIndex((prev) => prev + 1);
+            if (stats.date === today) stats.count++; //같은 날이면
+            else stats = { date: today, count: 1 }; //다른날이면
+            localStorage.setItem('daily_swipes', JSON.stringify(stats)); //저장
+
+            //info.offset.x: 카드가 처음 위치에서 가로로 이동한 픽셀 값
+            if (info.offset.x > 100) { //오른쪽으로 100픽셀 이상 밀었을때
+                setexitX(500); // 오른쪽으로 날아가기 설정
+                console.log(`${animal.kind} 찜하기`); //찜하기
+                onLike(currentAnimal.id); //찜 개수 증가
+                //카드 인덱스 증가
+                setnowIndex((prev) => prev + 1);
+
+            } else if (info.offset.x < -100) {//왼쪽으로 100픽셀이상 밀었을때
+                setexitX(-500); // 왼쪽으로 날아가기 설정
+                console.log(`${animal.kind} 패스`);
+                // 다음 카드로 넘어가기 (인덱스 증가)
+                setnowIndex((prev) => prev + 1);
+            }
         }
     };
 
