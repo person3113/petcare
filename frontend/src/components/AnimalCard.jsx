@@ -8,13 +8,20 @@ function AnimalCard({ animal, to }) {
   return (
     <Link to={linkTo} className="block">
       <article className="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-        <div className="aspect-[4/3] w-full bg-gray-100">
+        <div className="relative aspect-[4/3] w-full bg-gray-100">
           {image ? (
-            <img
-              src={image}
-              alt={animal.kind}
-              className="h-full w-full object-cover"
-            />
+            <>
+              <div className="absolute inset-0 animate-pulse bg-gray-200"></div>
+              <img
+                src={image}
+                alt={animal.kind}
+                loading="lazy"
+                className="relative z-10 h-full w-full object-cover transition-opacity duration-300"
+                onLoad={(e) => {
+                  e.target.previousSibling.style.display = 'none';
+                }}
+              />
+            </>
           ) : (
             <div className="flex h-full w-full items-center justify-center text-sm text-gray-500">
               사진 없음
@@ -29,9 +36,11 @@ function AnimalCard({ animal, to }) {
                 {animal.shelterName}
               </p>
             </div>
-            <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-              {animal.status}
-            </span>
+            {animal.status && (
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                {animal.status}
+              </span>
+            )}
           </div>
           <div className="text-sm text-gray-600">
             <p>성별: {animal.gender}</p>

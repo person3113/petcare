@@ -10,7 +10,7 @@ const DEFAULT_FILTERS = {
   sigungu: '',
   shelterName: '',
   kind: '',
-  status: '',
+  status: '보호중',
   gender: '',
   isNeutered: '',
   onlySocialized: false,

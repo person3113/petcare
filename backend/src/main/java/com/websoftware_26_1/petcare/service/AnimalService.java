@@ -55,6 +55,11 @@ public class AnimalService {
         String orgNm = request.getOrgCd();
         String careRegNo = request.getCareRegNo();
         String processState = request.getState();
+        if (processState == null || processState.trim().isEmpty()) {
+            processState = "보호중";
+        } else if ("전체".equals(processState) || "all".equalsIgnoreCase(processState)) {
+            processState = null;
+        }
         String keyword = request.getKeyword();
 
         List<Animal> animals = animalRepository.findAllWithFilters(
@@ -96,6 +101,11 @@ public class AnimalService {
         String orgNm = uprCd;
         String careRegNo = null;
         String processState = state;
+        if (processState == null || processState.trim().isEmpty()) {
+            processState = "보호중";
+        } else if ("전체".equals(processState) || "all".equalsIgnoreCase(processState)) {
+            processState = null;
+        }
 
         List<Animal> animals = animalRepository.findAllWithFiltersForMatch(
             upKindCd,
