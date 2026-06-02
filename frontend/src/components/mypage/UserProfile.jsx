@@ -1,8 +1,17 @@
-import { useAuth } from '../../context/AuthContext'; //
+import { useAuth } from '../../context/AuthContext';
+import React, { useState } from 'react';
 
-function UserProfile(){
+
+function UserProfile({favoriteCnt}){
 
     const { user }=useAuth();
+
+    //localstorage에 저장한 스와이프 수 가져오기
+    const [todaySwipe] = useState(() => {
+        const today = new Date().toLocaleDateString();
+        const stats = JSON.parse(localStorage.getItem('daily_swipes') || '{"date":"","count":0}');
+        return stats.date === today ? stats.count : 0;
+    });
 
     const boxstyle={
         background: 'whilt',
@@ -42,12 +51,12 @@ function UserProfile(){
                 <div className="flex flex-col items-center justify-center w-[450px] h-[150px]"
                     style={boxstyle}>
                     <h2>스와이프</h2>
-                    <p>숫자</p>
+                    <p>{todaySwipe}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center w-[450px] h-[150px]"
                 style={boxstyle}>
                     <h2>관심 동물</h2>
-                    <p>숫자</p>
+                    <p>{favoriteCnt}</p>
                 </div>
             </div>
         </div>
