@@ -33,4 +33,18 @@ public class AnimalDetailResponse {
     private String updatedAt;
     private boolean isLiked;
     private String geminiIntro;
+
+    // Added shelter detail fields
+    private String weekStartTime;
+    private String weekEndTime;
+    private String weekendStartTime;
+    private String weekendEndTime;
+    private String closedDays;
+    private Integer vetPersonCnt;
+    private Integer specsPersonCnt;
+    private Integer medicalCnt;
+    private Integer quarantineCnt;
+    private Integer feedCnt;
+    private String targetAnimals;
 }
+

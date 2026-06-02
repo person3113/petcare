@@ -28,6 +28,17 @@ function countUrgentAnimals(animals) {
   }).length;
 }
 
+const formatOperatingHours = (wStart, wEnd, wkStart, wkEnd, closed) => {
+  let str = [];
+  if (wStart && wEnd) str.push(`평일 ${wStart}~${wEnd}`);
+  if (wkStart && wkEnd) str.push(`주말 ${wkStart}~${wkEnd}`);
+  let closedStr = closed ? `휴무: ${closed}` : '';
+  if (str.length === 0 && !closedStr) return "운영시간 정보 없음";
+  
+  return [str.join(' | '), closedStr].filter(Boolean).join(' | ');
+};
+
+
 function ShelterMapPage() {
   const [shelters, setShelters] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -167,10 +178,33 @@ function ShelterMapPage() {
                   </span>
                 )}
               </div>
-              <p className="text-xs text-gray-500 mb-3">{shelter.address}</p>
+              <p className="text-xs text-gray-500 mb-1">{shelter.address}</p>
+              
+              {/* 간략한 연락처 및 운영시간 */}
+              <div className="text-[11px] text-gray-600 space-y-1 mb-3">
+                <p className="flex items-center gap-1">📞 {shelter.tel || '전화번호 없음'}</p>
+                <p className="flex items-center gap-1">🕒 {formatOperatingHours(shelter.weekStartTime, shelter.weekEndTime, shelter.weekendStartTime, shelter.weekendEndTime, shelter.closedDays)}</p>
+              </div>
 
               {selectedShelter && selectedShelter.id === shelter.id && (
                 <div className="mt-4 pt-4 border-t border-gray-100">
+                  {/* 시설 정보 더보기 */}
+                  <details className="mb-4 text-xs group cursor-pointer">
+                    <summary className="font-semibold text-gray-700 hover:text-blue-600 flex items-center outline-none list-none">
+                      <span className="group-open:hidden mr-1">▶</span>
+                      <span className="hidden group-open:inline mr-1">▼</span>
+                      시설 및 인력 상세정보
+                    </summary>
+                    <div className="mt-2 bg-gray-50 p-3 rounded-lg grid grid-cols-2 gap-2 text-gray-600 cursor-default">
+                      <p>수의사: <span className="font-semibold text-gray-800">{shelter.vetPersonCnt != null ? `${shelter.vetPersonCnt}명` : '-'}</span></p>
+                      <p>사양관리사: <span className="font-semibold text-gray-800">{shelter.specsPersonCnt != null ? `${shelter.specsPersonCnt}명` : '-'}</span></p>
+                      <p>진료실: <span className="font-semibold text-gray-800">{shelter.medicalCnt != null ? `${shelter.medicalCnt}실` : '-'}</span></p>
+                      <p>격리실: <span className="font-semibold text-gray-800">{shelter.quarantineCnt != null ? `${shelter.quarantineCnt}실` : '-'}</span></p>
+                      <p>사육실: <span className="font-semibold text-gray-800">{shelter.feedCnt != null ? `${shelter.feedCnt}실` : '-'}</span></p>
+                      <p className="col-span-2 mt-1 border-t border-gray-200 pt-1">구조대상: <span className="font-semibold text-gray-800">{shelter.targetAnimals || '-'}</span></p>
+                    </div>
+                  </details>
+
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-sm font-bold text-gray-800">보호 중인 동물</span>
                     {urgentCount > 0 && (

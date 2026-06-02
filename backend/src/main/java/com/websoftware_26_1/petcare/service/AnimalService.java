@@ -230,6 +230,17 @@ public class AnimalService {
             .updatedAt(formatDateTime(animal.getUpdTm()))
             .isLiked(isLiked)
             .geminiIntro(introResult.intro())
+            .weekStartTime(shelter != null ? shelter.getWeekOprStime() : null)
+            .weekEndTime(shelter != null ? shelter.getWeekOprEtime() : null)
+            .weekendStartTime(shelter != null ? shelter.getWeekendOprStime() : null)
+            .weekendEndTime(shelter != null ? shelter.getWeekendOprEtime() : null)
+            .closedDays(shelter != null ? shelter.getCloseDay() : null)
+            .vetPersonCnt(shelter != null ? shelter.getVetPersonCnt() : null)
+            .specsPersonCnt(shelter != null ? shelter.getSpecsPersonCnt() : null)
+            .medicalCnt(shelter != null ? shelter.getMedicalCnt() : null)
+            .quarantineCnt(shelter != null ? shelter.getQuarabtineCnt() : null)
+            .feedCnt(shelter != null ? shelter.getFeedCnt() : null)
+            .targetAnimals(shelter != null ? shelter.getSaveTrgtAnimal() : null)
             .build();
     }
 
