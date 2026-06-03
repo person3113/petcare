@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getStatsSummary, getRealtimeSummary } from '../api/stats.js';
 import CountUp from '../components/CountUp.jsx';
+import RecommendedAnimals from '../components/landing/RecommendedAnimals.jsx';
+import LostAnimalsSection from '../components/landing/LostAnimalsSection.jsx';
+import AdoptionReviewsSection from '../components/landing/AdoptionReviewsSection.jsx';
 
 function Home() {
   const { user } = useAuth();
@@ -107,25 +110,27 @@ function Home() {
         )}
       </section>
 
-      <section className="mb-6">
-        <div className="flex gap-4">
+      <section className="mb-12">
+        <div className="flex flex-col sm:flex-row gap-4">
             {/* 여기 아이디는 임시로 1로 둔것입니다. */}
-          <Link to="/animalswipe/1" className="flex-1 border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+          <Link to="/animalswipe/1" className="flex-1 border border-gray-200 bg-white rounded-xl p-6 hover:shadow-md hover:-translate-y-1 transition group">
             <p className="text-xs text-gray-400">인연 찾기</p>
-            <h3 className="text-lg font-bold text-gray-900">스와이프</h3>
+            <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">스와이프 &rarr;</h3>
           </Link>
-          <Link to="/animals" className="flex-1 border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+          <Link to="/animals" className="flex-1 border border-gray-200 bg-white rounded-xl p-6 hover:shadow-md hover:-translate-y-1 transition group">
             <p className="text-xs text-gray-400">입양하기</p>
-            <h3 className="text-lg font-bold text-gray-900">필터 목록</h3>
+            <h3 className="text-lg font-bold text-gray-900 group-hover:text-pink-600 transition-colors">필터 목록 &rarr;</h3>
           </Link>
-          <Link to="/survey" className="flex-1 border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+          <Link to="/survey" className="flex-1 border border-gray-200 bg-white rounded-xl p-6 hover:shadow-md hover:-translate-y-1 transition group">
             <p className="text-xs text-gray-400">매칭테스트</p>
-            <h3 className="text-lg font-bold text-gray-900">5문항 설문</h3>
+            <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors">5문항 설문 &rarr;</h3>
           </Link>
         </div>
       </section>
 
-
+      <RecommendedAnimals />
+      <LostAnimalsSection />
+      <AdoptionReviewsSection />
 
     </div>
   );
