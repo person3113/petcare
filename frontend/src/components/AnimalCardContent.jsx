@@ -63,13 +63,11 @@ function AnimalCardContent({ animal, variant = 'list' }) {
       </div>
       
       <div className="mt-auto flex items-center gap-4 text-sm text-gray-600">
-        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-lg">
-          <span className="text-gray-400">성별:</span>
-          <span className="font-medium text-gray-800">{gender}</span>
+        <div className="flex items-center bg-gray-50 px-3 py-1.5 rounded-lg font-medium text-gray-800">
+          {gender}
         </div>
-        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-lg">
-          <span className="text-gray-400">나이:</span>
-          <span className="font-medium text-gray-800">{age}</span>
+        <div className="flex items-center bg-gray-50 px-3 py-1.5 rounded-lg font-medium text-gray-800">
+          {age}
         </div>
       </div>
     </div>
