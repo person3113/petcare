@@ -45,6 +45,11 @@ public class FavoriteService {
         return responses;
     }
 
+    @Transactional(readOnly = true)
+    public long getFavoriteCount(Long userId) {
+        return favoriteRepository.countByUserId(userId);
+    }
+
     @Transactional
     public FavoriteResponse addFavorite(Long userId, String desertionNo) {
         User user = userRepository.findById(userId)

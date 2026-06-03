@@ -35,6 +35,13 @@ public class FavoriteController {
         return ResponseEntity.ok(ApiResponse.ok(responses));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse<Long>> getFavoriteCount(HttpSession session) {
+        Long userId = getLoginUserId(session);
+        long count = favoriteService.getFavoriteCount(userId);
+        return ResponseEntity.ok(ApiResponse.ok(count));
+    }
+
     @PostMapping("/{desertionNo}")
     public ResponseEntity<ApiResponse<FavoriteResponse>> addFavorite(
         @PathVariable String desertionNo,

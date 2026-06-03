@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import UserProfile from "../components/mypage/UserProfile.jsx";
 import SurveyHistory from "../components/mypage/SurveyHistory.jsx";
 import FavoriteList from "../components/mypage/FavoriteList.jsx";
-import { getFavorites } from '../api/favorites.js'; //
+import { getFavoritesCount } from '../api/favorites.js';
 
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('survey');
-  const [favorites, setFavorites] = useState([]); //찜 개수를 위한
+  const [favoriteCount, setFavoriteCount] = useState(0); //찜 개수를 위한
 
   useEffect(() => {
-    getFavorites()
+    getFavoritesCount()
         .then(res => {
-          setFavorites(res.data || []);
+          setFavoriteCount(res?.data ?? res ?? 0);
         });
   }, []);
 
@@ -20,7 +20,7 @@ function MyPage() {
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="mx-auto max-w-5xl">
         <div className="mb-6">
-          <UserProfile favoriteCnt={favorites.length}/>
+          <UserProfile favoriteCnt={favoriteCount}/>
         </div>
 
         <div className="flex gap-2 border-b border-gray-200">
