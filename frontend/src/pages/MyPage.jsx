@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserProfile from "../components/mypage/UserProfile.jsx";
 import SurveyHistory from "../components/mypage/SurveyHistory.jsx";
 import FavoriteList from "../components/mypage/FavoriteList.jsx";
-
+import { getFavorites } from '../api/favorites.js'; //
 
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('survey');
+  const [favorites, setFavorites] = useState([]); //찜 개수를 위한
+
+  useEffect(() => {
+    getFavorites()
+        .then(res => {
+          setFavorites(res.data || []);
+        });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="mx-auto max-w-5xl">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">마이페이지</h1>
-          <UserProfile/>
+          <UserProfile favoriteCnt={favorites.length}/>
         </div>
 
         <div className="flex gap-2 border-b border-gray-200">

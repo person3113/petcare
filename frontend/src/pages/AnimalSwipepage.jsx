@@ -24,6 +24,13 @@ function AnimalSwipePage() {
     const [nowIndex, setnowIndex] = useState(0); // 현재 보고 있는 카드의 인덱스
     const [exitX, setexitX] = useState(0); // 카드가 어느 방향으로 날아갈지 결정 (500 또는 -500)
     const [likeAnimal, setlikeAnimal] = useState([]); //찜한 동물id 리스트 저장 (서버에서 불러옴)
+    const [todaylike, setTodaylike] = useState(()=>{
+        //오늘의 찜 localstorage에 저장한거 가져오기
+        const today = new Date().toLocaleDateString();
+        const stats = JSON.parse(localStorage.getItem('daily_likes') || '{"date":"","count":0}');
+
+        return stats.date === today ? stats.count : 0; //오늘날짜면 저장한 수,다른날이면 0
+    }); //오늘의 찜 개수
 
     // 필터 드롭다운 옵션 목록
     const [sidoList, setSidoList] = useState([]);
@@ -77,15 +84,14 @@ function AnimalSwipePage() {
 
     // 데이터 읽어오는 코드
     useEffect(() => {
+        //전체 동물 리스트 가져오기
         fetchAnimals({ limit: 500 })
             .then((items) => {
                 setAnimals(items);
             })
             .catch((err) => console.log("데이터 로딩 실패", err));
-    }, []);
 
-    // 찜 목록 서버에서 불러오기
-    useEffect(() => {
+        // 찜 목록 서버에서 불러오기
         getFavorites()
             .then((data) => {
                 const list = data?.data || [];
@@ -97,14 +103,14 @@ function AnimalSwipePage() {
                     console.log("찜 목록 불러오기 실패", err);
                 }
             });
-    }, []);
 
-    // 시도 목록 초기 로딩
-    useEffect(() => {
+        // 시도 목록 초기 로딩
         fetchSido()
             .then((list) => setSidoList(list))
             .catch((err) => console.log('시도 목록 불러오기 실패', err));
+
     }, []);
+
 
 
     //동물 카드 무한루프를 위한 index(다 봤으면 index 0부터 다시)
@@ -131,10 +137,20 @@ function AnimalSwipePage() {
         });
     }
 
+    //찜하기 반영함수
     const handleLike = async (Id) => {
         try {
             await addFavorite(Id);
             LikeCnt(Id);
+
+            //오늘의 찜 수 저장
+            const today = new Date().toLocaleDateString();
+            const stats = JSON.parse(localStorage.getItem('daily_likes') || '{"date":"","count":0}');
+            if (stats.date === today) stats.count += 1;
+            else { stats.date = today; stats.count = 1; }
+
+            localStorage.setItem('daily_likes', JSON.stringify(stats));
+            setTodaylike(stats.count); // 오늘의 찜 업데이트
         } catch (err) {
             if (err?.status !== 401) {
                 console.log("찜하기 API 호출 실패", err);
@@ -239,7 +255,7 @@ function AnimalSwipePage() {
                     {/* 사이드바 컴포넌트 */}
                     <div className="w-full max-w-xs">
                         <SwipeSideBox
-                            LikeCnt={likeAnimal.length}
+                            LikeCnt={todaylike} //오늘 찜한 수
                             filter={filter}
                             sidoList={sidoList}
                             sigunguList={sigunguList}
