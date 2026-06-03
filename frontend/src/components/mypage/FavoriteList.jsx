@@ -72,10 +72,10 @@ function FavoriteList({ onFavoriteDeleted }) {
                     id: animal.desertionNo, //동물 번호
                     kind: animal.kind,
                     images: [animal.imageUrl], // 문자열로 된거를 리스트로
-                    shelterName: animal.shelterTel || '보호소 정보 없음', // 현재 찜 데이터에 있는 전화번호를 이름 위치에 표시
+                    shelterName: animal.shelterName || animal.shelterTel || '보호소 정보 없음', // shelterName 우선
                     status: animal.processState,
-                    gender: '정보 없음', // 찜 데이터에 없는 정보는 기본값 설정
-                    age: '정보 없음'     //기본값 설정
+                    gender: animal.gender || '정보 없음', // 찜 데이터에 있는 성별 적용
+                    age: animal.age || '정보 없음'     // 찜 데이터에 있는 나이 적용
                 };
                 return(
                     <div key={animal.desertionNo} className="relative group">

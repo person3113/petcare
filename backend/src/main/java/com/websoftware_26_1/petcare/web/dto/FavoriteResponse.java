@@ -14,4 +14,7 @@ public class FavoriteResponse {
     private String shelterTel;
     private String processState;
     private String noticeEndDate;
+    private String shelterName;
+    private String age;
+    private String gender;
 }
