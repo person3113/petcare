@@ -1,26 +1,26 @@
 import { useEffect, useRef } from 'react';
 
 // props: shelters = [{ id, name, lat, lng }, ...]
-function KakaoMap({ shelters, currentLocation, onMarkerClick }) {
+function KakaoMap({ shelters, currentLocation, selectedShelter, onMarkerClick }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markersRef = useRef([]);
 
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps) {
-      console.log('카카오맵 객체가 없습니다. SDK 스크립트 로드 여부를 확인하세요.');
+      console.log('카카오맵 객체가 없음. SDK 스크립트 로드 여부를 확인 필요');
       return;
     }
 
     const container = mapRef.current;
     
-    // Default center
+    // 기본 중심 위치와 줌 레벨 설정
     let centerPosition = new window.kakao.maps.LatLng(36.5, 127.5);
     let level = 7;
     
     if (currentLocation) {
         centerPosition = new window.kakao.maps.LatLng(currentLocation.lat, currentLocation.lng);
-        level = 5; // Zoom in closer if we have a location
+        level = 5; // 줌 더
     }
 
     const options = {
@@ -30,18 +30,28 @@ function KakaoMap({ shelters, currentLocation, onMarkerClick }) {
 
     if (!mapInstance.current) {
         mapInstance.current = new window.kakao.maps.Map(container, options);
+    } else if (currentLocation) {
+        mapInstance.current.setCenter(centerPosition);
+        mapInstance.current.setLevel(level);
     }
-  }, [currentLocation]); // Re-center on first location load
+  }, [currentLocation]); // currentLocation이 변경될 때, 지도 중심과 줌 레벨 업데이트
+
+  useEffect(() => {
+    if (!mapInstance.current || !selectedShelter) return;
+    
+    const position = new window.kakao.maps.LatLng(selectedShelter.lat, selectedShelter.lng);
+    mapInstance.current.panTo(position);
+  }, [selectedShelter]);
 
   useEffect(() => {
     if (!mapInstance.current) return;
     const map = mapInstance.current;
 
-    // Clear existing markers
+    // 기존 마커 제거
     markersRef.current.forEach(m => m.setMap(null));
     markersRef.current = [];
 
-    // Current location marker (Custom overlay)
+    // 현재 위치 마커
     if (currentLocation) {
         const currentPos = new window.kakao.maps.LatLng(currentLocation.lat, currentLocation.lng);
         const content = '<div class="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-md animate-pulse"></div>';
@@ -55,7 +65,7 @@ function KakaoMap({ shelters, currentLocation, onMarkerClick }) {
         markersRef.current.push(customOverlay);
     }
 
-    // Shelter markers
+    // 보호소 마커
     shelters.forEach((shelter) => {
       const position = new window.kakao.maps.LatLng(shelter.lat, shelter.lng);
 
@@ -77,7 +87,7 @@ function KakaoMap({ shelters, currentLocation, onMarkerClick }) {
       window.kakao.maps.event.addListener(marker, 'click', function () {
         if (onMarkerClick) {
             onMarkerClick(shelter);
-            map.panTo(position); // Smooth pan to clicked marker
+            map.panTo(position); // 마커 클릭 시 해당 위치로 지도 이동
         }
       });
     });

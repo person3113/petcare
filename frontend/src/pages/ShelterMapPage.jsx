@@ -13,7 +13,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
     Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * 
     Math.sin(dLon / 2) * Math.sin(dLon / 2); 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
-  const d = R * c; // km 단위 거리 계산
+  const d = R * c; // km 거리 계산
   return d;
 }
 
@@ -60,6 +60,7 @@ function ShelterMapPage() {
           setCurrentLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
+            timestamp: Date.now(),
           });
         },
         (error) => {
@@ -106,6 +107,7 @@ function ShelterMapPage() {
           setCurrentLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
+            timestamp: Date.now(),
           });
         },
         (error) => {
@@ -121,11 +123,12 @@ function ShelterMapPage() {
   return (
     <div className="py-6 h-[calc(100vh-100px)] min-h-[600px] flex flex-col md:flex-row gap-6">
       
-      {/* Map Area */}
+      {}
       <div className="relative flex-1 rounded-xl overflow-hidden shadow-md bg-gray-100 min-h-[300px]">
         <KakaoMap 
           shelters={shelters} 
           currentLocation={currentLocation} 
+          selectedShelter={selectedShelter}
           onMarkerClick={handleMarkerClick} 
         />
         <button 
@@ -136,10 +139,10 @@ function ShelterMapPage() {
         </button>
       </div>
 
-      {/* Sidebar / Bottom List */}
+      {/* 사이드바  */}
       <div className="w-full md:w-[360px] flex flex-col bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden shrink-0">
         
-        {/* Mobile Tabs */}
+        {/* 모바일 탭 */}
         <div className="md:hidden flex items-center gap-2 p-3 border-b border-gray-100 overflow-x-auto">
            <button onClick={() => { setSelectedShelter(null); setTab('전체'); }} className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap ${tab === '전체' && !selectedShelter ? 'bg-gray-900 text-white' : 'bg-gray-50 border border-gray-200 text-gray-600'}`}>내 주변</button>
         </div>
@@ -227,7 +230,7 @@ function ShelterMapPage() {
                           </Link>
                         ))}
                       </div>
-                      {/* Notice: If org_cd mapping fails in API, you might need care_reg_no query param based on what you implemented earlier */}
+                      {}
                       <Link 
                         to={`/animals?keyword=${shelter.name}`} 
                         className="block w-full text-center py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
