@@ -1,5 +1,5 @@
-//motion:html태그에 애니메이션 사용가능
 import { motion } from 'framer-motion';
+import AnimalCardContent from '../AnimalCardContent';
 
 function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
 
@@ -57,19 +57,11 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
             {/* 카드 UI 디자인 */}
             <div className="flex h-[520px] w-full flex-col overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
                 <img
-                    src={currentAnimal.images[0]}
+                    src={currentAnimal.images && currentAnimal.images.length > 0 ? currentAnimal.images[0] : ''}
                     alt={currentAnimal.kind}
                     className="h-[360px] w-full object-cover pointer-events-none"
                 />
-                <div className="flex flex-1 flex-col p-6">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-semibold">{currentAnimal.kind}</h3>
-                        <span>{currentAnimal.gender}</span>
-                    </div>
-                    <p>나이: {currentAnimal.age}</p>
-                    <p>색: {currentAnimal.color}</p>
-                    <div>보호소: {currentAnimal.shelterName}</div>
-                </div>
+                <AnimalCardContent animal={currentAnimal} variant="swipe" />
             </div>
         </motion.div>
     )

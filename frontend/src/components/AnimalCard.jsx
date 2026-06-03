@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AnimalCardContent from './AnimalCardContent';
 
 function AnimalCard({ animal, to }) {
   const image = animal?.images?.[0];
@@ -28,25 +29,7 @@ function AnimalCard({ animal, to }) {
             </div>
           )}
         </div>
-        <div className="flex flex-1 flex-col p-4">
-          <div className="mb-2 flex items-start justify-between gap-2">
-            <div className="flex-1">
-              <p className="line-clamp-1 text-sm text-gray-500">{animal.kind}</p>
-              <p className="line-clamp-1 text-lg font-semibold text-gray-900">
-                {animal.shelterName}
-              </p>
-            </div>
-            {animal.status && (
-              <span className="shrink-0 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-                {animal.status}
-              </span>
-            )}
-          </div>
-          <div className="mt-auto text-sm text-gray-600">
-            <p>성별: {animal.gender}</p>
-            <p>나이: {animal.age}</p>
-          </div>
-        </div>
+        <AnimalCardContent animal={animal} variant="list" />
       </article>
     </Link>
   );
