@@ -55,7 +55,7 @@ function AnimalCardContent({ animal, variant = 'list' }) {
           </div>
           <p className="line-clamp-1 text-sm text-gray-600">{location}</p>
         </div>
-        {status && !isSwipe && (
+        {status && (
           <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${status === '분실' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
             {status}
           </span>

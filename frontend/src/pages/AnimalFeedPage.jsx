@@ -13,8 +13,6 @@ const DEFAULT_FILTERS = {
   status: '보호중',
   gender: '',
   isNeutered: '',
-  onlySocialized: false,
-  onlyHealthy: false,
 };
 
 
@@ -53,8 +51,6 @@ function AnimalFeedPage() {
         if (filters.status) params.state = filters.status;
         if (filters.gender) params.gender = filters.gender;
         if (filters.isNeutered) params.isNeutered = filters.isNeutered;
-        if (filters.onlySocialized) params.onlySocialized = filters.onlySocialized;
-        if (filters.onlyHealthy) params.onlyHealthy = filters.onlyHealthy;
 
         const animalsData = await fetchAnimalsPage(params);
         if (!isMounted) return;
@@ -139,9 +135,6 @@ function AnimalFeedPage() {
 
         <section className="flex items-center justify-between text-sm text-gray-600">
           <span>총 {pagination?.totalCount ?? allAnimals.length}마리</span>
-          {(filters.onlySocialized || filters.onlyHealthy) && (
-            <span className="text-emerald-600">선택 조건 적용됨</span>
-          )}
         </section>
 
         {loading && <p className="text-sm text-gray-500">로딩 중...</p>}

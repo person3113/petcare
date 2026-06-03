@@ -8,6 +8,7 @@ import { addFavorite, getFavorites } from '../api/favorites.js';
 
 function AnimalSwipePage() {
     const [animals, setAnimals] = useState([]);//전체 동물 정보 받을 곳
+    const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState({ //사이드 박스의 필터를 위한것
         //필터링 조건들 저장할 곳
         sido: '',       //시도
@@ -17,8 +18,6 @@ function AnimalSwipePage() {
         status: '',
         gender: '',
         isNeutered: '',
-        onlySocialized: false, //사회화 정보 여부
-        onlyHealthy: false,    //건강상태 양호
     });
 
     const [nowIndex, setnowIndex] = useState(0); // 현재 보고 있는 카드의 인덱스
@@ -32,6 +31,8 @@ function AnimalSwipePage() {
         return stats.date === today ? stats.count : 0; //오늘날짜면 저장한 수,다른날이면 0
     }); //오늘의 찜 개수
 
+    const [initialLiked, setInitialLiked] = useState([]); // 최초 찜한 동물 목록 (스와이프 인덱스 꼬임 방지용)
+
     // 필터 드롭다운 옵션 목록
     const [sidoList, setSidoList] = useState([]);
     const [sigunguList, setSigunguList] = useState([]);
@@ -40,6 +41,12 @@ function AnimalSwipePage() {
 
     const filterAnimals = useMemo(() => {
         return animals.filter(animal => {
+            // 이미 찜한 동물 제외 (최초 로딩 기준)
+            const animalId = animal.id || animal.desertionNo;
+            if (initialLiked.includes(animalId)) {
+                return false;
+            }
+
             // kind는 "믹스견", "[개] 믹스견" 형태라 includes로 체크
             if (filter.kind !== '' && !animal.kind?.includes(filter.kind)) {
                 return false;
@@ -68,35 +75,41 @@ function AnimalSwipePage() {
             if (filter.isNeutered !== '' && animal.isNeutered !== filter.isNeutered) {
                 return false;
             }
-            // 사회화 정보 여부
-            if (filter.onlySocialized && (!animal.socialization || animal.socialization.trim() === '')) {
-                return false;
-            }
-            // 건강 상태 양호 여부
-            if (filter.onlyHealthy && animal.healthStatus !== '양호') {
-                return false;
-            }
 
             return true; // 모든 조건 통과
         });
-    }, [animals, filter]); //전체 동물 데이터 또는 필터 조건이 바뀔때마다 랜더링
+    }, [animals, filter, initialLiked]); //전체 동물 데이터 또는 필터 조건이 바뀔때마다 랜더링
 
 
-    // 데이터 읽어오는 코드
+    // 필터가 변경될 때마다 데이터 재요청
     useEffect(() => {
-        //전체 동물 리스트 가져오기
-        fetchAnimals({ limit: 500 })
+        setLoading(true);
+        const params = { limit: 500 };
+        if (filter.sido) params.sido = filter.sido;
+        if (filter.sigungu) params.sigungu = filter.sigungu;
+        if (filter.shelterName) params.shelterName = filter.shelterName;
+        if (filter.kind) params.kind = filter.kind;
+        if (filter.status) params.state = filter.status; // API 파라미터는 state
+        if (filter.gender) params.gender = filter.gender;
+        if (filter.isNeutered) params.isNeutered = filter.isNeutered;
+
+        fetchAnimals(params)
             .then((items) => {
                 setAnimals(items);
             })
-            .catch((err) => console.log("데이터 로딩 실패", err));
+            .catch((err) => console.log("데이터 로딩 실패", err))
+            .finally(() => setLoading(false));
+    }, [filter]);
 
+    // 기타 초기 로딩 (찜 목록, 시도 목록)
+    useEffect(() => {
         // 찜 목록 서버에서 불러오기
         getFavorites()
             .then((data) => {
                 const list = data?.data || [];
                 const ids = list.map((item) => item.desertionNo).filter(Boolean);
                 setlikeAnimal(ids);
+                setInitialLiked(ids); // 최초 로딩 시 찜 목록 저장
             })
             .catch((err) => {
                 if (err?.status !== 401) {
@@ -117,11 +130,6 @@ function AnimalSwipePage() {
     // usestate인 nowindex값이 바뀌면 컴포넌트 다시 시작하고 여기서 바뀐 currentAnimal로 dom그림
     const currentAnimal = filterAnimals.length > 0
         ? filterAnimals[nowIndex % filterAnimals.length] : null;
-
-    // 최초 로딩 전 (동물 데이터 자체가 아직 없음)
-    if (animals.length === 0) {
-        return <div className="py-12 text-center text-sm text-gray-500">데이터 로딩 중...</div>;
-    }
 
     //찜하기를 했을때 찜 개수 올려줄 함수
     const LikeCnt = (Id) => {
@@ -164,50 +172,36 @@ function AnimalSwipePage() {
     const FilterChange = async (newFilter) => {
         //시도가 바뀌면
         if (newFilter.sido !== filter.sido) {
-            //시군구·보호소 초기화
+            const sidoCode = sidoList.find((item) => item.name === newFilter.sido)?.code || '';
+            let sigungu = [];
+            let shelters = [];
+            
+            if (newFilter.sido) {
+                try {
+                    if (sidoCode) sigungu = await fetchSigungu(sidoCode);
+                    shelters = await fetchShelters(newFilter.sido, '');
+                } catch (err) {
+                    console.log('하위 목록 불러오기 실패', err);
+                }
+            }
+            setSigunguList(sigungu);
+            setShelterList(shelters);
+            
             newFilter = { ...newFilter, sigungu: '', shelterName: '' };
-
-            // 시도가 전체일때 하위 목록 초기화
-            if (!newFilter.sido) {
-                setSigunguList([]);
-                setShelterList([]);
-            }
-            else {
-                //시도를 선택했다면 그 시도의 시군구 목록을 바로 가져옴
-                const sidoCode = sidoList.find((item) => item.name === newFilter.sido)?.code || '';
-                if (sidoCode) {
-                    try {
-                        const list = await fetchSigungu(sidoCode);
-                        setSigunguList(list);
-                    }
-                    catch (err) {
-                        console.log('시군구 목록 불러오기 실패', err);
-                    }
-                }
-                setShelterList([]); // 시도를 바꿨으니 보호소는 일단 비움
-                }
-            }
-
+        }
         //시군구가 바뀌었을 때
-        if (newFilter.sigungu !== filter.sigungu) {
-            //보호소 초기화
-            newFilter = { ...newFilter, shelterName: '' };
-
-            if (!newFilter.sigungu) {
-                setShelterList([]);
-            } else {
-                // 특정 시군구를 선택했다면 보호소 목록을 바로 가져옴!
-                const sigunguCode = sigunguList.find((item) => item.name === newFilter.sigungu)?.code || '';
-                if (sigunguCode) {
-                    try {
-                        const list = await fetchShelters(sigunguCode);
-                        setShelterList(list);
-                        } catch (err) {
-                        console.log('보호소 목록 불러오기 실패', err);
-                        }
-                    }
+        else if (newFilter.sigungu !== filter.sigungu) {
+            let shelters = [];
+            if (newFilter.sido) {
+                try {
+                    shelters = await fetchShelters(newFilter.sido, newFilter.sigungu);
+                } catch (err) {
+                    console.log('보호소 목록 불러오기 실패', err);
                 }
             }
+            setShelterList(shelters);
+            newFilter = { ...newFilter, shelterName: '' };
+        }
 
         setFilter(newFilter);
 
@@ -225,7 +219,11 @@ function AnimalSwipePage() {
                 <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
                 {/* 카드 부분 */}
                     <div className="flex flex-1 flex-col items-center">
-                        {currentAnimal ? (
+                        {loading ? (
+                            <div className="flex h-[520px] w-[340px] items-center justify-center">
+                                <div className="py-12 text-center text-sm text-gray-500">데이터 로딩 중...</div>
+                            </div>
+                        ) : currentAnimal ? (
                         <div className="relative h-[520px] w-[340px] items-start">
                             <AnimatePresence custom={exitX}>
                                 <SwipeCard
@@ -238,7 +236,9 @@ function AnimalSwipePage() {
                                     onLike={handleLike}
                                 />
                             </AnimatePresence>
-                        </div>):(<div className="py-12 text-center text-sm text-gray-500">조건에 맞는 동물이 없습니다.</div>)}
+                        </div>) : (<div className="flex h-[520px] w-[340px] items-center justify-center">
+                                <div className="py-12 text-center text-sm text-gray-500">조건에 맞는 동물이 없습니다.</div>
+                            </div>)}
                         {/* 하단 방향 설명 부분*/}
                         <div className="mt-8 flex gap-16 text-center text-sm text-gray-500">
                             <div>

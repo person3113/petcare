@@ -136,26 +136,6 @@ function FilterBar({
         </label>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-700">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="onlySocialized"
-            checked={filters.onlySocialized}
-            onChange={handleChange}
-          />
-          사회화 정보 있는 아이만
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="onlyHealthy"
-            checked={filters.onlyHealthy}
-            onChange={handleChange}
-          />
-          건강 상태 양호만
-        </label>
-      </div>
     </section>
   );
 }

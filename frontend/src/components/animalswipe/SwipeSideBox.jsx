@@ -6,7 +6,7 @@ import { PROCESS_STATES } from '../../constants.js';
 function SwipeSideBox({LikeCnt, filter, onFilterChange, sidoList, sigunguList, shelterList}) {
 
     const disabledSigungu = !filter.sido; // 시도를 선택하지 않았으면, 시군구는 비활성화
-    const disabledShelter = !filter.sigungu; // 시군구를 선택하지 않았으면, 보호소는 비활성화
+    const disabledShelter = !filter.sido; // 시도를 선택하지 않았으면, 보호소는 비활성화
 
     
     return(
@@ -147,26 +147,6 @@ function SwipeSideBox({LikeCnt, filter, onFilterChange, sidoList, sigunguList, s
                         </label>
                     </div>
 
-                    <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-700">
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                name="onlySocialized"
-                                checked={filter.onlySocialized}
-                                onChange={onFilterChange}
-                            />
-                            사회화 정보 있는 아이만
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                name="onlyHealthy"
-                                checked={filter.onlyHealthy}
-                                onChange={onFilterChange}
-                            />
-                            건강 상태 양호만
-                        </label>
-                    </div>
                 </section>
             </div>
 
