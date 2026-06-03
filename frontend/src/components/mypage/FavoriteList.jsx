@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { Link } from 'react-router-dom';
-import { getFavorites } from '../../api/favorites.js'; //사용자가 찜한 동물 목록
+import { getFavorites, removeFavorite } from '../../api/favorites.js'; //사용자가 찜한 동물 목록
 import AnimalCard from '../AnimalCard.jsx';
 import {fetchMySurvey} from "../../api/survey.js";
 
-function FavoriteList() {
+function FavoriteList({ onFavoriteDeleted }) {
     const [favor, setFavor]= useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -25,6 +25,20 @@ function FavoriteList() {
             setLoading(false);
         })
     },[])
+
+    const handleRemoveFavorite = async (e, desertionNo) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+            await removeFavorite(desertionNo);
+            setFavor(prev => prev.filter(animal => animal.desertionNo !== desertionNo));
+            if (onFavoriteDeleted) {
+                onFavoriteDeleted();
+            }
+        } catch (err) {
+            alert('찜 삭제에 실패했습니다.');
+        }
+    };
 
     if(loading){
         return <div>찜한 동물 로딩중....</div>;
@@ -57,14 +71,23 @@ function FavoriteList() {
                 const animalForCard = {
                     id: animal.desertionNo, //동물 번호
                     kind: animal.kind,
-                    images: [animal.popfiles], // 문자열로 된거를을 리스트로
+                    images: [animal.imageUrl], // 문자열로 된거를 리스트로
                     shelterName: animal.shelterTel || '보호소 정보 없음', // 현재 찜 데이터에 있는 전화번호를 이름 위치에 표시
                     status: animal.processState,
                     gender: '정보 없음', // 찜 데이터에 없는 정보는 기본값 설정
                     age: '정보 없음'     //기본값 설정
                 };
                 return(
-                    <AnimalCard animal={animalForCard} to={`/animal/${animalForCard.id}`} />
+                    <div key={animal.desertionNo} className="relative group">
+                        <AnimalCard animal={animalForCard} to={`/animal/${animalForCard.id}`} />
+                        <button
+                            onClick={(e) => handleRemoveFavorite(e, animal.desertionNo)}
+                            className="absolute top-3 right-3 z-20 flex items-center justify-center rounded-md bg-white/90 px-2 py-1 text-xs font-semibold text-gray-600 shadow-sm backdrop-blur-sm transition-all hover:bg-red-50 hover:text-red-500"
+                            title="찜 삭제"
+                        >
+                            삭제
+                        </button>
+                    </div>
                 )
             })}
         </div>

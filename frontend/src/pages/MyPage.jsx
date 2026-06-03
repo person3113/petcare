@@ -48,7 +48,7 @@ function MyPage() {
 
         <div className="mt-2">
           {activeTab === 'survey' && <SurveyHistory />}
-          {activeTab === 'favorites' && <FavoriteList />}
+          {activeTab === 'favorites' && <FavoriteList onFavoriteDeleted={() => setFavoriteCount(prev => Math.max(0, prev - 1))} />}
         </div>
       </div>
     </div>
