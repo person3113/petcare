@@ -1,29 +1,35 @@
-//motion:html태그에 애니메이션 사용가능
 import { motion } from 'framer-motion';
-import { addFavorite } from '../../api/favorites.js';
+import AnimalCardContent from '../AnimalCardContent';
 
 function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
 
     // 드래그가 끝났을 때 판단 async:기다려야 하는 함수임을 선언, await: 이 작업이 끝날때까지 대기
     const handleDragEnd = async (event, info, animal) => {
-        //info.offset.x: 카드가 처음 위치에서 가로로 이동한 픽셀 값
-        if (info.offset.x > 100) { //오른쪽으로 100픽셀 이상 밀었을때
-            setexitX(500); // 오른쪽으로 날아가기 설정
-            console.log(`${animal.kind} 찜하기`); //찜하기
-            onLike(currentAnimal.id); //찜 개수 증가
-            try {
-                await addFavorite(animal.id);
-            } catch (err) {
-                console.log("찜하기 API 호출 실패", err);
-            }
-            //카드 인덱스 증가
-            setnowIndex((prev) => prev + 1);
+        //좌우 스와이프 성공했을때
+        if (Math.abs(info.offset.x) > 100){
+            //오늘 스와이프 한 수 localStorage에 저장(마이페이지에 사용할 용)
+            const today = new Date().toLocaleDateString();
+            const statsStr = localStorage.getItem('daily_swipes');
+            let stats = statsStr ? JSON.parse(statsStr) : { date: '', count: 0 };
 
-        } else if (info.offset.x < -100) {//왼쪽으로 100픽셀이상 밀었을때
-            setexitX(-500); // 왼쪽으로 날아가기 설정
-            console.log(`${animal.kind} 패스`);
-            // 다음 카드로 넘어가기 (인덱스 증가)
-            setnowIndex((prev) => prev + 1);
+            if (stats.date === today) stats.count++; //같은 날이면
+            else stats = { date: today, count: 1 }; //다른날이면
+            localStorage.setItem('daily_swipes', JSON.stringify(stats)); //저장
+
+            //info.offset.x: 카드가 처음 위치에서 가로로 이동한 픽셀 값
+            if (info.offset.x > 100) { //오른쪽으로 100픽셀 이상 밀었을때
+                setexitX(500); // 오른쪽으로 날아가기 설정
+                console.log(`${animal.kind} 찜하기`); //찜하기
+                onLike(currentAnimal.id); //찜 개수 증가
+                //카드 인덱스 증가
+                setnowIndex((prev) => prev + 1);
+
+            } else if (info.offset.x < -100) {//왼쪽으로 100픽셀이상 밀었을때
+                setexitX(-500); // 왼쪽으로 날아가기 설정
+                console.log(`${animal.kind} 패스`);
+                // 다음 카드로 넘어가기 (인덱스 증가)
+                setnowIndex((prev) => prev + 1);
+            }
         }
     };
 
@@ -49,21 +55,13 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
             }}
         >
             {/* 카드 UI 디자인 */}
-            <div className="flex h-full w-full flex-col overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
+            <div className="flex h-[520px] w-full flex-col overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
                 <img
-                    src={currentAnimal.images[0]}
+                    src={currentAnimal.images && currentAnimal.images.length > 0 ? currentAnimal.images[0] : ''}
                     alt={currentAnimal.kind}
                     className="h-[360px] w-full object-cover pointer-events-none"
                 />
-                <div className="flex flex-1 flex-col p-6">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-semibold">{currentAnimal.kind}</h3>
-                        <span>{currentAnimal.gender}</span>
-                    </div>
-                    <p>나이: {currentAnimal.age}</p>
-                    <p>색: {currentAnimal.color}</p>
-                    <div>보호소: {currentAnimal.shelterName}</div>
-                </div>
+                <AnimalCardContent animal={currentAnimal} variant="swipe" />
             </div>
         </motion.div>
     )

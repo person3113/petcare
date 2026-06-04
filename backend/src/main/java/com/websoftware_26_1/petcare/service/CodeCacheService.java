@@ -1,5 +1,8 @@
 package com.websoftware_26_1.petcare.service;
 
+import com.websoftware_26_1.petcare.domain.Shelter;
+import com.websoftware_26_1.petcare.repository.ShelterRepository;
+
 import com.websoftware_26_1.petcare.web.dto.CodeResponse;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -17,9 +20,11 @@ public class CodeCacheService {
     private List<CodeResponse> sidoCache = new ArrayList<>();
 
     private final OpenApiClient openApiClient;
+    private final ShelterRepository shelterRepository;
 
-    public CodeCacheService(OpenApiClient openApiClient) {
+    public CodeCacheService(OpenApiClient openApiClient, ShelterRepository shelterRepository) {
         this.openApiClient = openApiClient;
+        this.shelterRepository = shelterRepository;
     }
 
     @PostConstruct
@@ -49,17 +54,24 @@ public class CodeCacheService {
         return fetched;
     }
 
-    public List<CodeResponse> getShelterList(String uprCd, String orgCd) {
-        if (uprCd == null || orgCd == null) {
+    public List<CodeResponse> getShelterList(String sido, String sigungu) {
+        if (sido == null || sido.isBlank()) {
             return Collections.emptyList();
         }
-        String key = uprCd + ":" + orgCd;
-        List<CodeResponse> cached = shelterCache.get(key);
-        if (cached != null) {
-            return cached;
+        
+        String prefix = sido;
+        if (sigungu != null && !sigungu.isBlank()) {
+            prefix = sido + " " + sigungu;
         }
-        List<CodeResponse> fetched = openApiClient.fetchShelterCodes(uprCd, orgCd);
-        shelterCache.put(key, Collections.unmodifiableList(fetched));
-        return fetched;
+
+        List<Shelter> shelters = shelterRepository.findByOrgNmStartingWith(prefix);
+        
+        Map<String, CodeResponse> map = new java.util.LinkedHashMap<>();
+        for (Shelter s : shelters) {
+            if (!map.containsKey(s.getCareNm())) {
+                map.put(s.getCareNm(), new CodeResponse(s.getCareRegNo(), s.getCareNm()));
+            }
+        }
+        return new ArrayList<>(map.values());
     }
 }

@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserProfile from "../components/mypage/UserProfile.jsx";
 import SurveyHistory from "../components/mypage/SurveyHistory.jsx";
 import FavoriteList from "../components/mypage/FavoriteList.jsx";
-
+import { getFavoritesCount } from '../api/favorites.js';
 
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('survey');
+  const [favoriteCount, setFavoriteCount] = useState(0); //찜 개수를 위한
+
+  useEffect(() => {
+    getFavoritesCount()
+        .then(res => {
+          setFavoriteCount(res?.data ?? res ?? 0);
+        });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="mx-auto max-w-5xl">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">마이페이지</h1>
-          <UserProfile/>
+          <UserProfile favoriteCnt={favoriteCount}/>
         </div>
 
         <div className="flex gap-2 border-b border-gray-200">
@@ -41,7 +48,7 @@ function MyPage() {
 
         <div className="mt-2">
           {activeTab === 'survey' && <SurveyHistory />}
-          {activeTab === 'favorites' && <FavoriteList />}
+          {activeTab === 'favorites' && <FavoriteList onFavoriteDeleted={() => setFavoriteCount(prev => Math.max(0, prev - 1))} />}
         </div>
       </div>
     </div>

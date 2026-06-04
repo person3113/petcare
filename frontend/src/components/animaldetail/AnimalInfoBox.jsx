@@ -66,7 +66,7 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
             {/*종 · 나이 · 성별 · 체중 · 보호소명*/}
             <h2>기본 정보</h2>
             <div className="pt-6 text-sm text-gray-600">
-                <p>종: {kind.replace(/\[.*\\]\s*/, '')}</p>
+                <p>종: {kind?.replace(/\[.*\\]\s*/, '')}</p>
                 <p>나이: {age}</p>
                 <p>성별: {gender}</p>
                 <p>무게: {weight}</p>

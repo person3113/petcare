@@ -34,9 +34,9 @@ public class CodeController {
 
     @GetMapping("/shelters")
     public ResponseEntity<ApiResponse<List<CodeResponse>>> getShelterList(
-        @RequestParam(name = "uprCd", required = false) String uprCd,
-        @RequestParam(name = "orgCd", required = false) String orgCd
+        @RequestParam(name = "sido", required = false) String sido,
+        @RequestParam(name = "sigungu", required = false) String sigungu
     ) {
-        return ResponseEntity.ok(ApiResponse.ok(codeCacheService.getShelterList(uprCd, orgCd)));
+        return ResponseEntity.ok(ApiResponse.ok(codeCacheService.getShelterList(sido, sigungu)));
     }
 }

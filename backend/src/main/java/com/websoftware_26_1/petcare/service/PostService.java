@@ -30,10 +30,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getPosts(String category) {
-        List<Post> posts = category == null || category.isBlank()
-            ? postRepository.findAll()
-            : postRepository.findAllByCategory(category);
+    public List<PostResponse> getPosts(String category, String keyword) {
+        List<Post> posts = postRepository.findAllWithFilters(category, keyword);
 
         List<PostResponse> responses = new ArrayList<>();
         for (Post post : posts) {

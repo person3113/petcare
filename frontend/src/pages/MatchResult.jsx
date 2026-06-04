@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import AnimalCard from '../components/AnimalCard.jsx';
+import { matchQuiz } from '../api/match.js';
 
 // 설문 결과 페이지
 // Survey에서 navigate로 전달받은 data를 렌더링
 function MatchResult() {
   const location = useLocation();
   const data = location.state || {};
-  const items = data.items || [];
-  const pagination = data.pagination;
+  const initialItems = data.items || [];
+  const initialPagination = data.pagination || null;
+  const criteria = data.criteria || null;
+  const initialPage = initialPagination?.page || criteria?.page || 1;
+
+  const [items, setItems] = useState(initialItems);
+  const [pagination, setPagination] = useState(initialPagination);
+  const [page, setPage] = useState(initialPage);
+  const [loading, setLoading] = useState(false);
+  const didInitRef = useRef(false);
+
+  useEffect(() => {
+    if (!criteria) return;
+    if (!didInitRef.current) {
+      didInitRef.current = true;
+      return;
+    }
+
+    setLoading(true);
+    matchQuiz({ ...criteria, page })
+      .then((response) => {
+        const payload = response?.data || {};
+        setItems(payload.items || []);
+        setPagination(payload.pagination || null);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [page, criteria]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-10">
@@ -42,11 +69,39 @@ function MatchResult() {
           </div>
         )}
 
+        {loading && (
+          <p className="mt-4 text-center text-xs text-gray-400">페이지 로딩 중...</p>
+        )}
+
         {/* 페이지네이션 정보 */}
         {pagination && (
           <p className="mt-4 text-center text-xs text-gray-400">
             총 {pagination.totalCount}건 &middot; {pagination.page} / {pagination.totalPages} 페이지
           </p>
+        )}
+
+        {pagination && pagination.totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-3 text-sm">
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page <= 1}
+              className="rounded-lg border border-gray-200 px-3 py-2 text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              이전
+            </button>
+            <span className="text-gray-500">
+              {page} / {pagination.totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.min(prev + 1, pagination.totalPages))}
+              disabled={page >= pagination.totalPages}
+              className="rounded-lg border border-gray-200 px-3 py-2 text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              다음
+            </button>
+          </div>
         )}
 
         {/* 설문 다시하기 링크 */}

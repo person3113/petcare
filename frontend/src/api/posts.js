@@ -2,7 +2,7 @@ import { request } from './http.js';
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
-async function fetchPosts(category) {
+async function fetchPosts(category, keyword) {
   if (USE_MOCK) {
     const response = await fetch('/mock/community_posts.json');
     if (!response.ok) {
@@ -10,14 +10,22 @@ async function fetchPosts(category) {
     }
     const data = await response.json();
     const items = data?.data || [];
-    if (!category) {
-      return items;
+    let filtered = items;
+    if (category) {
+      filtered = filtered.filter((item) => item.category === category);
     }
-    return items.filter((item) => item.category === category);
+    if (keyword) {
+      filtered = filtered.filter((item) => item.title.includes(keyword) || item.content.includes(keyword));
+    }
+    return filtered;
   }
 
-  const query = category ? `?category=${category}` : '';
-  const data = await request(`/api/posts${query}`, { method: 'GET' });
+  const params = new URLSearchParams();
+  if (category) params.append('category', category);
+  if (keyword) params.append('keyword', keyword);
+  const queryStr = params.toString() ? `?${params.toString()}` : '';
+
+  const data = await request(`/api/posts${queryStr}`, { method: 'GET' });
   return data?.data || [];
 }
 

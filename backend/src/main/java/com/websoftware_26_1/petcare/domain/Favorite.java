@@ -53,6 +53,15 @@ public class Favorite {
     @Column(name = "snap_notice_edt")
     private LocalDate snapNoticeEdt;
 
+    @Column(name = "snap_care_nm", length = 200)
+    private String snapCareNm;
+
+    @Column(name = "snap_age", length = 50)
+    private String snapAge;
+
+    @Column(name = "snap_sex_cd", length = 10)
+    private String snapSexCd;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

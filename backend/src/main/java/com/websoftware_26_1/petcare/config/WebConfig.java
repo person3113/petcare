@@ -28,6 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
                 "/api/match/quiz",
                 "/api/codes/**",
                 "/api/shelters",
+                "/api/lost-animals/**",
                 "/api/stats/**",
                 "/api/admin/sync",
                 "/api/debug/**"

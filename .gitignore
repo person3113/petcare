@@ -29,6 +29,7 @@ frontend/build/
 .springBeans
 .sts4-cache
 bin/
+/doc
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
@@ -50,9 +51,6 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### etc ###
-.antigravitycli
 
 node_modules/
 #package-lock.json

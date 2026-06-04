@@ -51,20 +51,40 @@ public class AnimalService {
         int limit = request.getLimit() == null || request.getLimit() < 1 ? 20 : request.getLimit();
         int offset = (page - 1) * limit;
 
-        String upKindCd = request.getUpkind();
-        String orgNm = request.getOrgCd();
-        String careRegNo = null;
         String processState = request.getState();
+        if (processState == null || processState.trim().isEmpty()) {
+            processState = "보호중";
+        } else if ("전체".equals(processState) || "all".equalsIgnoreCase(processState)) {
+            processState = null;
+        }
+        String keyword = request.getKeyword();
 
         List<Animal> animals = animalRepository.findAllWithFilters(
-            upKindCd,
-            orgNm,
-            careRegNo,
+            request.getSido(),
+            request.getSigungu(),
+            request.getShelterName(),
+            request.getKind(),
             processState,
+            request.getGender(),
+            request.getIsNeutered(),
+            request.getOnlySocialized(),
+            request.getOnlyHealthy(),
+            keyword,
             offset,
             limit
         );
-        int totalCount = animalRepository.countAllWithFilters(upKindCd, orgNm, careRegNo, processState);
+        int totalCount = animalRepository.countAllWithFilters(
+            request.getSido(),
+            request.getSigungu(),
+            request.getShelterName(),
+            request.getKind(),
+            processState,
+            request.getGender(),
+            request.getIsNeutered(),
+            request.getOnlySocialized(),
+            request.getOnlyHealthy(),
+            keyword
+        );
         int totalPages = (int) Math.ceil((double) totalCount / limit);
 
         List<AnimalResponse> items = new ArrayList<>();
@@ -94,6 +114,11 @@ public class AnimalService {
         String orgNm = uprCd;
         String careRegNo = null;
         String processState = state;
+        if (processState == null || processState.trim().isEmpty()) {
+            processState = "보호중";
+        } else if ("전체".equals(processState) || "all".equalsIgnoreCase(processState)) {
+            processState = null;
+        }
 
         List<Animal> animals = animalRepository.findAllWithFiltersForMatch(
             upKindCd,
@@ -205,6 +230,17 @@ public class AnimalService {
             .updatedAt(formatDateTime(animal.getUpdTm()))
             .isLiked(isLiked)
             .geminiIntro(introResult.intro())
+            .weekStartTime(shelter != null ? shelter.getWeekOprStime() : null)
+            .weekEndTime(shelter != null ? shelter.getWeekOprEtime() : null)
+            .weekendStartTime(shelter != null ? shelter.getWeekendOprStime() : null)
+            .weekendEndTime(shelter != null ? shelter.getWeekendOprEtime() : null)
+            .closedDays(shelter != null ? shelter.getCloseDay() : null)
+            .vetPersonCnt(shelter != null ? shelter.getVetPersonCnt() : null)
+            .specsPersonCnt(shelter != null ? shelter.getSpecsPersonCnt() : null)
+            .medicalCnt(shelter != null ? shelter.getMedicalCnt() : null)
+            .quarantineCnt(shelter != null ? shelter.getQuarabtineCnt() : null)
+            .feedCnt(shelter != null ? shelter.getFeedCnt() : null)
+            .targetAnimals(shelter != null ? shelter.getSaveTrgtAnimal() : null)
             .build();
     }
 

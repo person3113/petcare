@@ -22,6 +22,7 @@ public class OpenApiClient {
     private static final String ABANDONMENT_BASE_URL = "https://apis.data.go.kr/1543061/abandonmentPublicService_v2";
     private static final String SHELTER_BASE_URL = "https://apis.data.go.kr/1543061/animalShelterSrvc_v2";
     private static final String STATS_BASE_URL = "https://apis.data.go.kr/1543061/rescueAnimalStatsService";
+    private static final String LOST_BASE_URL = "https://apis.data.go.kr/1543061/lossInfoService";
 
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
@@ -35,7 +36,7 @@ public class OpenApiClient {
     }
 
     public List<CodeResponse> fetchSidoCodes() {
-        JsonNode root = get(ABANDONMENT_BASE_URL, "/sido_v2", Collections.emptyMap());
+        JsonNode root = get(ABANDONMENT_BASE_URL, "/sido_v2", Map.of("numOfRows", "100"));
         List<JsonNode> items = extractItems(root);
         List<CodeResponse> results = new ArrayList<>();
         for (JsonNode item : items) {
@@ -49,7 +50,7 @@ public class OpenApiClient {
     }
 
     public List<CodeResponse> fetchSigunguCodes(String uprCd) {
-        JsonNode root = get(ABANDONMENT_BASE_URL, "/sigungu_v2", Map.of("upr_cd", uprCd));
+        JsonNode root = get(ABANDONMENT_BASE_URL, "/sigungu_v2", Map.of("upr_cd", uprCd, "numOfRows", "100"));
         List<JsonNode> items = extractItems(root);
         List<CodeResponse> results = new ArrayList<>();
         for (JsonNode item : items) {
@@ -63,7 +64,13 @@ public class OpenApiClient {
     }
 
     public List<CodeResponse> fetchShelterCodes(String uprCd, String orgCd) {
-        JsonNode root = get(ABANDONMENT_BASE_URL, "/shelter_v2", Map.of("upr_cd", uprCd, "org_cd", orgCd));
+        java.util.Map<String, String> params = new java.util.HashMap<>();
+        params.put("upr_cd", uprCd);
+        params.put("numOfRows", "100");
+        if (orgCd != null && !orgCd.isBlank()) {
+            params.put("org_cd", orgCd);
+        }
+        JsonNode root = get(ABANDONMENT_BASE_URL, "/shelter_v2", params);
         List<JsonNode> items = extractItems(root);
         List<CodeResponse> results = new ArrayList<>();
         for (JsonNode item : items) {
@@ -76,11 +83,13 @@ public class OpenApiClient {
         return results;
     }
 
-    public PagedResult fetchAnimals(int pageNo, int numOfRows) {
-        JsonNode root = get(ABANDONMENT_BASE_URL, "/abandonmentPublic_v2", Map.of(
-            "pageNo", String.valueOf(pageNo),
-            "numOfRows", String.valueOf(numOfRows)
-        ));
+    public PagedResult fetchAnimals(String bgnde, String endde, int pageNo, int numOfRows) {
+        java.util.Map<String, String> params = new java.util.HashMap<>();
+        params.put("pageNo", String.valueOf(pageNo));
+        params.put("numOfRows", String.valueOf(numOfRows));
+        if (bgnde != null && !bgnde.isBlank()) params.put("bgnde", bgnde);
+        if (endde != null && !endde.isBlank()) params.put("endde", endde);
+        JsonNode root = get(ABANDONMENT_BASE_URL, "/abandonmentPublic_v2", params);
         return toPagedResult(root);
     }
 
@@ -92,14 +101,31 @@ public class OpenApiClient {
         return toPagedResult(root);
     }
 
-    public PagedResult fetchRescueStats(String bgnde, String endde, String se, int pageNo, int numOfRows) {
-        JsonNode root = get(STATS_BASE_URL, "/rescueAnimalStats", Map.of(
+    public PagedResult fetchLostAnimals(String bgnde, String ended, int pageNo, int numOfRows) {
+        JsonNode root = get(LOST_BASE_URL, "/lossInfo", Map.of(
             "bgnde", bgnde,
-            "endde", endde,
-            "se", se,
+            "ended", ended,
             "pageNo", String.valueOf(pageNo),
             "numOfRows", String.valueOf(numOfRows)
         ));
+        return toPagedResult(root);
+    }
+
+    public PagedResult fetchRescueStats(String bgnde, String endde, String se, int pageNo, int numOfRows) {
+        return fetchRescueStats(bgnde, endde, se, null, pageNo, numOfRows);
+    }
+
+    public PagedResult fetchRescueStats(String bgnde, String endde, String se, String uprCd, int pageNo, int numOfRows) {
+        java.util.Map<String, String> params = new java.util.HashMap<>();
+        params.put("bgnde", bgnde);
+        params.put("endde", endde);
+        params.put("se", se);
+        params.put("pageNo", String.valueOf(pageNo));
+        params.put("numOfRows", String.valueOf(numOfRows));
+        if (uprCd != null && !uprCd.isBlank()) {
+            params.put("upr_cd", uprCd);
+        }
+        JsonNode root = get(STATS_BASE_URL, "/rescueAnimalStats", params);
         return toPagedResult(root);
     }
 

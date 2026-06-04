@@ -45,6 +45,11 @@ public class FavoriteService {
         return responses;
     }
 
+    @Transactional(readOnly = true)
+    public long getFavoriteCount(Long userId) {
+        return favoriteRepository.countByUserId(userId);
+    }
+
     @Transactional
     public FavoriteResponse addFavorite(Long userId, String desertionNo) {
         User user = userRepository.findById(userId)
@@ -67,6 +72,9 @@ public class FavoriteService {
             .snapCareTel(animal != null ? animal.getCareTel() : null)
             .snapProcessState(animal != null ? animal.getProcessState() : null)
             .snapNoticeEdt(animal != null ? animal.getNoticeEdt() : null)
+            .snapCareNm(animal != null ? animal.getCareNm() : null)
+            .snapAge(animal != null ? animal.getAge() : null)
+            .snapSexCd(animal != null ? animal.getSexCd() : null)
             .build();
 
         Favorite saved = favoriteRepository.save(favorite);
@@ -88,6 +96,9 @@ public class FavoriteService {
             .shelterTel(favorite.getSnapCareTel())
             .processState(favorite.getSnapProcessState())
             .noticeEndDate(formatDate(favorite.getSnapNoticeEdt()))
+            .shelterName(favorite.getSnapCareNm())
+            .age(favorite.getSnapAge())
+            .gender(convertGender(favorite.getSnapSexCd()))
             .build();
     }
 
@@ -96,6 +107,22 @@ public class FavoriteService {
             return null;
         }
         return date.format(DATE_FORMATTER);
+    }
+
+    private String convertGender(String sexCd) {
+        if (sexCd == null) {
+            return null;
+        }
+        if ("M".equalsIgnoreCase(sexCd)) {
+            return "수컷";
+        }
+        if ("F".equalsIgnoreCase(sexCd)) {
+            return "암컷";
+        }
+        if ("Q".equalsIgnoreCase(sexCd)) {
+            return "미상";
+        }
+        return sexCd;
     }
 
     private String firstImage(Animal animal) {

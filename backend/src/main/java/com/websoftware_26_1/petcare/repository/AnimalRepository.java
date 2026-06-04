@@ -36,31 +36,67 @@ public class AnimalRepository {
     }
 
     public List<Animal> findAllWithFilters(
-        String upKindCd,
-        String orgNm,
-        String careRegNo,
+        String sido,
+        String sigungu,
+        String shelterName,
+        String kind,
         String processState,
+        String gender,
+        String isNeutered,
+        Boolean onlySocialized,
+        Boolean onlyHealthy,
+        String keyword,
         int offset,
         int limit
     ) {
         StringBuilder jpql = new StringBuilder("select a from Animal a where 1=1");
         Map<String, Object> params = new HashMap<>();
 
-        if (upKindCd != null && !upKindCd.isBlank()) {
-            jpql.append(" and a.upKindCd = :upKindCd");
-            params.put("upKindCd", upKindCd);
+        if (sido != null && !sido.isBlank()) {
+            jpql.append(" and a.orgNm like :sido");
+            params.put("sido", "%" + sido + "%");
         }
-        if (orgNm != null && !orgNm.isBlank()) {
-            jpql.append(" and a.orgNm like :orgNm");
-            params.put("orgNm", "%" + orgNm + "%");
+        if (sigungu != null && !sigungu.isBlank()) {
+            jpql.append(" and a.orgNm like :sigungu");
+            params.put("sigungu", "%" + sigungu + "%");
         }
-        if (careRegNo != null && !careRegNo.isBlank()) {
-            jpql.append(" and a.careRegNo = :careRegNo");
-            params.put("careRegNo", careRegNo);
+        if (shelterName != null && !shelterName.isBlank()) {
+            jpql.append(" and a.careNm = :shelterName");
+            params.put("shelterName", shelterName);
+        }
+        if (kind != null && !kind.isBlank()) {
+            jpql.append(" and (a.kindCd like :kind or a.kindNm like :kind or a.kindFullNm like :kind)");
+            params.put("kind", "%" + kind + "%");
         }
         if (processState != null && !processState.isBlank()) {
             jpql.append(" and a.processState = :processState");
             params.put("processState", processState);
+        }
+        if (gender != null && !gender.isBlank()) {
+            if ("수컷".equals(gender)) {
+                jpql.append(" and a.sexCd = 'M'");
+            } else if ("암컷".equals(gender)) {
+                jpql.append(" and a.sexCd = 'F'");
+            }
+        }
+        if (isNeutered != null && !isNeutered.isBlank()) {
+            if ("예".equals(isNeutered)) {
+                jpql.append(" and a.neuterYn = 'Y'");
+            } else if ("아니오".equals(isNeutered)) {
+                jpql.append(" and a.neuterYn = 'N'");
+            } else if ("미상".equals(isNeutered)) {
+                jpql.append(" and a.neuterYn = 'U'");
+            }
+        }
+        if (Boolean.TRUE.equals(onlySocialized)) {
+            jpql.append(" and a.sfeSoci is not null and trim(a.sfeSoci) != ''");
+        }
+        if (Boolean.TRUE.equals(onlyHealthy)) {
+            jpql.append(" and (a.sfeHealth = '양호' or (a.sfeHealth is null and a.healthChk = '양호'))");
+        }
+        if (keyword != null && !keyword.isBlank()) {
+            jpql.append(" and (a.kindCd like :keyword or a.careNm like :keyword or a.specialMark like :keyword or a.kindNm like :keyword)");
+            params.put("keyword", "%" + keyword + "%");
         }
 
         jpql.append(" order by a.noticeEdt asc");
@@ -172,29 +208,65 @@ public class AnimalRepository {
     }
 
     public int countAllWithFilters(
-        String upKindCd,
-        String orgNm,
-        String careRegNo,
-        String processState
+        String sido,
+        String sigungu,
+        String shelterName,
+        String kind,
+        String processState,
+        String gender,
+        String isNeutered,
+        Boolean onlySocialized,
+        Boolean onlyHealthy,
+        String keyword
     ) {
         StringBuilder jpql = new StringBuilder("select count(a) from Animal a where 1=1");
         Map<String, Object> params = new HashMap<>();
 
-        if (upKindCd != null && !upKindCd.isBlank()) {
-            jpql.append(" and a.upKindCd = :upKindCd");
-            params.put("upKindCd", upKindCd);
+        if (sido != null && !sido.isBlank()) {
+            jpql.append(" and a.orgNm like :sido");
+            params.put("sido", "%" + sido + "%");
         }
-        if (orgNm != null && !orgNm.isBlank()) {
-            jpql.append(" and a.orgNm like :orgNm");
-            params.put("orgNm", "%" + orgNm + "%");
+        if (sigungu != null && !sigungu.isBlank()) {
+            jpql.append(" and a.orgNm like :sigungu");
+            params.put("sigungu", "%" + sigungu + "%");
         }
-        if (careRegNo != null && !careRegNo.isBlank()) {
-            jpql.append(" and a.careRegNo = :careRegNo");
-            params.put("careRegNo", careRegNo);
+        if (shelterName != null && !shelterName.isBlank()) {
+            jpql.append(" and a.careNm = :shelterName");
+            params.put("shelterName", shelterName);
+        }
+        if (kind != null && !kind.isBlank()) {
+            jpql.append(" and (a.kindCd like :kind or a.kindNm like :kind or a.kindFullNm like :kind)");
+            params.put("kind", "%" + kind + "%");
         }
         if (processState != null && !processState.isBlank()) {
             jpql.append(" and a.processState = :processState");
             params.put("processState", processState);
+        }
+        if (gender != null && !gender.isBlank()) {
+            if ("수컷".equals(gender)) {
+                jpql.append(" and a.sexCd = 'M'");
+            } else if ("암컷".equals(gender)) {
+                jpql.append(" and a.sexCd = 'F'");
+            }
+        }
+        if (isNeutered != null && !isNeutered.isBlank()) {
+            if ("예".equals(isNeutered)) {
+                jpql.append(" and a.neuterYn = 'Y'");
+            } else if ("아니오".equals(isNeutered)) {
+                jpql.append(" and a.neuterYn = 'N'");
+            } else if ("미상".equals(isNeutered)) {
+                jpql.append(" and a.neuterYn = 'U'");
+            }
+        }
+        if (Boolean.TRUE.equals(onlySocialized)) {
+            jpql.append(" and a.sfeSoci is not null and trim(a.sfeSoci) != ''");
+        }
+        if (Boolean.TRUE.equals(onlyHealthy)) {
+            jpql.append(" and (a.sfeHealth = '양호' or (a.sfeHealth is null and a.healthChk = '양호'))");
+        }
+        if (keyword != null && !keyword.isBlank()) {
+            jpql.append(" and (a.kindCd like :keyword or a.careNm like :keyword or a.specialMark like :keyword or a.kindNm like :keyword)");
+            params.put("keyword", "%" + keyword + "%");
         }
 
         TypedQuery<Long> query = entityManager.createQuery(jpql.toString(), Long.class);

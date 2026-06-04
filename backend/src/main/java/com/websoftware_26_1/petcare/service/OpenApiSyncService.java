@@ -2,9 +2,11 @@ package com.websoftware_26_1.petcare.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.websoftware_26_1.petcare.domain.Animal;
+import com.websoftware_26_1.petcare.domain.LostAnimal;
 import com.websoftware_26_1.petcare.domain.RescueStatsCache;
 import com.websoftware_26_1.petcare.domain.Shelter;
 import com.websoftware_26_1.petcare.repository.AnimalRepository;
+import com.websoftware_26_1.petcare.repository.LostAnimalRepository;
 import com.websoftware_26_1.petcare.repository.RescueStatsCacheRepository;
 import com.websoftware_26_1.petcare.repository.ShelterRepository;
 import java.time.LocalDate;
@@ -23,32 +25,59 @@ public class OpenApiSyncService {
     private static final Logger logger = LoggerFactory.getLogger(OpenApiSyncService.class);
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.BASIC_ISO_DATE;
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter LOST_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
     private final OpenApiClient openApiClient;
     private final AnimalRepository animalRepository;
+    private final LostAnimalRepository lostAnimalRepository;
     private final ShelterRepository shelterRepository;
     private final RescueStatsCacheRepository rescueStatsCacheRepository;
 
     public OpenApiSyncService(
         OpenApiClient openApiClient,
         AnimalRepository animalRepository,
+        LostAnimalRepository lostAnimalRepository,
         ShelterRepository shelterRepository,
         RescueStatsCacheRepository rescueStatsCacheRepository
     ) {
         this.openApiClient = openApiClient;
         this.animalRepository = animalRepository;
+        this.lostAnimalRepository = lostAnimalRepository;
         this.shelterRepository = shelterRepository;
         this.rescueStatsCacheRepository = rescueStatsCacheRepository;
     }
 
+    @org.springframework.scheduling.annotation.Async
     @Transactional
-    public SyncResult syncAnimals(int numOfRows) {
+    public void syncAllDataAsync(LocalDate startDate, LocalDate endDate, int numOfRows) {
+        logger.info("background sync 시작: from {} to {} ", startDate, endDate);
+        LocalDate current = startDate;
+        while (!current.isAfter(endDate)) {
+            LocalDate next = current.plusMonths(1).minusDays(1);
+            if (next.isAfter(endDate)) {
+                next = endDate;
+            }
+            logger.info("Syncing chunk: {} to {}", current, next);
+            syncAnimalsForPeriod(current, next, numOfRows);
+            syncLostAnimals(current, next, numOfRows);
+            syncRescueStats(current, next, numOfRows);
+            current = current.plusMonths(1);
+        }
+        logger.info("Background sync 완료: from {} to {}", startDate, endDate);
+    }
+
+    @Transactional
+    public SyncResult syncAnimalsForPeriod(LocalDate bgnde, LocalDate endde, int numOfRows) {
         int pageNo = 1;
         int totalCount = 0;
         int savedCount = 0;
 
         while (true) {
-            OpenApiClient.PagedResult result = openApiClient.fetchAnimals(pageNo, numOfRows);
+            OpenApiClient.PagedResult result = openApiClient.fetchAnimals(
+                bgnde == null ? null : bgnde.format(DATE_FORMATTER),
+                endde == null ? null : endde.format(DATE_FORMATTER),
+                pageNo, numOfRows
+            );
             if (result.getItems().isEmpty()) {
                 break;
             }
@@ -92,6 +121,48 @@ public class OpenApiSyncService {
                 Shelter shelter = toShelter(item);
                 if (shelter != null) {
                     shelterRepository.save(shelter);
+                    savedCount++;
+                }
+            }
+
+            if (pageNo * numOfRows >= totalCount) {
+                break;
+            }
+            pageNo++;
+        }
+
+        return new SyncResult(savedCount, totalCount);
+    }
+
+    @Transactional
+    public SyncResult syncLostAnimals(LocalDate bgnde, LocalDate ended, int numOfRows) {
+        int pageNo = 1;
+        int totalCount = 0;
+        int savedCount = 0;
+
+        while (true) {
+            OpenApiClient.PagedResult result = openApiClient.fetchLostAnimals(
+                bgnde == null ? null : bgnde.format(DATE_FORMATTER),
+                ended == null ? null : ended.format(DATE_FORMATTER),
+                pageNo,
+                numOfRows
+            );
+            if (result.getItems().isEmpty()) {
+                break;
+            }
+            if (totalCount == 0) {
+                totalCount = result.getTotalCount();
+            }
+
+            for (JsonNode item : result.getItems()) {
+                LostAnimal parsed = toLostAnimal(item);
+                if (parsed != null) {
+                    LostAnimal existing = lostAnimalRepository.findExisting(parsed).orElse(null);
+                    if (existing != null) {
+                        parsed.setId(existing.getId());
+                        parsed.setCachedAt(existing.getCachedAt());
+                    }
+                    lostAnimalRepository.save(parsed);
                     savedCount++;
                 }
             }
@@ -292,6 +363,47 @@ public class OpenApiSyncService {
             .build();
     }
 
+    private LostAnimal toLostAnimal(JsonNode item) {
+        String rfidCd = getText(item, "rfidCd");
+        String happenDtRaw = getText(item, "happenDt");
+        String happenAddr = getText(item, "happenAddr");
+        String happenAddrDtl = getText(item, "happenAddrDtl");
+        String happenPlace = getText(item, "happenPlace");
+        String kindCd = getText(item, "kindCd");
+        String colorCd = getText(item, "colorCd");
+        String age = getText(item, "age");
+        String sexCd = getText(item, "sexCd");
+        String specialMark = getText(item, "specialMark");
+        String popfile = getText(item, "popfile");
+        String callName = getText(item, "callName");
+        String callTel = getText(item, "callTel");
+        String orgNm = getText(item, "orgNm");
+
+        if (happenDtRaw == null && happenAddr == null && kindCd == null) {
+            return null;
+        }
+
+        LocalDateTime happenDt = parseDateTime(happenDtRaw);
+
+        return LostAnimal.builder()
+            .rfidCd(rfidCd)
+            .happenDt(happenDt)
+            .happenAddr(happenAddr)
+            .happenAddrDtl(happenAddrDtl)
+            .happenPlace(happenPlace)
+            .kindCd(kindCd)
+            .colorCd(colorCd)
+            .age(age)
+            .sexCd(sexCd)
+            .specialMark(specialMark)
+            .popfile(popfile)
+            .callName(callName)
+            .callTel(callTel)
+            .orgNm(orgNm)
+            .cachedAt(LocalDateTime.now())
+            .build();
+    }
+
     private String getText(JsonNode node, String field) {
         if (node == null || field == null) {
             return null;
@@ -350,7 +462,11 @@ public class OpenApiSyncService {
         try {
             return LocalDateTime.parse(value, DATETIME_FORMATTER);
         } catch (Exception ex) {
-            return null;
+            try {
+                return LocalDateTime.parse(value, LOST_DATETIME_FORMATTER);
+            } catch (Exception ignored) {
+                return null;
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import { request } from '../api/http.js';
 import AnimalInfoBox from '../components/animaldetail/AnimalInfoBox';
 import AnimalImg from '../components/animaldetail/AnimalImg';
 import AnimalInfoTab from '../components/animaldetail/AnimalInfoTab';
+import SimilarAnimals from '../components/animaldetail/SimilarAnimals';
 
 function AnimalDetailpage(){
 
@@ -30,16 +31,16 @@ function AnimalDetailpage(){
     if(loding){return(<div>...로딩중...</div>)}
     if(!animal){return(<div>데이터가 없습니다</div>)}
 
+    const safeImages = Array.isArray(animal.images) ? animal.images : [];
+
 
     return(
         <div className="mx-auto max-w-5xl py-6">
-            <h1 className="text-xl font-bold text-gray-900">동물 상세 페이지 확인용</h1>
-            <p className="text-sm text-gray-600">동물의 id: {id}</p>
             {/*todo:현재 페이지 위치 나타내는부분 ex)메인화면>입양하기>동물상세정보 */}
             {/*여기에 동물 상세페이지 컴포넌트들 넣기*/}
             <div className="mt-6 flex flex-col gap-10 lg:flex-row">
                 <div className="min-w-[320px] flex-1">
-                    <AnimalImg images={animal.images} />
+                    <AnimalImg images={safeImages} />
                 </div>
                 <div className="min-w-[320px] flex-1">
                     <AnimalInfoBox animal={animal} onFavoriteChange={SetAnimal} />
@@ -47,6 +48,7 @@ function AnimalDetailpage(){
 
             </div>
             <AnimalInfoTab animal={animal} />
+            <SimilarAnimals currentAnimal={animal} />
         </div>
     )
 }

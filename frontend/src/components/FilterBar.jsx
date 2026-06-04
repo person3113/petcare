@@ -1,4 +1,5 @@
 import React from 'react';
+import { PROCESS_STATES } from '../constants.js';
 
 function FilterBar({
   sidoList,
@@ -97,9 +98,11 @@ function FilterBar({
             className="rounded-lg border border-gray-200 px-3 py-2 text-sm"
           >
             <option value="">전체</option>
-            <option value="보호중">보호중</option>
-            <option value="종료(입양)">종료(입양)</option>
-            <option value="종료(반환)">종료(반환)</option>
+            {PROCESS_STATES.map((st) => (
+              <option key={st} value={st}>
+                {st}
+              </option>
+            ))}
           </select>
         </label>
 
@@ -133,26 +136,6 @@ function FilterBar({
         </label>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-700">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="onlySocialized"
-            checked={filters.onlySocialized}
-            onChange={handleChange}
-          />
-          사회화 정보 있는 아이만
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="onlyHealthy"
-            checked={filters.onlyHealthy}
-            onChange={handleChange}
-          />
-          건강 상태 양호만
-        </label>
-      </div>
     </section>
   );
 }

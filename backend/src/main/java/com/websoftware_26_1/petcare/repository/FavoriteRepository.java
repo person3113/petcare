@@ -32,6 +32,14 @@ public class FavoriteRepository {
             .getResultList();
     }
 
+    public long countByUserId(Long userId) {
+        String jpql = "select count(f) from Favorite f where f.user.id = :userId";
+        Long count = entityManager.createQuery(jpql, Long.class)
+            .setParameter("userId", userId)
+            .getSingleResult();
+        return count != null ? count : 0L;
+    }
+
     public Optional<Favorite> findByUserIdAndDesertionNo(Long userId, String desertionNo) {
         String jpql = "select f from Favorite f where f.user.id = :userId and f.desertionNo = :desertionNo";
         return entityManager.createQuery(jpql, Favorite.class)
