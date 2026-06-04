@@ -54,7 +54,7 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
 
             {/*타이틀: 품종 및 보호 상태 */}
             <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold">
+                <h1 className="!text-4xl font-bold">
                     {kind} {/* ex) [개] 믹스견 */}
                 </h1>
                 <span className="rounded bg-indigo-50 px-2 py-1 text-sm font-medium text-indigo-600">
