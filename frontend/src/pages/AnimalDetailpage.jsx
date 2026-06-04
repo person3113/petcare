@@ -36,8 +36,6 @@ function AnimalDetailpage(){
 
     return(
         <div className="mx-auto max-w-5xl py-6">
-            <h1 className="text-xl font-bold text-gray-900">동물 상세 페이지 확인용</h1>
-            <p className="text-sm text-gray-600">동물의 id: {id}</p>
             {/*todo:현재 페이지 위치 나타내는부분 ex)메인화면>입양하기>동물상세정보 */}
             {/*여기에 동물 상세페이지 컴포넌트들 넣기*/}
             <div className="mt-6 flex flex-col gap-10 lg:flex-row">
