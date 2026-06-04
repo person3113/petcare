@@ -53,21 +53,21 @@ function AnimalInfoTab({ animal }) {
             <nav className="flex gap-3">
                 <button
                     type="button"
-                    className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${nowTab === 'health' ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                    className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${nowTab === 'health' ? 'bg-tabbar-bg text-white border-tabbar-bg' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
                     onClick={() => setNowTab('health')}
                 >
                     건강 정보
                 </button>
                 <button
                     type="button"
-                    className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${nowTab === 'shelter' ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                    className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${nowTab === 'shelter' ? 'bg-tabbar-bg text-white border-tabbar-bg' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
                     onClick={() => setNowTab('shelter')}
                 >
                     보호소 정보
                 </button>
                 <button
                     type="button"
-                    className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${nowTab === 'personality' ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                    className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${nowTab === 'personality' ? 'bg-tabbar-bg text-white border-tabbar-bg' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
                     onClick={() => setNowTab('personality')}
                 >
                     성향 정보
@@ -118,11 +118,11 @@ function AnimalInfoTab({ animal }) {
             {nowTab === 'personality' && (
                 <div className="space-y-3">
                     <h4 className="font-bold text-gray-900 text-lg mb-4 border-b pb-2">🐾 성향정보</h4>
-                    <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="bg-orange-50/50 p-4 rounded-lg">
                         <p className="text-xs text-gray-500 mb-1">성향 및 특징</p>
                         <p className="font-medium leading-relaxed">{description || '등록된 성향 정보가 없습니다.'}</p>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="bg-orange-50/50 p-4 rounded-lg">
                         <p className="text-xs text-gray-500 mb-1">사회성</p>
                         <p className="font-medium leading-relaxed">{socialization || '등록된 사회성 정보가 없습니다.'}</p>
                     </div>

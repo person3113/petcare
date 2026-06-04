@@ -37,13 +37,13 @@ function AnimalDetailpage(){
 
     return(
         <div className="mx-auto max-w-5xl py-6">
-            {/*todo:현재 페이지 위치 나타내는부분 ex)메인화면>입양하기>동물상세정보 */}
+            {/*페이지 경로*/}
             <div className="path ml-6">
                 <Link to="/" className="text-sm text-gray-500 hover:underline">메인 화면</Link>
                 <span>&gt;</span>
                 <Link to="/animals" className="text-sm text-gray-500 hover:underline">인연 찾기</Link>
                 <span>&gt;</span>
-                <span className="text-sm text-gray-500">인연 상세</span>
+                <span className="text-sm text-accent">인연 상세</span>
             </div>
             {/*여기에 동물 상세페이지 컴포넌트들 넣기*/}
             <div className="mt-6 flex flex-col gap-10 lg:flex-row">
