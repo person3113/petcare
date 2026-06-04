@@ -44,7 +44,13 @@ async function fetchShelters(sidoName, sigunguName) {
 async function fetchLostAnimals(params = {}) {
   const query = buildQuery(params);
   const data = await request(`/api/lost-animals${query}`);
-  return data?.data || [];
+  return data?.data?.items || [];
 }
 
-export { fetchAnimals, fetchAnimalsPage, fetchSido, fetchSigungu, fetchShelters, fetchLostAnimals };
+async function fetchLostAnimalsPage(params = {}) {
+  const query = buildQuery(params);
+  const data = await request(`/api/lost-animals${query}`);
+  return data?.data || { items: [], pagination: null };
+}
+
+export { fetchAnimals, fetchAnimalsPage, fetchSido, fetchSigungu, fetchShelters, fetchLostAnimals, fetchLostAnimalsPage };

@@ -50,8 +50,19 @@ public class CodeCacheService {
             return cached;
         }
         List<CodeResponse> fetched = openApiClient.fetchSigunguCodes(uprCd);
-        sigunguCache.put(uprCd, Collections.unmodifiableList(fetched));
-        return fetched;
+
+        String sidoName = sidoCache.stream()
+                .filter(s -> s.getCode().equals(uprCd))
+                .map(CodeResponse::getName)
+                .findFirst()
+                .orElse("");
+
+        List<CodeResponse> filtered = fetched.stream()
+                .filter(c -> !c.getName().equals(sidoName) && !c.getName().contains("가정보호"))
+                .toList();
+
+        sigunguCache.put(uprCd, Collections.unmodifiableList(filtered));
+        return filtered;
     }
 
     public List<CodeResponse> getShelterList(String sido, String sigungu) {

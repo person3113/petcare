@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fetchLostAnimals, fetchSigungu, fetchShelters } from '../api/animals.js';
+import { fetchLostAnimalsPage, fetchSido, fetchSigungu } from '../api/animals.js';
 import LostAnimalFilter from '../components/LostAnimalFilter.jsx';
 import AnimalCard from '../components/AnimalCard.jsx';
-import { SIDO_LIST } from '../constants.js';
 
 // 필터 초기값
 const DEFAULT_FILTERS = {
@@ -13,56 +12,40 @@ const DEFAULT_FILTERS = {
   gender: '',
 };
 
-// 필터 조건에 맞는 동물만 걸러내는 함수
-function applyFilter(animals, filters) {
-  let result = animals;
-
-  if (filters.sido) {
-    result = result.filter((animal) => animal.jurisdiction && animal.jurisdiction.includes(filters.sido));
-  }
-  if (filters.sigungu) {
-    result = result.filter((animal) => animal.jurisdiction && animal.jurisdiction.includes(filters.sigungu));
-  }
-  if (filters.kind) {
-    result = result.filter((animal) => animal.kind && animal.kind.includes(filters.kind));
-  }
-  if (filters.gender) {
-    result = result.filter((animal) => animal.gender === filters.gender);
-  }
-
-  return result;
-}
-
 function LostAnimalPage() {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword') || '';
 
-  // 분실동물 전체 목록
   const [allAnimals, setAllAnimals] = useState([]);
-  // 필터 적용 후 보여줄 목록
-  const [filteredAnimals, setFilteredAnimals] = useState([]);
-  // 현재 필터 상태
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  // 시도/시군구/보호소 드롭다운 목록
+  const [sidoList, setSidoList] = useState([]);
   const [sigunguList, setSigunguList] = useState([]);
-  // 로딩 및 에러 상태
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
   const pageLimit = 20;
-  // 300ms debounce용 타이머 ref
   const debounceRef = useRef(null);
 
-  // 마운트 시 분실동물 데이터 + 시도 목록 불러오기
   useEffect(() => {
     let isMounted = true;
 
+    import('../api/animals.js').then((module) => {
+      module.fetchSido().then(setSidoList);
+    });
+
     async function init() {
       try {
-        const animals = await fetchLostAnimals({ keyword });
+        const params = { page, limit: pageLimit, keyword };
+        if (filters.sido) params.sido = filters.sido;
+        if (filters.sigungu) params.sigungu = filters.sigungu;
+        if (filters.kind) params.kind = filters.kind;
+        if (filters.gender) params.gender = filters.gender;
+
+        const data = await fetchLostAnimalsPage(params);
         if (!isMounted) return;
-        setAllAnimals(animals);
-        setFilteredAnimals(animals);
+        setAllAnimals(data.items || []);
+        setPagination(data.pagination || null);
       } catch (err) {
         if (!isMounted) return;
         setError('분실동물 데이터를 불러오지 못했습니다.');
@@ -73,7 +56,14 @@ function LostAnimalPage() {
       }
     }
 
-    init();
+    setLoading(true);
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(() => {
+      init();
+    }, 300);
 
     return () => {
       isMounted = false;
@@ -81,30 +71,18 @@ function LostAnimalPage() {
         clearTimeout(debounceRef.current);
       }
     };
-  }, []);
+  }, [page, filters, keyword]);
 
-  // 필터 변경 시 300ms debounce 후 필터 적용
   function handleFilterChange(nextFilters) {
     setFilters(nextFilters);
-
     if (page !== 1) {
       setPage(1);
     }
-
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-
-    debounceRef.current = setTimeout(() => {
-      const result = applyFilter(allAnimals, nextFilters);
-      setFilteredAnimals(result);
-    }, 300);
   }
 
-  // 시도 → 시군구 → 보호소 연쇄 드롭다운 처리
   async function handleCascadeChange(nextFilters) {
     if (nextFilters.sido !== filters.sido) {
-      const sidoCode = SIDO_LIST.find((item) => item.name === nextFilters.sido)?.code || '';
+      const sidoCode = sidoList.find((item) => item.name === nextFilters.sido)?.code || '';
       const sigungu = nextFilters.sido ? await fetchSigungu(sidoCode) : [];
       setSigunguList(sigungu);
       nextFilters = { ...nextFilters, sigungu: '' };
@@ -113,11 +91,7 @@ function LostAnimalPage() {
     handleFilterChange(nextFilters);
   }
 
-  // 시도 미선택 시 시군구/보호소 비활성화
   const isSigunguDisabled = !filters.sido;
-  const totalPages = Math.max(1, Math.ceil(filteredAnimals.length / pageLimit));
-  const startIndex = (page - 1) * pageLimit;
-  const pagedAnimals = filteredAnimals.slice(startIndex, startIndex + pageLimit);
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
@@ -130,7 +104,7 @@ function LostAnimalPage() {
         </div>
 
         <LostAnimalFilter
-          sidoList={SIDO_LIST}
+          sidoList={sidoList}
           sigunguList={sigunguList}
           filters={filters}
           onChange={handleCascadeChange}
@@ -138,28 +112,25 @@ function LostAnimalPage() {
         />
 
         <section className="flex items-center justify-between text-sm text-gray-600">
-          <span>총 {filteredAnimals.length}건</span>
-          {(filters.onlySocialized || filters.onlyHealthy) && (
-            <span className="text-emerald-600">선택 조건 적용됨</span>
-          )}
+          <span>총 {pagination?.totalCount ?? allAnimals.length}건</span>
         </section>
 
         {loading && <p className="text-sm text-gray-500">로딩 중...</p>}
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        {!loading && !error && filteredAnimals.length === 0 && (
+        {!loading && !error && allAnimals.length === 0 && (
           <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-500">
             조건에 맞는 분실동물이 없습니다.
           </div>
         )}
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {pagedAnimals.map((animal) => (
+          {allAnimals.map((animal) => (
             <AnimalCard key={animal.id} animal={animal} to={`/lost-animals/${animal.id}`} />
           ))}
         </div>
 
-        {filteredAnimals.length > 0 && totalPages > 1 && (
+        {pagination && pagination.totalPages > 1 && (
           <div className="mt-6 flex items-center justify-center gap-3 text-sm">
             <button
               type="button"
@@ -170,12 +141,12 @@ function LostAnimalPage() {
               이전
             </button>
             <span className="text-gray-500">
-              {page} / {totalPages}
+              {page} / {pagination.totalPages}
             </span>
             <button
               type="button"
-              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={page >= totalPages}
+              onClick={() => setPage((prev) => Math.min(prev + 1, pagination.totalPages))}
+              disabled={page >= pagination.totalPages}
               className="rounded-lg border border-gray-200 px-3 py-2 text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               다음

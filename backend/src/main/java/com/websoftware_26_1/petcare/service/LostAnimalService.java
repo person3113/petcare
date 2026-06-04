@@ -3,6 +3,9 @@ package com.websoftware_26_1.petcare.service;
 import com.websoftware_26_1.petcare.domain.LostAnimal;
 import com.websoftware_26_1.petcare.repository.LostAnimalRepository;
 import com.websoftware_26_1.petcare.web.dto.LostAnimalResponse;
+import com.websoftware_26_1.petcare.web.dto.LostAnimalListResponse;
+import com.websoftware_26_1.petcare.web.dto.LostAnimalSearchRequest;
+import com.websoftware_26_1.petcare.web.dto.PaginationResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,13 +25,36 @@ public class LostAnimalService {
     }
 
     @Transactional(readOnly = true)
-    public List<LostAnimalResponse> getLostAnimals(String keyword) {
-        List<LostAnimal> animals = lostAnimalRepository.findAllWithKeyword(keyword);
-        List<LostAnimalResponse> results = new ArrayList<>();
+    public LostAnimalListResponse getLostAnimals(LostAnimalSearchRequest request) {
+        int page = request.getPage() == null || request.getPage() < 1 ? 1 : request.getPage();
+        int limit = request.getLimit() == null || request.getLimit() < 1 ? 20 : request.getLimit();
+        int offset = (page - 1) * limit;
+
+        List<LostAnimal> animals = lostAnimalRepository.findAllWithFilters(
+            request.getSido(),
+            request.getSigungu(),
+            request.getKind(),
+            request.getGender(),
+            request.getKeyword(),
+            offset,
+            limit
+        );
+        int totalCount = lostAnimalRepository.countAllWithFilters(
+            request.getSido(),
+            request.getSigungu(),
+            request.getKind(),
+            request.getGender(),
+            request.getKeyword()
+        );
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
+
+        List<LostAnimalResponse> items = new ArrayList<>();
         for (LostAnimal animal : animals) {
-            results.add(toResponse(animal));
+            items.add(toResponse(animal));
         }
-        return results;
+
+        PaginationResponse pagination = new PaginationResponse(page, limit, totalCount, totalPages);
+        return new LostAnimalListResponse(items, pagination);
     }
 
     @Transactional(readOnly = true)
