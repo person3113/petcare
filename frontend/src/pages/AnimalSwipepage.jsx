@@ -5,6 +5,7 @@ import SwipeCard from '../components/animalswipe/SwipeCard';
 import SwipeSideBox from '../components/animalswipe/SwipeSideBox.jsx';
 import { fetchAnimals, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
 import { addFavorite, getFavorites } from '../api/favorites.js';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 function AnimalSwipePage() {
     const [animals, setAnimals] = useState([]);//전체 동물 정보 받을 곳
@@ -241,13 +242,13 @@ function AnimalSwipePage() {
                             </div>)}
                         {/* 하단 방향 설명 부분*/}
                         <div className="mt-8 flex gap-16 text-center text-sm text-gray-500">
-                            <div>
-                                <div>👈</div>
-                                <div className="mt-1">PASS</div>
+                            <div className="flex flex-col items-center">
+                                <ArrowLeft size={24} className="mb-1 text-gray-400" />
+                                <div>PASS</div>
                             </div>
-                            <div>
-                                <div>👉</div>
-                                <div className="mt-1">LIKE</div>
+                            <div className="flex flex-col items-center">
+                                <ArrowRight size={24} className="mb-1 text-gray-400" />
+                                <div>LIKE</div>
                             </div>
                         </div>
                     </div>
