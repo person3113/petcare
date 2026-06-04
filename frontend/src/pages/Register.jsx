@@ -7,6 +7,7 @@ function Register() {
   const [form, setForm] = useState({
     email: '',
     password: '',
+    passwordConfirm: '',
     nickname: '',
   });
   const [error, setError] = useState('');
@@ -46,7 +47,11 @@ function Register() {
         setError('닉네임에는 특수문자를 포함되면 안됩니다.');
         return;
     }
-
+    // 비밀번호 확인
+    if(form.password !== form.passwordConfirm){
+        setError('비밀번호가 일치하지 않습니다.');
+        return;
+    }
     setLoading(true);
 
     try {
@@ -74,6 +79,7 @@ function Register() {
               type="email"
               value={form.email}
               onChange={handleChange}
+              placeholder="Email"
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black"
             />
@@ -88,8 +94,24 @@ function Register() {
               type="password"
               value={form.password}
               onChange={handleChange}
+              placeholder="Password"
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            />
+          </div>
+          <div>
+            <label htmlFor="register-password-confirm" className="block text-sm font-medium text-gray-700 mb-1">
+                비밀번호 확인
+                </label>
+                <input
+                id="register-password-confirm"
+                name="passwordConfirm"
+                type="password"
+                value={form.passwordConfirm}
+                onChange={handleChange}
+                placeholder="Confirm Password"
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black"
             />
           </div>
           <div>
@@ -102,6 +124,7 @@ function Register() {
               type="text"
               value={form.nickname}
               onChange={handleChange}
+              placeholder="nickname"
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black"
             />
