@@ -8,6 +8,8 @@
   --color-accent: #f59e0b;
   --color-accent-bg: rgba(245, 158, 11, 0.1);
   --color-accent-border: rgba(245, 158, 11, 0.5);
+  --color-statusbg: #FCF8E7;
+  --color-tabbar-bg:#F9BA4D;
 
   --font-sans: 'Noto Sans KR', system-ui, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, Consolas, monospace;
