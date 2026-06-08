@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 
 #인증키
-.env.properties
-.env.*
+.env
+.env
 *.env
