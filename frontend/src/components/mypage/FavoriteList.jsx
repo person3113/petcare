@@ -26,18 +26,19 @@ function FavoriteList({ onFavoriteDeleted }) {
         })
     },[])
 
-    const handleRemoveFavorite = async (e, desertionNo) => {
+    const handleRemoveFavorite = (e, desertionNo) => {
         e.preventDefault();
         e.stopPropagation();
-        try {
-            await removeFavorite(desertionNo);
-            setFavor(prev => prev.filter(animal => animal.desertionNo !== desertionNo));
-            if (onFavoriteDeleted) {
-                onFavoriteDeleted();
-            }
-        } catch (err) {
-            alert('찜 삭제에 실패했습니다.');
-        }
+        removeFavorite(desertionNo)
+            .then(() => {
+                setFavor(prev => prev.filter(animal => animal.desertionNo !== desertionNo));
+                if (onFavoriteDeleted) {
+                    onFavoriteDeleted();
+                }
+            })
+            .catch(err => {
+                alert('찜 삭제에 실패했습니다.');
+            });
     };
 
     if(loading){

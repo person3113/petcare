@@ -12,19 +12,21 @@ function LostAnimalsSection() {
   useEffect(() => {
     let isMounted = true;
 
-    async function loadLostAnimals() {
-      try {
-        const results = await fetchLostAnimals();
-        if (isMounted) {
-          setAnimals(results.slice(0, 8));
-        }
-      } catch (error) {
-        console.error('분실동물 로드 실패:', error);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+    function loadLostAnimals() {
+      fetchLostAnimals()
+        .then((results) => {
+          if (isMounted) {
+            setAnimals(results.slice(0, 8));
+          }
+        })
+        .catch((error) => {
+          console.log('분실동물 에러', error);
+        })
+        .finally(() => {
+          if (isMounted) {
+            setLoading(false);
+          }
+        });
     }
 
     loadLostAnimals();

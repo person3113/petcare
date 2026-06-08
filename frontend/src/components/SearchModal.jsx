@@ -24,7 +24,7 @@ function SearchModal({ isOpen, onClose }) {
     }
   }, []);
 
-  // 모달 열릴 때 포커스 및 초기화
+  // 모달 열릴 때
   useEffect(() => {
     if (isOpen) {
       setKeyword('');
@@ -33,7 +33,7 @@ function SearchModal({ isOpen, onClose }) {
     }
   }, [isOpen]);
 
-  // Debounce 적용 (0.5초)
+  // 0.5초 대기
   useEffect(() => {
     if (!keyword.trim()) {
       setResults({ animals: [], lostAnimals: [], posts: [] });
@@ -61,25 +61,36 @@ function SearchModal({ isOpen, onClose }) {
     localStorage.setItem('recentSearches', JSON.stringify(newSearches));
   };
 
-  const performSearch = async (term) => {
+  const performSearch = (term) => {
     setLoading(true);
-    try {
-      // Promise.all로 3개 API 동시 호출
-      const [animalData, lostData, postData] = await Promise.all([
-        fetchAnimals({ keyword: term, limit: 3 }),
-        fetchLostAnimals({ keyword: term, limit: 3 }),
-        fetchPosts(null, term)
-      ]);
-      setResults({
-        animals: (animalData || []).slice(0, 3),
-        lostAnimals: (lostData || []).slice(0, 3),
-        posts: (postData || []).slice(0, 3)
+    // 검색
+    fetchAnimals({ keyword: term, limit: 3 })
+      .then(animalData => {
+        fetchLostAnimals({ keyword: term, limit: 3 })
+          .then(lostData => {
+            fetchPosts(null, term)
+              .then(postData => {
+                setResults({
+                  animals: (animalData || []).slice(0, 3),
+                  lostAnimals: (lostData || []).slice(0, 3),
+                  posts: (postData || []).slice(0, 3)
+                });
+                setLoading(false);
+              })
+              .catch(err => {
+                console.log("글 검색 에러", err);
+                setLoading(false);
+              });
+          })
+          .catch(err => {
+            console.log("분실동물 에러", err);
+            setLoading(false);
+          });
+      })
+      .catch(err => {
+        console.log("구조동물 에러", err);
+        setLoading(false);
       });
-    } catch (error) {
-      console.error('검색 실패', error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleKeyDown = (e) => {

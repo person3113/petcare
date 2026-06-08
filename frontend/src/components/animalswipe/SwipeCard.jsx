@@ -3,8 +3,7 @@ import AnimalCardContent from '../AnimalCardContent';
 
 function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
 
-    // 드래그가 끝났을 때 판단 async:기다려야 하는 함수임을 선언, await: 이 작업이 끝날때까지 대기
-    const handleDragEnd = async (event, info, animal) => {
+    const handleDragEnd = (event, info, animal) => {
         //좌우 스와이프 성공했을때
         if (Math.abs(info.offset.x) > 100){
             //오늘 스와이프 한 수 localStorage에 저장(마이페이지에 사용할 용)

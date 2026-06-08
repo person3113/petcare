@@ -34,16 +34,18 @@ function AdoptionReviewsSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadReviews() {
-      try {
-        const results = await fetchPosts('adoption_review');
-        const sorted = [...results].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setPosts(sorted.slice(0, 5));
-      } catch (error) {
-        console.error('입양후기 로드 실패:', error);
-      } finally {
-        setLoading(false);
-      }
+    function loadReviews() {
+      fetchPosts('adoption_review')
+        .then(results => {
+          const sorted = [...results].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          setPosts(sorted.slice(0, 5));
+        })
+        .catch(error => {
+          console.log('입양후기 에러', error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
     loadReviews();
   }, []);

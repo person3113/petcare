@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 
-// props: shelters = [{ id, name, lat, lng }, ...]
 function KakaoMap({ shelters, currentLocation, selectedShelter, onMarkerClick }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
@@ -8,13 +7,13 @@ function KakaoMap({ shelters, currentLocation, selectedShelter, onMarkerClick })
 
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps) {
-      console.log('카카오맵 객체가 없음. SDK 스크립트 로드 여부를 확인 필요');
+      console.log('맵 없음');
       return;
     }
 
     const container = mapRef.current;
     
-    // 기본 중심 위치와 줌 레벨 설정
+    // 기본 설정
     let centerPosition = new window.kakao.maps.LatLng(36.5, 127.5);
     let level = 7;
     
@@ -34,7 +33,7 @@ function KakaoMap({ shelters, currentLocation, selectedShelter, onMarkerClick })
         mapInstance.current.setCenter(centerPosition);
         mapInstance.current.setLevel(level);
     }
-  }, [currentLocation]); // currentLocation이 변경될 때, 지도 중심과 줌 레벨 업데이트
+  }, [currentLocation]);
 
   useEffect(() => {
     if (!mapInstance.current || !selectedShelter) return;

@@ -23,26 +23,36 @@ function SearchPage() {
       return;
     }
 
-    const loadData = async () => {
+    const loadData = () => {
       setLoading(true);
-      try {
-        const [animalsRes, lostAnimalsRes, postsRes] = await Promise.all([
-          fetchAnimalsPage({ keyword, limit: 20 }),
-          fetchLostAnimals({ keyword }),
-          fetchPosts(null, keyword)
-        ]);
-
-        setResults({
-          animals: animalsRes?.items || [],
-          animalsCount: animalsRes?.pagination?.totalCount || animalsRes?.items?.length || 0,
-          lostAnimals: lostAnimalsRes || [],
-          posts: postsRes || []
+      fetchAnimalsPage({ keyword, limit: 20 })
+        .then(animalsRes => {
+          fetchLostAnimals({ keyword })
+            .then(lostAnimalsRes => {
+              fetchPosts(null, keyword)
+                .then(postsRes => {
+                  setResults({
+                    animals: animalsRes?.items || [],
+                    animalsCount: animalsRes?.pagination?.totalCount || animalsRes?.items?.length || 0,
+                    lostAnimals: lostAnimalsRes || [],
+                    posts: postsRes || []
+                  });
+                  setLoading(false);
+                })
+                .catch(e => {
+                  console.log("글 에러", e);
+                  setLoading(false);
+                });
+            })
+            .catch(e => {
+              console.log("분실 에러", e);
+              setLoading(false);
+            });
+        })
+        .catch(e => {
+          console.log("동물 에러", e);
+          setLoading(false);
         });
-      } catch (error) {
-        console.error('검색 데이터 로드 실패', error);
-      } finally {
-        setLoading(false);
-      }
     };
 
     loadData();

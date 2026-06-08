@@ -15,15 +15,17 @@ function AnimalDetailpage(){
 
     //컴포넌트가 처음 나타나는 한번 데이터를 가져오기 위해 useEffect사용(안쓰면 데이터가져올때 usetate가 바뀌어서 다시가져오는 무한에 빠짐)
     useEffect(()=>{
-        async function fetchAnimal() {
-            try {
-                const data = await request(`/api/animals/${id}`, { method: 'GET' });
-                SetAnimal(data?.data || data);
-            } catch (err) {
-                console.log("데이터 로딩 실패", err)
-            } finally {
-                SetLoding(false); //로딩 끝내기
-            }
+        function fetchAnimal() {
+            request(`/api/animals/${id}`, { method: 'GET' })
+                .then(data => {
+                    SetAnimal(data?.data || data);
+                })
+                .catch(err => {
+                    console.log("데이터 에러", err)
+                })
+                .finally(() => {
+                    SetLoding(false); //로딩 끝내기
+                });
         }
 
         fetchAnimal();

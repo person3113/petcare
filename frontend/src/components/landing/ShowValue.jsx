@@ -14,14 +14,14 @@ const ShowValue = () => {
 
     useEffect(() => {
         getRealtimeSummary().then(res => {
-            const data = res.data; // ApiResponse 구조를 감안
+            const data = res.data;
             setState({
                 todayDate: data.todayDate || "",
                 totalRescued: data.totalRescued || 0,
                 totalAdopted: data.totalAdopted || 0,
                 totalEuthanized: data.totalEuthanized || 0,
             });
-        }).catch(() => console.log('데이터 로딩 실패'));
+        }).catch(() => console.log('통계치 가져오기 에러'));
     }, []);
 
     const calcRate = (part, total) => {

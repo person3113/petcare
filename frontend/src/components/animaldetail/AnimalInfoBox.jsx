@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router-dom'; {/*보호소 연락버튼에 사
 
 function AnimalInfoBox({animal, onFavoriteChange}) {
 
+    const [favoriteLoading, setFavoriteLoading] = useState(false);
+    const navigate = useNavigate(); //페이지 이동을 위한 함수(보호소값 전달을 위해)
+
     if(!animal)return(<div>데이터 로드 안됨</div>)
 
     const {
@@ -25,8 +28,6 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
         geminiIntro,
     } = animal;
 
-    const [favoriteLoading, setFavoriteLoading] = useState(false);
-    const navigate = useNavigate(); //페이지 이동을 위한 함수(보호소값 전달을 위해)
 
         async function handleToggleFavorite() {
         if (favoriteLoading) {
@@ -120,7 +121,7 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
                     textColor="white"
                 />
                 <Button
-                    text="보호소 연락"
+                    text="보호소 찾기"
                     flex={1.1}
                     bgColor="white"
                     textColor="#444"
