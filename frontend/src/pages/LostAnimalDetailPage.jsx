@@ -13,18 +13,20 @@ function LostAnimalDetailPage() {
     useEffect(() => {
         let isMounted = true;
 
-        async function fetchLostAnimal() {
-            try {
-                const data = await request(`/api/lost-animals/${id}`, { method: 'GET' });
-                if (!isMounted) return;
-                setAnimal(data?.data || data);
-            } catch (err) {
-                console.log('분실동물 데이터 로딩 실패', err);
-            } finally {
-                if (isMounted) {
-                    setLoading(false);
-                }
-            }
+        function fetchLostAnimal() {
+            request(`/api/lost-animals/${id}`, { method: 'GET' })
+                .then(data => {
+                    if (!isMounted) return;
+                    setAnimal(data?.data || data);
+                })
+                .catch(err => {
+                    console.log('분실동물 데이터 로딩 실패', err);
+                })
+                .finally(() => {
+                    if (isMounted) {
+                        setLoading(false);
+                    }
+                });
         }
 
         fetchLostAnimal();

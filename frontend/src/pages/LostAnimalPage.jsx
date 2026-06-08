@@ -34,26 +34,28 @@ function LostAnimalPage() {
       module.fetchSido().then(setSidoList);
     });
 
-    async function init() {
-      try {
-        const params = { page, limit: pageLimit, keyword };
-        if (filters.sido) params.sido = filters.sido;
-        if (filters.sigungu) params.sigungu = filters.sigungu;
-        if (filters.kind) params.kind = filters.kind;
-        if (filters.gender) params.gender = filters.gender;
+    function init() {
+      const params = { page, limit: pageLimit, keyword };
+      if (filters.sido) params.sido = filters.sido;
+      if (filters.sigungu) params.sigungu = filters.sigungu;
+      if (filters.kind) params.kind = filters.kind;
+      if (filters.gender) params.gender = filters.gender;
 
-        const data = await fetchLostAnimalsPage(params);
-        if (!isMounted) return;
-        setAllAnimals(data.items || []);
-        setPagination(data.pagination || null);
-      } catch (err) {
-        if (!isMounted) return;
-        setError('분실동물 데이터를 불러오지 못했습니다.');
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+      fetchLostAnimalsPage(params)
+        .then(data => {
+          if (!isMounted) return;
+          setAllAnimals(data.items || []);
+          setPagination(data.pagination || null);
+        })
+        .catch(err => {
+          if (!isMounted) return;
+          setError('분실동물 데이터를 불러오지 못했습니다.');
+        })
+        .finally(() => {
+          if (isMounted) {
+            setLoading(false);
+          }
+        });
     }
 
     setLoading(true);
@@ -80,15 +82,23 @@ function LostAnimalPage() {
     }
   }
 
-  async function handleCascadeChange(nextFilters) {
+  function handleCascadeChange(nextFilters) {
     if (nextFilters.sido !== filters.sido) {
       const sidoCode = sidoList.find((item) => item.name === nextFilters.sido)?.code || '';
-      const sigungu = nextFilters.sido ? await fetchSigungu(sidoCode) : [];
-      setSigunguList(sigungu);
-      nextFilters = { ...nextFilters, sigungu: '' };
+      if (nextFilters.sido) {
+        fetchSigungu(sidoCode).then(sigungu => {
+          setSigunguList(sigungu);
+          nextFilters = { ...nextFilters, sigungu: '' };
+          handleFilterChange(nextFilters);
+        });
+      } else {
+        setSigunguList([]);
+        nextFilters = { ...nextFilters, sigungu: '' };
+        handleFilterChange(nextFilters);
+      }
+    } else {
+      handleFilterChange(nextFilters);
     }
-
-    handleFilterChange(nextFilters);
   }
 
   const isSigunguDisabled = !filters.sido;

@@ -11,46 +11,39 @@ function buildQuery(params = {}) {
   return query ? `?${query}` : '';
 }
 
-async function fetchAnimals(params = {}) {
+function fetchAnimals(params = {}) {
   const query = buildQuery(params);
-  const data = await request(`/api/animals${query}`);
-  return data?.data?.items || [];
+  return request(`/api/animals${query}`).then(data => data?.data?.items || []);
 }
 
-async function fetchAnimalsPage(params = {}) {
+function fetchAnimalsPage(params = {}) {
   const query = buildQuery(params);
-  const data = await request(`/api/animals${query}`);
-  return data?.data || { items: [], pagination: null };
+  return request(`/api/animals${query}`).then(data => data?.data || { items: [], pagination: null });
 }
 
-async function fetchSido() {
-  const data = await request('/api/codes/sido');
-  return data?.data || [];
+function fetchSido() {
+  return request('/api/codes/sido').then(data => data?.data || []);
 }
 
-async function fetchSigungu(sidoCode) {
+function fetchSigungu(sidoCode) {
   const query = buildQuery({ uprCd: sidoCode });
-  const data = await request(`/api/codes/sigungu${query}`);
-  return data?.data || [];
+  return request(`/api/codes/sigungu${query}`).then(data => data?.data || []);
 }
 
-async function fetchShelters(sidoName, sigunguName) {
+function fetchShelters(sidoName, sigunguName) {
   const query = buildQuery({ sido: sidoName, sigungu: sigunguName });
-  const data = await request(`/api/codes/shelters${query}`);
-  return data?.data || [];
+  return request(`/api/codes/shelters${query}`).then(data => data?.data || []);
 }
 
 // 분실동물 목록 불러오기
-async function fetchLostAnimals(params = {}) {
+function fetchLostAnimals(params = {}) {
   const query = buildQuery(params);
-  const data = await request(`/api/lost-animals${query}`);
-  return data?.data?.items || [];
+  return request(`/api/lost-animals${query}`).then(data => data?.data?.items || []);
 }
 
-async function fetchLostAnimalsPage(params = {}) {
+function fetchLostAnimalsPage(params = {}) {
   const query = buildQuery(params);
-  const data = await request(`/api/lost-animals${query}`);
-  return data?.data || { items: [], pagination: null };
+  return request(`/api/lost-animals${query}`).then(data => data?.data || { items: [], pagination: null });
 }
 
 export { fetchAnimals, fetchAnimalsPage, fetchSido, fetchSigungu, fetchShelters, fetchLostAnimals, fetchLostAnimalsPage };

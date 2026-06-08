@@ -41,30 +41,32 @@ function AnimalFeedPage() {
       module.fetchSido().then(setSidoList);
     });
 
-    async function init() {
-      try {
-        const params = { page, limit: pageLimit, keyword };
-        if (filters.sido) params.sido = filters.sido;
-        if (filters.sigungu) params.sigungu = filters.sigungu;
-        if (filters.shelterName) params.shelterName = filters.shelterName;
-        if (filters.kind) params.kind = filters.kind;
-        if (filters.status) params.state = filters.status;
-        if (filters.gender) params.gender = filters.gender;
-        if (filters.isNeutered) params.isNeutered = filters.isNeutered;
+    function init() {
+      const params = { page, limit: pageLimit, keyword };
+      if (filters.sido) params.sido = filters.sido;
+      if (filters.sigungu) params.sigungu = filters.sigungu;
+      if (filters.shelterName) params.shelterName = filters.shelterName;
+      if (filters.kind) params.kind = filters.kind;
+      if (filters.status) params.state = filters.status;
+      if (filters.gender) params.gender = filters.gender;
+      if (filters.isNeutered) params.isNeutered = filters.isNeutered;
 
-        const animalsData = await fetchAnimalsPage(params);
-        if (!isMounted) return;
-        const items = animalsData.items || [];
-        setAllAnimals(items);
-        setPagination(animalsData.pagination || null);
-      } catch (err) {
-        if (!isMounted) return;
-        setError('동물 데이터를 불러오지 못했습니다.');
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+      fetchAnimalsPage(params)
+        .then(animalsData => {
+          if (!isMounted) return;
+          const items = animalsData.items || [];
+          setAllAnimals(items);
+          setPagination(animalsData.pagination || null);
+        })
+        .catch(err => {
+          if (!isMounted) return;
+          setError('동물 데이터 에러');
+        })
+        .finally(() => {
+          if (isMounted) {
+            setLoading(false);
+          }
+        });
     }
 
     setLoading(true);
@@ -91,23 +93,39 @@ function AnimalFeedPage() {
     }
   }
 
-  async function handleCascadeChange(nextFilters) {
+  function handleCascadeChange(nextFilters) {
     if (nextFilters.sido !== filters.sido) {
       const sidoCode = sidoList.find((item) => item.name === nextFilters.sido)?.code || '';
-      const sigungu = nextFilters.sido ? await fetchSigungu(sidoCode) : [];
-      setSigunguList(sigungu);
       
-      const shelters = nextFilters.sido ? await fetchShelters(nextFilters.sido, '') : [];
-      setShelterList(shelters);
-      
+      if (nextFilters.sido) {
+        fetchSigungu(sidoCode).then(sigungu => {
+          setSigunguList(sigungu);
+        });
+        fetchShelters(nextFilters.sido, '').then(shelters => {
+          setShelterList(shelters);
+        });
+      } else {
+        setSigunguList([]);
+        setShelterList([]);
+      }
       nextFilters = { ...nextFilters, sigungu: '', shelterName: '' };
-    } else if (nextFilters.sigungu !== filters.sigungu) {
-      const shelters = nextFilters.sido ? await fetchShelters(nextFilters.sido, nextFilters.sigungu) : [];
-      setShelterList(shelters);
-      nextFilters = { ...nextFilters, shelterName: '' };
-    }
+      handleFilterChange(nextFilters);
 
-    handleFilterChange(nextFilters);
+    } else if (nextFilters.sigungu !== filters.sigungu) {
+      if (nextFilters.sido) {
+        fetchShelters(nextFilters.sido, nextFilters.sigungu).then(shelters => {
+          setShelterList(shelters);
+          nextFilters = { ...nextFilters, shelterName: '' };
+          handleFilterChange(nextFilters);
+        });
+      } else {
+        setShelterList([]);
+        nextFilters = { ...nextFilters, shelterName: '' };
+        handleFilterChange(nextFilters);
+      }
+    } else {
+      handleFilterChange(nextFilters);
+    }
   }
 
   const isSigunguDisabled = !filters.sido;

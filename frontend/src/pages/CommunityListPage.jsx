@@ -20,21 +20,23 @@ function CommunityListPage() {
   useEffect(() => {
     let isMounted = true;
 
-    async function loadPosts() {
+    function loadPosts() {
       setLoading(true);
       setError('');
-      try {
-        const data = await fetchPosts(category, keyword);
-        if (!isMounted) return;
-        setPosts(data);
-      } catch (err) {
-        if (!isMounted) return;
-        setError('게시글을 불러오지 못했습니다.');
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+      fetchPosts(category, keyword)
+        .then(data => {
+          if (!isMounted) return;
+          setPosts(data);
+        })
+        .catch(err => {
+          if (!isMounted) return;
+          setError('게시글을 불러오지 못했습니다.');
+        })
+        .finally(() => {
+          if (isMounted) {
+            setLoading(false);
+          }
+        });
     }
 
     loadPosts();
@@ -44,14 +46,14 @@ function CommunityListPage() {
     };
   }, [category]);
 
-  const summary = useMemo(() => {
-    const total = posts.length;
-    if (!category) {
-      return `전체 ${total}건`;
-    }
+  let summary = '';
+  const total = posts.length;
+  if (!category) {
+    summary = `전체 ${total}건`;
+  } else {
     const label = CATEGORY_OPTIONS.find((item) => item.value === category)?.label || '';
-    return `${label} ${total}건`;
-  }, [posts.length, category]);
+    summary = `${label} ${total}건`;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">

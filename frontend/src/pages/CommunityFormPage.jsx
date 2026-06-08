@@ -23,21 +23,23 @@ function CommunityFormPage() {
     if (!isEdit) return;
 
     let isMounted = true;
-    async function loadPost() {
-      try {
-        const data = await fetchPost(id);
-        if (!isMounted) return;
-        setTitle(data?.title || '');
-        setContent(data?.content || '');
-        setCategory(data?.category || 'adoption_review');
-      } catch (err) {
-        if (!isMounted) return;
-        setError('게시글을 불러오지 못했습니다.');
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+    function loadPost() {
+      fetchPost(id)
+        .then(data => {
+          if (!isMounted) return;
+          setTitle(data?.title || '');
+          setContent(data?.content || '');
+          setCategory(data?.category || 'adoption_review');
+        })
+        .catch(err => {
+          if (!isMounted) return;
+          setError('게시글을 불러오지 못했습니다.');
+        })
+        .finally(() => {
+          if (isMounted) {
+            setLoading(false);
+          }
+        });
     }
 
     loadPost();
@@ -53,7 +55,7 @@ function CommunityFormPage() {
     }
   }, [user, navigate]);
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     if (!title.trim()) {
       setError('제목을 입력해 주세요.');
@@ -64,16 +66,28 @@ function CommunityFormPage() {
       return;
     }
 
-    try {
-      const payload = {
-        title: title.trim(),
-        content: content.trim(),
-        category,
-      };
-      const result = isEdit ? await updatePost(id, payload) : await createPost(payload);
-      navigate(`/community/${result.id}`);
-    } catch (err) {
-      setError('저장에 실패했습니다.');
+    const payload = {
+      title: title.trim(),
+      content: content.trim(),
+      category,
+    };
+    
+    if (isEdit) {
+      updatePost(id, payload)
+        .then(result => {
+          navigate(`/community/${result.id}`);
+        })
+        .catch(err => {
+          setError('저장에 실패했습니다.');
+        });
+    } else {
+      createPost(payload)
+        .then(result => {
+          navigate(`/community/${result.id}`);
+        })
+        .catch(err => {
+          setError('저장에 실패했습니다.');
+        });
     }
   }
 

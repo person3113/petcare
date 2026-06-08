@@ -17,31 +17,30 @@ function Home() {
   useEffect(() => {
     let isMounted = true;
 
-    async function fetchStats() {
-      try {
-        const [summaryRes, realtimeRes] = await Promise.all([
-          getStatsSummary(),
+    function fetchStats() {
+      getStatsSummary()
+        .then(summaryRes => {
           getRealtimeSummary()
-        ]);
-        if (!isMounted) return;
-        
-        // realtimeRes.data가 실제 StatsRealtimeResponse 데이터라고 가정
-        const realData = realtimeRes?.data || realtimeRes;
-        
-        // 필요한 데이터를 summary 상태 하나로 합치거나 
-        // chart 컴포넌트는 기존 데이터를 사용할 수 있도록 유지
-        setSummary({
-          ...(summaryRes?.data || summaryRes),
-          realtime: realData
-        });
-      } catch (err) {
-        if (!isMounted) return;
-        setError('통계 데이터를 불러오지 못했습니다.');
-      } finally {
-        if (isMounted) {
+            .then(realtimeRes => {
+              if (!isMounted) return;
+              const realData = realtimeRes?.data || realtimeRes;
+              setSummary({
+                ...(summaryRes?.data || summaryRes),
+                realtime: realData
+              });
+              setLoading(false);
+            })
+            .catch(err => {
+              if (!isMounted) return;
+              setError('실시간 데이터 에러');
+              setLoading(false);
+            });
+        })
+        .catch(err => {
+          if (!isMounted) return;
+          setError('통계 데이터 에러');
           setLoading(false);
-        }
-      }
+        });
     }
 
     fetchStats();

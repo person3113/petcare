@@ -46,33 +46,37 @@ function StatsPage() {
 
   // Fetch Global Stats on Mount
   useEffect(() => {
-    async function fetchGlobal() {
+    function fetchGlobal() {
       setLoadingGlobal(true);
       setErrorGlobal('');
-      try {
-        const res = await getGlobalStats();
-        setGlobalStats(res.data || res);
-      } catch (err) {
-        setErrorGlobal('전역 통계 데이터를 불러오는데 실패했습니다.');
-      } finally {
-        setLoadingGlobal(false);
-      }
+      getGlobalStats()
+        .then(res => {
+          setGlobalStats(res.data || res);
+        })
+        .catch(err => {
+          setErrorGlobal('전역 통계 데이터를 불러오는데 실패했습니다.');
+        })
+        .finally(() => {
+          setLoadingGlobal(false);
+        });
     }
     fetchGlobal();
   }, []);
 
   // Fetch Filtered Stats when button is clicked or on initial load
-  const fetchFiltered = async () => {
+  const fetchFiltered = () => {
     setLoadingFiltered(true);
     setErrorFiltered('');
-    try {
-      const res = await getFilteredStats(filters.startDate, filters.endDate, filters.sido);
-      setFilteredStats(res.data || res);
-    } catch (err) {
-      setErrorFiltered('상세 통계 데이터를 불러오는데 실패했습니다.');
-    } finally {
-      setLoadingFiltered(false);
-    }
+    getFilteredStats(filters.startDate, filters.endDate, filters.sido)
+      .then(res => {
+        setFilteredStats(res.data || res);
+      })
+      .catch(err => {
+        setErrorFiltered('상세 통계 데이터를 불러오는데 실패했습니다.');
+      })
+      .finally(() => {
+        setLoadingFiltered(false);
+      });
   };
 
   useEffect(() => {
@@ -89,9 +93,9 @@ function StatsPage() {
   };
 
   // --- Global Chart Data ---
-  const rescueTrendData = useMemo(() => {
-    if (!globalStats?.rescueTrend) return null;
-    return {
+  let rescueTrendData = null;
+  if (globalStats?.rescueTrend) {
+    rescueTrendData = {
       labels: globalStats.rescueTrend.map(d => d.month),
       datasets: [{
         label: '구조 건수',
@@ -101,56 +105,56 @@ function StatsPage() {
         tension: 0.3
       }]
     };
-  }, [globalStats]);
+  }
 
-  const lostVsRescueData = useMemo(() => {
-    if (!globalStats?.lostVsRescue) return null;
-    return {
+  let lostVsRescueData = null;
+  if (globalStats?.lostVsRescue) {
+    lostVsRescueData = {
       labels: globalStats.lostVsRescue.map(d => d.month),
       datasets: [
         { label: '구조', data: globalStats.lostVsRescue.map(d => d.rescueCount), borderColor: '#0ea5e9', tension: 0.3 },
         { label: '분실', data: globalStats.lostVsRescue.map(d => d.lostCount), borderColor: '#f43f5e', tension: 0.3 }
       ]
     };
-  }, [globalStats]);
+  }
 
   // --- Filtered Chart Data ---
-  const regionalChartData = useMemo(() => {
-    if (!filteredStats?.regionalStats) return null;
-    return {
+  let regionalChartData = null;
+  if (filteredStats?.regionalStats) {
+    regionalChartData = {
       labels: filteredStats.regionalStats.map(d => d.region),
       datasets: [
         { label: '입양률 (%)', data: filteredStats.regionalStats.map(d => d.adoptionRate), backgroundColor: '#10b981' },
         { label: '안락사율 (%)', data: filteredStats.regionalStats.map(d => d.euthanasiaRate), backgroundColor: '#e11d48' }
       ]
     };
-  }, [filteredStats]);
+  }
 
-  const statusChartData = useMemo(() => {
-    if (!filteredStats?.statusRatio) return null;
-    return {
+  let statusChartData = null;
+  if (filteredStats?.statusRatio) {
+    statusChartData = {
       labels: filteredStats.statusRatio.map(d => d.status),
       datasets: [{
         data: filteredStats.statusRatio.map(d => d.count),
         backgroundColor: ['#f97316', '#e11d48', '#0ea5e9', '#10b981', '#64748b', '#f59e0b', '#8b5cf6', '#ec4899']
       }]
     };
-  }, [filteredStats]);
+  }
 
-  const kindChartData = useMemo(() => {
-    if (!filteredStats?.kindRatio) return null;
-    return {
+  let kindChartData = null;
+  if (filteredStats?.kindRatio) {
+    kindChartData = {
       labels: filteredStats.kindRatio.map(d => d.kind),
       datasets: [{
         data: filteredStats.kindRatio.map(d => d.count),
         backgroundColor: ['#f59e0b', '#3b82f6', '#8b5cf6']
       }]
     };
-  }, [filteredStats]);
+  }
 
-  const topBreedsData = useMemo(() => {
-    if (!filteredStats?.topBreeds) return null;
-    return {
+  let topBreedsData = null;
+  if (filteredStats?.topBreeds) {
+    topBreedsData = {
       labels: filteredStats.topBreeds.map(d => d.breed),
       datasets: [{
         label: '발생 건수',
@@ -158,11 +162,11 @@ function StatsPage() {
         backgroundColor: '#8b5cf6'
       }]
     };
-  }, [filteredStats]);
+  }
 
-  const lostHotspotsData = useMemo(() => {
-    if (!filteredStats?.lostHotspots) return null;
-    return {
+  let lostHotspotsData = null;
+  if (filteredStats?.lostHotspots) {
+    lostHotspotsData = {
       labels: filteredStats.lostHotspots.map(d => d.region),
       datasets: [{
         label: '분실 건수',
@@ -170,11 +174,11 @@ function StatsPage() {
         backgroundColor: '#f43f5e'
       }]
     };
-  }, [filteredStats]);
+  }
 
-  const topLostBreedsData = useMemo(() => {
-    if (!filteredStats?.topLostBreeds) return null;
-    return {
+  let topLostBreedsData = null;
+  if (filteredStats?.topLostBreeds) {
+    topLostBreedsData = {
       labels: filteredStats.topLostBreeds.map(d => d.breed),
       datasets: [{
         label: '분실 건수',
@@ -182,11 +186,11 @@ function StatsPage() {
         backgroundColor: '#f59e0b'
       }]
     };
-  }, [filteredStats]);
+  }
 
-  const topSheltersData = useMemo(() => {
-    if (!filteredStats?.topShelters) return null;
-    return {
+  let topSheltersData = null;
+  if (filteredStats?.topShelters) {
+    topSheltersData = {
       labels: filteredStats.topShelters.map(d => d.shelter),
       datasets: [{
         label: '보호 개체 수',
@@ -194,7 +198,7 @@ function StatsPage() {
         backgroundColor: '#10b981'
       }]
     };
-  }, [filteredStats]);
+  }
 
   const defaultOptions = { responsive: true, maintainAspectRatio: false };
   const horizontalBarOptions = { indexAxis: 'y', responsive: true, maintainAspectRatio: false };
@@ -217,7 +221,7 @@ function StatsPage() {
               <div className="h-64"><Line data={rescueTrendData} options={defaultOptions} /></div>
             </div>
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">분실 vs 구조 발생 트렌드</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">분실 vs 구조 발생 추이</h2>
               <div className="h-64"><Line data={lostVsRescueData} options={defaultOptions} /></div>
             </div>
           </div>
@@ -307,7 +311,7 @@ function StatsPage() {
             </div>
 
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">지역별 분실 핫스팟 Top 10</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">지역별 분실 장소 Top 10</h2>
               <div className="h-64"><Bar data={lostHotspotsData} options={horizontalBarOptions} /></div>
             </div>
 

@@ -18,7 +18,7 @@ function Register() {
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     setError('');
 
@@ -54,14 +54,16 @@ function Register() {
     }
     setLoading(true);
 
-    try {
-      await register(form);
-      navigate('/login');
-    } catch (err) {
-      setError(err?.message || '회원가입에 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
+    register(form)
+      .then(() => {
+        navigate('/login');
+      })
+      .catch(err => {
+        setError(err?.message || '회원가입에 실패했습니다.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (

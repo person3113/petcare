@@ -10,22 +10,22 @@ function RecommendedAnimals() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadAnimals() {
-      try {
-        const results = await fetchAnimals({ state: '보호중', limit: 30 });
-        
-        const sorted = [...results].sort((a, b) => {
-          if (!a.noticeEdt) return 1;
-          if (!b.noticeEdt) return -1;
-          return a.noticeEdt.localeCompare(b.noticeEdt);
+    function loadAnimals() {
+      fetchAnimals({ state: '보호중', limit: 30 })
+        .then(results => {
+          const sorted = [...results].sort((a, b) => {
+            if (!a.noticeEdt) return 1;
+            if (!b.noticeEdt) return -1;
+            return a.noticeEdt.localeCompare(b.noticeEdt);
+          });
+          setAnimals(sorted.slice(0, 8));
+        })
+        .catch(error => {
+          console.log('추천 입양 동물 에러', error);
+        })
+        .finally(() => {
+          setLoading(false);
         });
-        
-        setAnimals(sorted.slice(0, 8));
-      } catch (error) {
-        console.error('추천 입양 동물 로드 실패:', error);
-      } finally {
-        setLoading(false);
-      }
     }
     loadAnimals();
   }, []);

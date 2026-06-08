@@ -15,7 +15,7 @@ function Login() {
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     setError('');
 
@@ -38,16 +38,18 @@ function Login() {
 
     setLoading(true);
 
-    try {
-      const data = await login(form);
-      const user = data?.data || data;
-      setUser(user || null);
-      navigate('/');
-    } catch (err) {
-      setError(err?.message || '로그인에 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
+    login(form)
+      .then(data => {
+        const user = data?.data || data;
+        setUser(user || null);
+        navigate('/');
+      })
+      .catch(err => {
+        setError(err?.message || '로그인에 실패했습니다.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (

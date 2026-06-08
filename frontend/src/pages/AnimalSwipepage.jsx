@@ -40,46 +40,44 @@ function AnimalSwipePage() {
     const [shelterList, setShelterList] = useState([]);
 
 
-    const filterAnimals = useMemo(() => {
-        return animals.filter(animal => {
-            // 이미 찜한 동물 제외 (최초 로딩 기준)
-            const animalId = animal.id || animal.desertionNo;
-            if (initialLiked.includes(animalId)) {
-                return false;
-            }
+    const filterAnimals = animals.filter(animal => {
+        // 이미 찜한 동물 제외
+        const animalId = animal.id || animal.desertionNo;
+        if (initialLiked.includes(animalId)) {
+            return false;
+        }
 
-            // kind는 "믹스견", "[개] 믹스견" 형태라 includes로 체크
-            if (filter.kind !== '' && !animal.kind?.includes(filter.kind)) {
-                return false;
-            }
-            // status 필드명은 API 응답 기준
-            if (filter.status !== '' && animal.status !== filter.status) {
-                return false;
-            }
-            // gender 필드명은 API 응답 기준
-            if (filter.gender !== '' && animal.gender !== filter.gender) {
-                return false;
-            }
-            // 시도는 jurisdiction(관할) 필드에 포함 여부로 체크
-            if (filter.sido !== '' && !animal.jurisdiction?.includes(filter.sido)) {
-                return false;
-            }
-            // 시군구도 jurisdiction 필드에 포함 여부로 체크
-            if (filter.sigungu !== '' && !animal.jurisdiction?.includes(filter.sigungu)) {
-                return false;
-            }
-            // 보호소 이름 일치 여부
-            if (filter.shelterName !== '' && animal.shelterName !== filter.shelterName) {
-                return false;
-            }
-            // 중성화 일치 여부
-            if (filter.isNeutered !== '' && animal.isNeutered !== filter.isNeutered) {
-                return false;
-            }
+        // kind는 "믹스견", "[개] 믹스견" 형태라 includes로 체크
+        if (filter.kind !== '' && !animal.kind?.includes(filter.kind)) {
+            return false;
+        }
+        // status 필드명은 API 응답 기준
+        if (filter.status !== '' && animal.status !== filter.status) {
+            return false;
+        }
+        // gender 필드명은 API 응답 기준
+        if (filter.gender !== '' && animal.gender !== filter.gender) {
+            return false;
+        }
+        // 시도는 jurisdiction(관할) 필드에 포함 여부로 체크
+        if (filter.sido !== '' && !animal.jurisdiction?.includes(filter.sido)) {
+            return false;
+        }
+        // 시군구도 jurisdiction 필드에 포함 여부로 체크
+        if (filter.sigungu !== '' && !animal.jurisdiction?.includes(filter.sigungu)) {
+            return false;
+        }
+        // 보호소 이름 일치 여부
+        if (filter.shelterName !== '' && animal.shelterName !== filter.shelterName) {
+            return false;
+        }
+        // 중성화 일치 여부
+        if (filter.isNeutered !== '' && animal.isNeutered !== filter.isNeutered) {
+            return false;
+        }
 
-            return true; // 모든 조건 통과
-        });
-    }, [animals, filter, initialLiked]); //전체 동물 데이터 또는 필터 조건이 바뀔때마다 랜더링
+        return true; // 모든 조건 통과
+    });
 
 
     // 필터가 변경될 때마다 데이터 재요청
@@ -90,7 +88,7 @@ function AnimalSwipePage() {
         if (filter.sigungu) params.sigungu = filter.sigungu;
         if (filter.shelterName) params.shelterName = filter.shelterName;
         if (filter.kind) params.kind = filter.kind;
-        if (filter.status) params.state = filter.status; // API 파라미터는 state
+        if (filter.status) params.state = filter.status;
         if (filter.gender) params.gender = filter.gender;
         if (filter.isNeutered) params.isNeutered = filter.isNeutered;
 
@@ -98,7 +96,7 @@ function AnimalSwipePage() {
             .then((items) => {
                 setAnimals(items);
             })
-            .catch((err) => console.log("데이터 로딩 실패", err))
+            .catch((err) => console.log("에러", err))
             .finally(() => setLoading(false));
     }, [filter]);
 
@@ -114,21 +112,20 @@ function AnimalSwipePage() {
             })
             .catch((err) => {
                 if (err?.status !== 401) {
-                    console.log("찜 목록 불러오기 실패", err);
+                    console.log("찜 에러", err);
                 }
             });
 
         // 시도 목록 초기 로딩
         fetchSido()
             .then((list) => setSidoList(list))
-            .catch((err) => console.log('시도 목록 불러오기 실패', err));
+            .catch((err) => console.log('지역 에러', err));
 
     }, []);
 
 
 
-    //동물 카드 무한루프를 위한 index(다 봤으면 index 0부터 다시)
-    // usestate인 nowindex값이 바뀌면 컴포넌트 다시 시작하고 여기서 바뀐 currentAnimal로 dom그림
+    // 현재 동물 세팅
     const currentAnimal = filterAnimals.length > 0
         ? filterAnimals[nowIndex % filterAnimals.length] : null;
 
@@ -137,77 +134,102 @@ function AnimalSwipePage() {
         setlikeAnimal((prev) => {
             //중복인 경우
             if (prev.includes(Id)) {
-                console.log("이미 찜한 동물");
+                console.log("중복");
                 return prev;
             }
             //중복이 아닌 경우
-            console.log("찜한 동물 추가", Id);
+            console.log("추가", Id);
             return [...prev, Id];
         });
     }
 
     //찜하기 반영함수
-    const handleLike = async (Id) => {
-        try {
-            await addFavorite(Id);
-            LikeCnt(Id);
+    const handleLike = (Id) => {
+        addFavorite(Id)
+            .then(() => {
+                LikeCnt(Id);
 
-            //오늘의 찜 수 저장
-            const today = new Date().toLocaleDateString();
-            const stats = JSON.parse(localStorage.getItem('daily_likes') || '{"date":"","count":0}');
-            if (stats.date === today) stats.count += 1;
-            else { stats.date = today; stats.count = 1; }
+                //오늘의 찜 수 저장
+                const today = new Date().toLocaleDateString();
+                const statsStr = localStorage.getItem('daily_likes');
+                const stats = statsStr ? JSON.parse(statsStr) : {date:"", count:0};
+                if (stats.date === today) stats.count += 1;
+                else { stats.date = today; stats.count = 1; }
 
-            localStorage.setItem('daily_likes', JSON.stringify(stats));
-            setTodaylike(stats.count); // 오늘의 찜 업데이트
-        } catch (err) {
-            if (err?.status !== 401) {
-                console.log("찜하기 API 호출 실패", err);
-            }
-        }
+                localStorage.setItem('daily_likes', JSON.stringify(stats));
+                setTodaylike(stats.count); // 오늘의 찜 업데이트
+            })
+            .catch(err => {
+                if (err?.status !== 401) {
+                    console.log("찜 에러", err);
+                }
+            });
     };
 
     //==========================필터를 위한 부분================================
 
     //필터를 위해 데이터를 다시 불러오거나(API 호출), 목록을 걸러주는 함수
-    const FilterChange = async (newFilter) => {
+    const FilterChange = (newFilter) => {
         //시도가 바뀌면
         if (newFilter.sido !== filter.sido) {
             const sidoCode = sidoList.find((item) => item.name === newFilter.sido)?.code || '';
-            let sigungu = [];
-            let shelters = [];
             
             if (newFilter.sido) {
-                try {
-                    if (sidoCode) sigungu = await fetchSigungu(sidoCode);
-                    shelters = await fetchShelters(newFilter.sido, '');
-                } catch (err) {
-                    console.log('하위 목록 불러오기 실패', err);
+                if (sidoCode) {
+                    fetchSigungu(sidoCode)
+                        .then(sigungu => {
+                            setSigunguList(sigungu);
+                        })
+                        .catch(err => {
+                            console.log('시군구 에러', err);
+                        });
+                } else {
+                    setSigunguList([]);
                 }
+
+                fetchShelters(newFilter.sido, '')
+                    .then(shelters => {
+                        setShelterList(shelters);
+                    })
+                    .catch(err => {
+                        console.log('보호소 에러', err);
+                    });
+
+                newFilter = { ...newFilter, sigungu: '', shelterName: '' };
+                setFilter(newFilter);
+                setnowIndex(0);
+
+            } else {
+                setSigunguList([]);
+                setShelterList([]);
+                newFilter = { ...newFilter, sigungu: '', shelterName: '' };
+                setFilter(newFilter);
+                setnowIndex(0);
             }
-            setSigunguList(sigungu);
-            setShelterList(shelters);
-            
-            newFilter = { ...newFilter, sigungu: '', shelterName: '' };
         }
         //시군구가 바뀌었을 때
         else if (newFilter.sigungu !== filter.sigungu) {
-            let shelters = [];
             if (newFilter.sido) {
-                try {
-                    shelters = await fetchShelters(newFilter.sido, newFilter.sigungu);
-                } catch (err) {
-                    console.log('보호소 목록 불러오기 실패', err);
-                }
+                fetchShelters(newFilter.sido, newFilter.sigungu)
+                    .then(shelters => {
+                        setShelterList(shelters);
+                        newFilter = { ...newFilter, shelterName: '' };
+                        setFilter(newFilter);
+                        setnowIndex(0);
+                    })
+                    .catch(err => {
+                        console.log('에러', err);
+                    });
+            } else {
+                setShelterList([]);
+                newFilter = { ...newFilter, shelterName: '' };
+                setFilter(newFilter);
+                setnowIndex(0);
             }
-            setShelterList(shelters);
-            newFilter = { ...newFilter, shelterName: '' };
+        } else {
+            setFilter(newFilter);
+            setnowIndex(0);
         }
-
-        setFilter(newFilter);
-
-        //인덱스를 다시 0으로 돌려서 첫 번째 카드부터 보여주기
-        setnowIndex(0);
     }
 
 

@@ -10,16 +10,16 @@ function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    async function handleLogout() {
-        try {
-            await logout();
-        } catch (error) {
-            // 서버 응답 실패여도 프론트 상태는 초기화
-        } finally {
-            setUser(null);
-            setIsDropdownOpen(false);
-            navigate('/');
-        }
+    function handleLogout() {
+        logout()
+            .catch((error) => {
+                // 서버 응답 실패여도 프론트 상태는 초기화
+            })
+            .finally(() => {
+                setUser(null);
+                setIsDropdownOpen(false);
+                navigate('/');
+            });
     }
 
     const toggleMenu = () => {

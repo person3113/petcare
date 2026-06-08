@@ -17,7 +17,6 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
         throws IOException {
         
-        // CORS preflight OPTIONS 요청은 허용
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             return true;
         }

@@ -24,7 +24,7 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
 
     const [favoriteLoading, setFavoriteLoading] = useState(false);
 
-    async function handleToggleFavorite() {
+    function handleToggleFavorite() {
         if (favoriteLoading) {
             return;
         }
@@ -33,19 +33,33 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
             return;
         }
         setFavoriteLoading(true);
-        try {
-            if (isLiked) {
-                await removeFavorite(animal.id);
-            } else {
-                await addFavorite(animal.id);
-            }
-            const updated = { ...animal, isLiked: !isLiked };
-            onFavoriteChange?.(updated);
-        } catch (error) {
-            console.log('찜하기 처리 실패', error);
-            alert('찜하기 처리에 실패했습니다.');
-        } finally {
-            setFavoriteLoading(false);
+        
+        if (isLiked) {
+            removeFavorite(animal.id)
+                .then(() => {
+                    const updated = { ...animal, isLiked: !isLiked };
+                    onFavoriteChange?.(updated);
+                })
+                .catch((error) => {
+                    console.log('찜하기 처리 실패', error);
+                    alert('찜하기 처리에 실패했습니다.');
+                })
+                .finally(() => {
+                    setFavoriteLoading(false);
+                });
+        } else {
+            addFavorite(animal.id)
+                .then(() => {
+                    const updated = { ...animal, isLiked: !isLiked };
+                    onFavoriteChange?.(updated);
+                })
+                .catch((error) => {
+                    console.log('찜하기 처리 실패', error);
+                    alert('찜하기 처리에 실패했습니다.');
+                })
+                .finally(() => {
+                    setFavoriteLoading(false);
+                });
         }
     }
 

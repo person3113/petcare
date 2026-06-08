@@ -12,21 +12,23 @@ function AuthProvider({ children }) {
   useEffect(() => {
     let isMounted = true;
 
-    async function restoreSession() {
-      try {
-        const data = await me();
-        if (!isMounted) return;
-        setUser(data?.data || data || null);
-      } catch (error) {
-        if (!isMounted) return;
-        if (error?.status === 401) {
-          setUser(null);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+    function restoreSession() {
+      me()
+        .then(data => {
+          if (!isMounted) return;
+          setUser(data?.data || data || null);
+        })
+        .catch(error => {
+          if (!isMounted) return;
+          if (error?.status === 401) {
+            setUser(null);
+          }
+        })
+        .finally(() => {
+          if (isMounted) {
+            setLoading(false);
+          }
+        });
     }
 
     restoreSession();
@@ -35,18 +37,6 @@ function AuthProvider({ children }) {
       isMounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    function handleUnauthorized() {
-      setUser(null);
-      navigate('/login');
-    }
-
-    window.addEventListener('auth:unauthorized', handleUnauthorized);
-    return () => {
-      window.removeEventListener('auth:unauthorized', handleUnauthorized);
-    };
-  }, [navigate]);
 
   const value = { user, setUser, loading };
 

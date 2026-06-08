@@ -11,54 +11,69 @@ function SimilarAnimals({ currentAnimal }) {
   useEffect(() => {
     if (!currentAnimal) return;
 
-    async function getSimilarAnimals() {
+    function getSimilarAnimals() {
       setLoading(true);
-      try {
-        const kindCategory = currentAnimal.kind?.match(/\[.*?\]/)?.[0] || '';
-        const breed = currentAnimal.kind?.replace(/\[.*?\]\s*/, '').trim() || '';
-        const sidoName = currentAnimal.jurisdiction?.split(' ')?.[0] || '';
+      const kindCategory = currentAnimal.kind?.match(/\[.*?\]/)?.[0] || '';
+      const breed = currentAnimal.kind?.replace(/\[.*?\]\s*/, '').trim() || '';
+      const sidoName = currentAnimal.jurisdiction?.split(' ')?.[0] || '';
 
-        let results = [];
-        const existingIds = new Set([currentAnimal.id]);
+      let results = [];
+      const existingIds = new Set([currentAnimal.id]);
 
-        const fetchAndAppend = async (params) => {
-          if (results.length >= 8) return;
-          const fetched = await fetchAnimals({ ...params, state: '보호중', limit: 10 });
-          for (const animal of fetched) {
-            if (!existingIds.has(animal.id)) {
-              results.push(animal);
-              existingIds.add(animal.id);
-            }
-            if (results.length >= 8) break;
-          }
-        };
-
-        // 1. 정확한 품종 + 장소
+      const loadAnimals = () => {
         if (breed && sidoName) {
-          await fetchAndAppend({ kind: breed, sido: sidoName });
+          fetchAnimals({ kind: breed, sido: sidoName, state: '보호중', limit: 10 })
+            .then(fetched => {
+              appendAnimals(fetched);
+              if (results.length < 8 && breed) {
+                fetchAnimals({ kind: breed, state: '보호중', limit: 10 }).then(f2 => {
+                  appendAnimals(f2);
+                  if (results.length < 8 && kindCategory && kindCategory !== '[기타축종]' && sidoName) {
+                    fetchAnimals({ kind: kindCategory, sido: sidoName, state: '보호중', limit: 10 }).then(f3 => {
+                      appendAnimals(f3);
+                      if (results.length < 8) {
+                        fetchAnimals({ kind: kindCategory, state: '보호중', limit: 10 }).then(f4 => {
+                          appendAnimals(f4);
+                          finishLoading();
+                        });
+                      } else {
+                        finishLoading();
+                      }
+                    });
+                  } else {
+                    finishLoading();
+                  }
+                });
+              } else {
+                finishLoading();
+              }
+            }).catch(handleError);
+        } else {
+          finishLoading();
         }
+      };
 
-        // 2. 정확한 품종 + 장소 없으면 품종만
-        if (breed && results.length < 8) {
-          await fetchAndAppend({ kind: breed });
-        }
-
-        // 3. 품종 카테고리 + 장소
-        if (kindCategory && kindCategory !== '[기타축종]' && results.length < 8) {
-          if (sidoName) {
-            await fetchAndAppend({ kind: kindCategory, sido: sidoName });
+      const appendAnimals = (fetched) => {
+        for (const animal of fetched) {
+          if (!existingIds.has(animal.id)) {
+            results.push(animal);
+            existingIds.add(animal.id);
           }
-          if (results.length < 8) {
-            await fetchAndAppend({ kind: kindCategory });
-          }
+          if (results.length >= 8) break;
         }
+      };
 
+      const finishLoading = () => {
         setSimilarAnimals(results);
-      } catch (error) {
-        console.error('비슷한 동물 불러오기 실패:', error);
-      } finally {
         setLoading(false);
-      }
+      };
+
+      const handleError = (error) => {
+        console.log('비슷한 동물 에러', error);
+        setLoading(false);
+      };
+
+      loadAnimals();
     }
 
     getSimilarAnimals();

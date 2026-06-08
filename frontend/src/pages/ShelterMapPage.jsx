@@ -51,7 +51,7 @@ function ShelterMapPage() {
     // 전체 보호소 가져오기
     request('/api/shelters')
       .then((res) => setShelters(res?.data || []))
-      .catch((err) => console.log('보호소 데이터 로딩 실패', err));
+      .catch((err) => console.log('보호소 데이터 에러', err));
 
     // 내 위치 가져오기
     if (navigator.geolocation) {
@@ -64,7 +64,7 @@ function ShelterMapPage() {
           });
         },
         (error) => {
-          console.log('위치 정보 로딩 실패', error);
+          console.log('위치 에러', error);
         }
       );
     }
@@ -94,7 +94,7 @@ function ShelterMapPage() {
         setLoadingAnimals(false);
       })
       .catch(err => {
-        console.error('동물 데이터 로딩 실패', err);
+        console.log('동물 데이터 에러', err);
         setShelterAnimals([]);
         setLoadingAnimals(false);
       });

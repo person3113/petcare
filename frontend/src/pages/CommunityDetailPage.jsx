@@ -25,25 +25,30 @@ function CommunityDetailPage() {
   useEffect(() => {
     let isMounted = true;
 
-    async function loadDetail() {
+    function loadDetail() {
       setLoading(true);
       setError('');
-      try {
-        const [postData, commentData] = await Promise.all([
-          fetchPost(id),
-          fetchComments(id),
-        ]);
-        if (!isMounted) return;
-        setPost(postData);
-        setComments(commentData);
-      } catch (err) {
-        if (!isMounted) return;
-        setError('게시글 정보를 불러오지 못했습니다.');
-      } finally {
-        if (isMounted) {
+      fetchPost(id)
+        .then((postData) => {
+          if (!isMounted) return;
+          setPost(postData);
+          fetchComments(id)
+            .then((commentData) => {
+              if (!isMounted) return;
+              setComments(commentData);
+              setLoading(false);
+            })
+            .catch((err) => {
+              if (!isMounted) return;
+              setError('댓글을 못 불러옴');
+              setLoading(false);
+            });
+        })
+        .catch((err) => {
+          if (!isMounted) return;
+          setError('글 정보 못 불러옴');
           setLoading(false);
-        }
-      }
+        });
     }
 
     loadDetail();
@@ -57,63 +62,67 @@ function CommunityDetailPage() {
     return user && post && String(user.id) === String(post.userId);
   }
 
-  async function handleDeletePost() {
+  function handleDeletePost() {
     if (!post) return;
     const ok = window.confirm('게시글을 삭제할까요?');
     if (!ok) return;
-    try {
-      await deletePost(post.id);
-      navigate('/community');
-    } catch (err) {
-      setError('게시글 삭제에 실패했습니다.');
-    }
+    deletePost(post.id)
+      .then(() => {
+        navigate('/community');
+      })
+      .catch((err) => {
+        setError('게시글 삭제 실패');
+      });
   }
 
-  async function handleSubmitComment(event) {
+  function handleSubmitComment(event) {
     event.preventDefault();
     if (!commentInput.trim()) {
       setError('댓글 내용을 입력해 주세요.');
       return;
     }
-    try {
-      const created = await createComment(id, { content: commentInput.trim() });
-      setComments((prev) => [...prev, created]);
-      setCommentInput('');
-      setError('');
-    } catch (err) {
-      setError('댓글 작성에 실패했습니다.');
-    }
+    createComment(id, { content: commentInput.trim() })
+      .then((created) => {
+        setComments((prev) => [...prev, created]);
+        setCommentInput('');
+        setError('');
+      })
+      .catch((err) => {
+        setError('댓글 작성 실패');
+      });
   }
 
-  async function handleEditComment(commentId) {
+  function handleEditComment(commentId) {
     if (!editingContent.trim()) {
       setError('댓글 내용을 입력해 주세요.');
       return;
     }
-    try {
-      const updated = await updateComment(commentId, { content: editingContent.trim() });
-      setComments((prev) =>
-        prev.map((comment) =>
-          comment.id === commentId ? { ...comment, ...updated } : comment
-        )
-      );
-      setEditingCommentId(null);
-      setEditingContent('');
-      setError('');
-    } catch (err) {
-      setError('댓글 수정에 실패했습니다.');
-    }
+    updateComment(commentId, { content: editingContent.trim() })
+      .then((updated) => {
+        setComments((prev) =>
+          prev.map((comment) =>
+            comment.id === commentId ? { ...comment, ...updated } : comment
+          )
+        );
+        setEditingCommentId(null);
+        setEditingContent('');
+        setError('');
+      })
+      .catch((err) => {
+        setError('수정 실패');
+      });
   }
 
-  async function handleDeleteComment(commentId) {
+  function handleDeleteComment(commentId) {
     const ok = window.confirm('댓글을 삭제할까요?');
     if (!ok) return;
-    try {
-      await deleteComment(commentId);
-      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
-    } catch (err) {
-      setError('댓글 삭제에 실패했습니다.');
-    }
+    deleteComment(commentId)
+      .then(() => {
+        setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+      })
+      .catch((err) => {
+        setError('댓글 삭제 실패');
+      });
   }
 
   if (loading) {
