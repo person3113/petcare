@@ -4,6 +4,7 @@ import Tag from '../Tag';
 import Button from '../Button';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { LuMessageSquareHeart } from "react-icons/lu";
+import { useNavigate } from 'react-router-dom'; {/*보호소 연락버튼에 사용 지도페이지랑 연결*/}
 
 function AnimalInfoBox({animal, onFavoriteChange}) {
 
@@ -24,11 +25,10 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
         geminiIntro,
     } = animal;
 
-    console.log(animal)
-
     const [favoriteLoading, setFavoriteLoading] = useState(false);
+    const navigate = useNavigate(); //페이지 이동을 위한 함수(보호소값 전달을 위해)
 
-    async function handleToggleFavorite() {
+        async function handleToggleFavorite() {
         if (favoriteLoading) {
             return;
         }
@@ -53,6 +53,11 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
         } finally {
             setFavoriteLoading(false);
         }
+    }
+
+    const handleShelterCall =()=>{
+        //주소창에 보호소 이름 포함해서 전달
+        navigate(`/map?q=${encodeURIComponent(animal.shelterName)}`);
     }
 
     return(
@@ -119,7 +124,7 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
                     flex={1.1}
                     bgColor="white"
                     textColor="#444"
-                    onClick={() => alert(`${shelterName} 연락처: ${animal.shelterTel}`)}
+                    onClick={handleShelterCall}
                     border="1px solid #ddd"
                 />
             </div>

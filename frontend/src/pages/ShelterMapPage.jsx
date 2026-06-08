@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import KakaoMap from '../components/KakaoMap';
 import { request } from '../api/http.js';
 import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 function getDistance(lat1, lon1, lat2, lon2) {
   if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity;
@@ -46,6 +47,8 @@ function ShelterMapPage() {
   const [shelterAnimals, setShelterAnimals] = useState([]);
   const [loadingAnimals, setLoadingAnimals] = useState(false);
   const [tab, setTab] = useState('전체');
+  const [searchParams] = useSearchParams(); //동물상세페이지에서 주소창에 전달한 보호소 이름 읽기 위한
+  const targetName = searchParams.get('q'); //주소창에 q뒤에있는 보호소 이름만 가져오기
 
   useEffect(() => {
     // 전체 보호소 가져오기
@@ -119,6 +122,18 @@ function ShelterMapPage() {
 
   const displayShelters = selectedShelter ? [selectedShelter] : sortedShelters.slice(0, 10);
   const urgentCount = countUrgentAnimals(shelterAnimals);
+
+  //주소창읽기
+  useEffect(() => {
+    if (shelters.length > 0 && targetName){
+      const found = shelters.find(s => s.name === targetName);
+      if (found){
+        setTimeout(() => { handleMarkerClick(found);},0); //앞에 화면 다 그리고 난 후
+      }
+
+    }
+  }, [shelters, targetName]);
+
 
   return (
     <div className="py-6 h-[calc(100vh-100px)] min-h-[600px] flex flex-col md:flex-row gap-6">
