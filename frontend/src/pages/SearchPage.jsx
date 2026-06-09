@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { fetchAnimalsPage } from '../api/animals.js';
 import { fetchLostAnimals } from '../api/animals.js';
 import { fetchPosts } from '../api/posts.js';
+import SafeImage from '../components/SafeImage';
 
 function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -92,7 +93,7 @@ function SearchPage() {
                 {results.animals.slice(0, 4).map(animal => (
                   <div key={animal.id} onClick={() => navigate(`/animal/${animal.id}`)} className="cursor-pointer group">
                     <div className="w-full aspect-square rounded-xl bg-gray-200 overflow-hidden mb-2">
-                       {animal.images?.[0] ? <img src={animal.images[0]} alt="thumb" className="w-full h-full object-cover group-hover:scale-105 transition-transform" /> : <div className="w-full h-full bg-gray-200"></div>}
+                       <SafeImage images={animal.images} alt="thumb" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                     </div>
                     <div className="text-sm font-semibold truncate">{animal.kind || '품종 모름'}</div>
                     <div className="text-xs text-gray-500 truncate">{animal.shelterName}</div>
@@ -117,7 +118,7 @@ function SearchPage() {
                 {results.lostAnimals.slice(0, 4).map(animal => (
                   <div key={animal.id} onClick={() => navigate(`/lost-animals/${animal.id}`)} className="cursor-pointer group">
                     <div className="w-full aspect-square rounded-xl bg-gray-200 overflow-hidden mb-2">
-                       {animal.images?.[0] ? <img src={animal.images[0]} alt="thumb" className="w-full h-full object-cover group-hover:scale-105 transition-transform" /> : <div className="w-full h-full bg-gray-200"></div>}
+                       <SafeImage images={animal.images} alt="thumb" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                     </div>
                     <div className="text-sm font-semibold truncate">{animal.kind || '품종 모름'}</div>
                     <div className="text-xs text-gray-500 truncate">{animal.discoveryPlace}</div>

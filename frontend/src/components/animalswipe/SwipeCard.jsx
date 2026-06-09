@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
 import AnimalCardContent from '../AnimalCardContent';
+import SafeImage from '../SafeImage';
 
 function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
 
     const handleDragEnd = (event, info, animal) => {
         //좌우 스와이프 성공했을때
         if (Math.abs(info.offset.x) > 100){
-            //오늘 스와이프 한 수 localStorage에 저장(마이페이지에 사용할 용)
+            //오늘 스와이프 한 수
             const today = new Date().toLocaleDateString();
             const statsStr = localStorage.getItem('daily_swipes');
             let stats = statsStr ? JSON.parse(statsStr) : { date: '', count: 0 };
@@ -26,7 +27,7 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
             } else if (info.offset.x < -100) {//왼쪽으로 100픽셀이상 밀었을때
                 setexitX(-500); // 왼쪽으로 날아가기 설정
                 console.log(`${animal.kind} 패스`);
-                // 다음 카드로 넘어가기 (인덱스 증가)
+                // 다음 카드로 넘어가기
                 setnowIndex((prev) => prev + 1);
             }
         }
@@ -37,26 +38,26 @@ function SwipeCard({ currentAnimal, exitX, setexitX, setnowIndex, onLike}) {
         <motion.div
             className="absolute h-full w-full cursor-grab"
             drag="x" //가로로 이동
-            dragConstraints={{ left: 0, right: 0 }} //드래그 범위:드래그후 놓으면 돌아올 자리
+            dragConstraints={{ left: 0, right: 0 }} //드래그후 놓으면 돌아올 자리
             //사용자가 카드를 놓았을때
             onDragEnd={(e, info) => handleDragEnd(e, info, currentAnimal)}
 
-            // 나타날 때 애니메이션: 선명해지며 살짝 위로 올라오는
-            initial={{ scale: 0.9, opacity: 0, y: 10 }} //초기값:크기 0.9,투명,y축 10만큼 아래
-            animate={{ scale: 1, opacity: 1, y: 0 }} //애니메이션: 크가1,선명,원래위치
+            // 나타날 때 애니메이션
+            initial={{ scale: 0.9, opacity: 0, y: 10 }} //초기값
+            animate={{ scale: 1, opacity: 1, y: 0 }} //애니메이션
 
-            // 사라질 때 실행(exitX 방향으로 날아감)
+            // 사라질 때
             exit={{
                 x: exitX,  //이 값이 왼,오 결정
                 opacity: 0, //날아가면서 투명해짐
-                rotate: exitX > 0 ? 25 : -25, // 날아갈 때 살짝 회전(+:시게방향,-:반시계)
+                rotate: exitX > 0 ? 25 : -25, // 날아갈 때 살짝 회전
                 transition: { duration: 0.3 } //0.3초동안
             }}
         >
-            {/* 카드 UI 디자인 */}
+            {/* 카드*/}
             <div className="flex h-[520px] w-full flex-col overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
-                <img
-                    src={currentAnimal.images && currentAnimal.images.length > 0 ? currentAnimal.images[0] : ''}
+                <SafeImage
+                    images={currentAnimal.images}
                     alt={currentAnimal.kind}
                     className="h-[360px] w-full object-cover pointer-events-none"
                 />

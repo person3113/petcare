@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchAnimals } from '../api/animals.js';
 import { fetchLostAnimals } from '../api/animals.js';
 import { fetchPosts } from '../api/posts.js';
+import SafeImage from './SafeImage';
 
 function SearchModal({ isOpen, onClose }) {
   const [keyword, setKeyword] = useState('');
@@ -12,7 +13,7 @@ function SearchModal({ isOpen, onClose }) {
   const navigate = useNavigate();
   const inputRef = useRef(null);
 
-  // 로컬스토리지에서 최근 검색어 불러오기
+  // 최근 검색어
   useEffect(() => {
     const saved = localStorage.getItem('recentSearches');
     if (saved) {
@@ -163,7 +164,7 @@ function SearchModal({ isOpen, onClose }) {
                 {results.animals.map((animal) => (
                   <div key={animal.id} className="flex items-center gap-3 py-2 border-b border-gray-100 cursor-pointer hover:bg-gray-50" onClick={() => { onClose(); navigate(`/animal/${animal.id}`); }}>
                     <div className="w-12 h-12 rounded-lg bg-gray-200 shrink-0 overflow-hidden">
-                       {animal.images?.[0] ? <img src={animal.images[0]} alt="thumb" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200"></div>}
+                       <SafeImage images={animal.images} alt="thumb" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 flex flex-col gap-1">
                       <div className="text-sm font-medium text-gray-800">{animal.kind || '품종 모름'}</div>
@@ -182,7 +183,7 @@ function SearchModal({ isOpen, onClose }) {
                 {results.lostAnimals.map((animal) => (
                   <div key={animal.id} className="flex items-center gap-3 py-2 border-b border-gray-100 cursor-pointer hover:bg-orange-50" onClick={() => { onClose(); navigate(`/lost-animals/${animal.id}`); }}>
                     <div className="w-12 h-12 rounded-lg bg-gray-200 shrink-0 overflow-hidden">
-                      {animal.images?.[0] ? <img src={animal.images[0]} alt="thumb" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200"></div>}
+                      <SafeImage images={animal.images} alt="thumb" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 flex flex-col gap-1">
                       <div className="text-sm font-medium text-gray-800">{animal.kind || '품종 모름'}</div>

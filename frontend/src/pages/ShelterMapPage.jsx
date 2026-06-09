@@ -3,6 +3,7 @@ import KakaoMap from '../components/KakaoMap';
 import { request } from '../api/http.js';
 import { Link } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
+import SafeImage from '../components/SafeImage';
 
 function getDistance(lat1, lon1, lat2, lon2) {
   if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity;
@@ -47,7 +48,7 @@ function ShelterMapPage() {
   const [shelterAnimals, setShelterAnimals] = useState([]);
   const [loadingAnimals, setLoadingAnimals] = useState(false);
   const [tab, setTab] = useState('전체');
-  const [searchParams] = useSearchParams(); //동물상세페이지에서 주소창에 전달한 보호소 이름 읽기 위한
+  const [searchParams] = useSearchParams(); //주소창에 전달한 보호소 이름 읽기 위한
   const targetName = searchParams.get('q'); //주소창에 q뒤에있는 보호소 이름만 가져오기
 
   useEffect(() => {
@@ -76,7 +77,7 @@ function ShelterMapPage() {
   const sortedShelters = useMemo(() => {
     if (!currentLocation || shelters.length === 0) return shelters;
     
-    // 오픈API 데이터 중에 이름이 똑같은 중복 데이터가 있어서 이름으로 필터링
+    // 오픈API 중에 이름이 똑같은 데이터가 있어서 필터링
     const uniqueShelters = shelters.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
 
     return [...uniqueShelters]
@@ -241,7 +242,7 @@ function ShelterMapPage() {
                         {shelterAnimals.map(animal => (
                           <Link key={animal.id} to={`/animal/${animal.id}`} className="block min-w-[72px] w-[72px] group">
                             <div className="w-16 h-16 rounded-lg bg-gray-200 overflow-hidden mb-1 relative mx-auto">
-                              <img src={animal.images?.[0] || 'https://via.placeholder.com/150'} alt={animal.kind} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                              <SafeImage images={animal.images} alt={animal.kind} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                             </div>
                           </Link>
                         ))}
