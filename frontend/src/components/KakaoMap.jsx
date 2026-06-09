@@ -29,11 +29,11 @@ function KakaoMap({ shelters, currentLocation, selectedShelter, onMarkerClick })
 
     if (!mapInstance.current) {
         mapInstance.current = new window.kakao.maps.Map(container, options);
-    } else if (currentLocation) {
+    } else if (currentLocation && !selectedShelter) {
         mapInstance.current.setCenter(centerPosition);
         mapInstance.current.setLevel(level);
     }
-  }, [currentLocation]);
+  }, [currentLocation, selectedShelter]);
 
   useEffect(() => {
     if (!mapInstance.current || !selectedShelter) return;

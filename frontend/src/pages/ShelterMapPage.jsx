@@ -104,6 +104,7 @@ function ShelterMapPage() {
   };
 
   const handleRefreshLocation = () => {
+    setSelectedShelter(null);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {

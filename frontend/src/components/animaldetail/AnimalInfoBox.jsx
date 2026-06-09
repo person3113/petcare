@@ -29,7 +29,7 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
     } = animal;
 
 
-        async function handleToggleFavorite() {
+    function handleToggleFavorite() {
         if (favoriteLoading) {
             return;
         }
@@ -38,21 +38,35 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
             return;
         }
         setFavoriteLoading(true);
-        try {
-            if (liked) {
-                await removeFavorite(animal.id);
-                console.log('찜하기 삭제 성공');
-            } else {
-                await addFavorite(animal.id);
-                console.log('찜하기 추가 성공');
-            }
-            const updated = { ...animal, liked: !liked };
-            onFavoriteChange?.(updated);
-        } catch (error) {
-            console.log('찜하기 처리 실패', error);
-            alert('찜하기 처리에 실패했습니다.');
-        } finally {
-            setFavoriteLoading(false);
+        
+        if (liked) {
+            removeFavorite(animal.id)
+                .then(() => {
+                    console.log('찜하기 삭제 성공');
+                    const updated = { ...animal, liked: !liked };
+                    onFavoriteChange?.(updated);
+                })
+                .catch((error) => {
+                    console.log('찜하기 처리 실패', error);
+                    alert('찜하기 처리에 실패했습니다.');
+                })
+                .finally(() => {
+                    setFavoriteLoading(false);
+                });
+        } else {
+            addFavorite(animal.id)
+                .then(() => {
+                    console.log('찜하기 추가 성공');
+                    const updated = { ...animal, liked: !liked };
+                    onFavoriteChange?.(updated);
+                })
+                .catch((error) => {
+                    console.log('찜하기 처리 실패', error);
+                    alert('찜하기 처리에 실패했습니다.');
+                })
+                .finally(() => {
+                    setFavoriteLoading(false);
+                });
         }
     }
 
