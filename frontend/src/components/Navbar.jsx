@@ -35,7 +35,7 @@ function Navbar() {
         <div className="custom-header">
             <div className="header-left">
                 {/* 로고 부분 */}
-                <div className="logo" onClick={() => navigate('/')}>
+                <div className="logo !text-accent" onClick={() => navigate('/')}>
                     PETCARE
                 </div>
 
@@ -90,7 +90,7 @@ function Navbar() {
                     /* 비로그인 상태 */
                     <div className="guest-actions">
                         <Link to="/login" className="login-btn">로그인</Link>
-                        <Link to="/register" className="register-btn">시작하기</Link>
+                        <Link to="/register" className="register-btn !bg-accent">시작하기</Link>
                     </div>
                 )}
 

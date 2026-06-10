@@ -69,7 +69,7 @@ function Register() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-md p-10 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-8">회원가입</h1>
+        <h1 className="text-2xl font-bold text-center mb-8 !text-text-a">회원가입</h1>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label htmlFor="register-email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -135,7 +135,7 @@ function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-3 rounded-xl font-semibold text-sm hover:bg-gray-800 transition disabled:opacity-50"
+            className="w-full bg-accent text-white py-3 rounded-xl font-semibold text-sm hover:bg-amber-400 transition disabled:opacity-50"
           >
             {loading ? '가입 중...' : '회원가입'}
           </button>

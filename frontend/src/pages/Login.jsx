@@ -55,7 +55,7 @@ function Login() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-md p-10 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-8">로그인</h1>
+        <h1 className="text-2xl font-bold text-center mb-8 !text-text-a">로그인</h1>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label htmlFor="login-email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -89,13 +89,13 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-3 rounded-xl font-semibold text-sm hover:bg-gray-800 transition disabled:opacity-50"
+            className="w-full bg-accent text-white py-3 rounded-xl font-semibold text-sm hover:bg-amber-400 transition disabled:opacity-50"
           >
             {loading ? '로그인 중...' : '로그인'}
           </button>
         </form>
         <p className="text-center text-sm text-gray-500 mt-6">계정이 없으신가요?
-            <Link to ="/register" className="font-bold text-black hover:underline">회원가입하러가기</Link></p>
+            <Link to ="/register" className="font-bold text-text-a hover:underline">회원가입하러가기</Link></p>
       </div>
     </div>
   );

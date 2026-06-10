@@ -9,7 +9,7 @@ function Footer() {
         
         {/* 브랜드 블록 */}
         <div className="max-w-xs">
-          <h2 className="text-xl font-bold text-gray-900">Petcare</h2>
+          <h2 className="text-xl font-bold !text-text-a">Petcare</h2>
           <p className="text-sm text-gray-500 mt-2 leading-relaxed">
             유기동물과 새 가족을<br />
             연결하는 매칭 서비스
@@ -20,7 +20,7 @@ function Footer() {
         <div className="flex flex-wrap gap-12 md:gap-16">
           {/* 서비스 컬럼 */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">서비스</h3>
+            <h3 className="text-sm font-semibold !text-text-a mb-3">서비스</h3>
             <ul className="space-y-2 text-xs text-gray-600">
               <li><a href="#" className="hover:underline">인연 찾기</a></li>
               <li><Link to="/animalswipe/1" className="hover:underline">동물 스와이프</Link></li>
@@ -33,7 +33,7 @@ function Footer() {
 
           {/* 커뮤니티 컬럼 */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">커뮤니티</h3>
+            <h3 className="text-sm font-semibold !text-text-a mb-3">커뮤니티</h3>
             <ul className="space-y-2 text-xs text-gray-600">
               <li><a href="#" className="hover:underline">입양후기</a></li>
               <li><a href="#" className="hover:underline">질문</a></li>
@@ -44,7 +44,7 @@ function Footer() {
 
           {/* 정보 컬럼 */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">정보</h3>
+            <h3 className="text-sm font-semibold !text-text-a mb-3">정보</h3>
             <ul className="space-y-2 text-xs text-gray-600">
               <li><a href="#" className="hover:underline">공지사항</a></li>
               <li><a href="#" className="hover:underline">이용약관</a></li>
@@ -63,9 +63,9 @@ function Footer() {
 
         {/* SNS 버튼 (Figma에 명시된 심플한 핑크빛 사각형 버튼 구조) */}
         <div className="flex gap-2">
-          <a href="#" className="w-8 h-8 rounded bg-pink-100 hover:bg-pink-200 transition-colors flex items-center justify-center text-xs text-pink-600 font-semibold" aria-label="Instagram">IG</a>
-          <a href="#" className="w-8 h-8 rounded bg-pink-100 hover:bg-pink-200 transition-colors flex items-center justify-center text-xs text-pink-600 font-semibold" aria-label="Facebook">FB</a>
-          <a href="#" className="w-8 h-8 rounded bg-pink-100 hover:bg-pink-200 transition-colors flex items-center justify-center text-xs text-pink-600 font-semibold" aria-label="Twitter">TW</a>
+          <a href="#" className="w-8 h-8 rounded bg-amber-100 hover:bg-amber-200 transition-colors flex items-center justify-center text-xs text-accent font-semibold" aria-label="Instagram">IG</a>
+          <a href="#" className="w-8 h-8 rounded bg-amber-100 hover:bg-amber-200 transition-colors flex items-center justify-center text-xs text-accent font-semibold" aria-label="Facebook">FB</a>
+          <a href="#" className="w-8 h-8 rounded bg-amber-100 hover:bg-amber-200 transition-colors flex items-center justify-center text-xs text-accent font-semibold" aria-label="Twitter">TW</a>
         </div>
       </div>
     </footer>
