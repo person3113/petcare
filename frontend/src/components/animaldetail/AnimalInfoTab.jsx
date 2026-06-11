@@ -1,6 +1,5 @@
 import React,{useState} from "react";
 
-// 운영시간 포맷팅 유틸
 const formatHours = (wStart, wEnd, wkStart, wkEnd, closed) => {
     let str = [];
     if (wStart && wEnd) str.push(`평일 ${wStart}~${wEnd}`);

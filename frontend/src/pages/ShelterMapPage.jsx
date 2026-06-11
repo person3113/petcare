@@ -5,18 +5,17 @@ import { Link } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import SafeImage from '../components/SafeImage';
 
+// 거리 계산
 function getDistance(lat1, lon1, lat2, lon2) {
   if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity;
-  const R = 6371; // 지구 반지름 (km)
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a = 
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * 
-    Math.sin(dLon / 2) * Math.sin(dLon / 2); 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
-  const d = R * c; // km 거리 계산
-  return d;
+  
+  const dx = lat2 - lat1;
+  const dy = lon2 - lon1;
+  
+  // 위경도 1도 차이를 대략 100km 정도로 잡아서 계산
+  const distance = Math.sqrt(dx * dx + dy * dy) * 100;
+  
+  return distance;
 }
 
 function countUrgentAnimals(animals) {
@@ -77,8 +76,16 @@ function ShelterMapPage() {
   const sortedShelters = useMemo(() => {
     if (!currentLocation || shelters.length === 0) return shelters;
     
-    // 오픈API 중에 이름이 똑같은 데이터가 있어서 필터링
-    const uniqueShelters = shelters.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
+    // 오픈API에서 이름 같은 데이터가 있어서 필터링
+    const uniqueShelters = [];
+    const nameList = [];
+    
+    for (let i = 0; i < shelters.length; i++) {
+      if (!nameList.includes(shelters[i].name)) {
+        nameList.push(shelters[i].name);
+        uniqueShelters.push(shelters[i]);
+      }
+    }
 
     return [...uniqueShelters]
       .map(s => ({

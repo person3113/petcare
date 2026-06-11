@@ -19,7 +19,7 @@
 -- INSERT INTO users (id, email, password_hash, nickname, oauth_provider, oauth_id, created_at, updated_at)
 -- VALUES (5, 'test5@petcare.com', '$2a$10$8.ZUnR9OYqpDnRoBG9IcDeWp9.pEKpW3/SInp90/ZfD9pIByJ3zP.', 'tester5', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 --
--- -- Restart identity sequence to avoid PK violation on next insert
+-- -------------------------------
 -- ALTER TABLE users ALTER COLUMN id RESTART WITH 6;
 -- ALTER TABLE favorites ALTER COLUMN id RESTART WITH 4;
 --

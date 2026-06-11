@@ -1,6 +1,5 @@
 import React from 'react';
 
-// 포맷 유틸리티
 export function formatKind(kind) {
   if (!kind) return { species: '미상', breed: '품종 미상' };
   
@@ -26,7 +25,7 @@ function AnimalCardContent({ animal, variant = 'list' }) {
   const { species, breed } = formatKind(animal.kind);
   const status = animal.status;
   
-  // 구조동물은 보호소 우선, 분실동물(status === '분실')은 발견장소 우선
+  // 구조동물은 보호소 우선, 분실동물은 발견장소 우선
   const location = status === '분실' 
     ? (animal.discoveryPlace || animal.shelterName || '위치 미상') 
     : (animal.shelterName || animal.discoveryPlace || '위치 미상');

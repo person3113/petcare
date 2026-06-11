@@ -34,7 +34,6 @@ public class AnimalDetailResponse {
     private boolean isLiked;
     private String geminiIntro;
 
-    // Added shelter detail fields
     private String weekStartTime;
     private String weekEndTime;
     private String weekendStartTime;

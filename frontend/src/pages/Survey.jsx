@@ -63,7 +63,7 @@ function Survey() {
       <div className="mx-auto max-w-5xl">
         {/* 헤더 */}
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">🐾 간단 설문</h1>
+          <h1 className="text-2xl font-bold text-gray-900">간단 설문</h1>
           <p className="mt-2 text-sm text-gray-500">
             원하는 조건을 선택하면 어울리는 동물을 추천해 드립니다.
           </p>

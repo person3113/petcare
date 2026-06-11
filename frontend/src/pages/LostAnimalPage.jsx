@@ -30,9 +30,7 @@ function LostAnimalPage() {
   useEffect(() => {
     let isMounted = true;
 
-    import('../api/animals.js').then((module) => {
-      module.fetchSido().then(setSidoList);
-    });
+    fetchSido().then(setSidoList);
 
     function init() {
       const params = { page, limit: pageLimit, keyword };

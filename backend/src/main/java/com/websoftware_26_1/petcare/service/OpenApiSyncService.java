@@ -50,20 +50,20 @@ public class OpenApiSyncService {
     @org.springframework.scheduling.annotation.Async
     @Transactional
     public void syncAllDataAsync(LocalDate startDate, LocalDate endDate, int numOfRows) {
-        logger.info("background sync 시작: from {} to {} ", startDate, endDate);
+        logger.info("background 동기화 시작: from {} to {} ", startDate, endDate);
         LocalDate current = startDate;
         while (!current.isAfter(endDate)) {
             LocalDate next = current.plusMonths(1).minusDays(1);
             if (next.isAfter(endDate)) {
                 next = endDate;
             }
-            logger.info("Syncing chunk: {} to {}", current, next);
+            logger.info("chunk 동기화: {} to {}", current, next);
             syncAnimalsForPeriod(current, next, numOfRows);
             syncLostAnimals(current, next, numOfRows);
             syncRescueStats(current, next, numOfRows);
             current = current.plusMonths(1);
         }
-        logger.info("Background sync 완료: from {} to {}", startDate, endDate);
+        logger.info("Background 동기화 완료: from {} to {}", startDate, endDate);
     }
 
     @Transactional

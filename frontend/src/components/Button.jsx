@@ -1,8 +1,6 @@
 import React from 'react';
 
-// variant: 'primary' | 'secondary' | 'danger'
 // variant를 쓰면 미리 정해진 색상 스타일이 적용됨.
-// 기존처럼 bgColor/textColor/border를 직접 넘기면 variant보다 우선 적용됨 (하위 호환).
 const variantStyles = {
     primary:   { backgroundColor: '#f59e0b', color: '#fff',     border: 'none' },
     secondary: { backgroundColor: '#fff',    color: '#f59e0b',  border: '1px solid #f59e0b' },
@@ -13,14 +11,14 @@ function Button({
          text,                // 버튼에 들어갈 글자
          onClick,             // 클릭 시 실행할 함수
          variant,             // 'primary' | 'secondary' | 'danger' (선택)
-         bgColor,             // 배경색 (직접 지정 시 variant보다 우선)
-         textColor,           // 글자색 (직접 지정 시 variant보다 우선)
+         bgColor,             // 배경색(직접 지정 시 variant보다 우선)
+         textColor,           // 글자색(직접 지정 우선)
          width = 'auto',      // 가로 너비
          flex = 'none',       // flex (none이면 글자크기만큼 버튼)
-         border,              // 테두리 (직접 지정 시 variant보다 우선)
+         border,              // 테두리 (직접 지정 우선)
      }) {
 
-    // variant 기본값: bgColor나 textColor를 직접 넘기면 variant 없이도 동작
+    // variant 기본값
     const base = variant ? variantStyles[variant] : { backgroundColor: bgColor ?? '#222', color: textColor ?? '#fff', border: border ?? 'none' };
 
     const buttonStyle = {
@@ -52,4 +50,4 @@ function Button({
     );
 }
 
-export default Button;
+export default Button;

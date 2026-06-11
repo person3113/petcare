@@ -175,7 +175,7 @@ public class DbStatsService {
         for (Object[] row : rows) {
             String orgNm = (String) row[0];
             String state = (String) row[1];
-            // If sido is filtered, group by sigungu (2nd word). Else, group by sido (1st word).
+
             String[] parts = orgNm.split(" ");
             String regionKey;
             if (isSidoFiltered && parts.length > 1) {

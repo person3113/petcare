@@ -6,7 +6,7 @@ import { PROCESS_STATES } from '../../constants.js';
 function SwipeSideBox({LikeCnt, filter, onFilterChange, sidoList, sigunguList, shelterList, mySurvey, applySurveyFilter}) {
 
     const disabledSigungu = !filter.sido; // 시도를 선택하지 않았으면, 시군구는 비활성화
-    const disabledShelter = !filter.sido; // 시도를 선택하지 않았으면, 보호소는 비활성화
+    const disabledShelter = !filter.sido; // 시도 안 선택하면, 마찬가지로 비활성화
 
     
     return(

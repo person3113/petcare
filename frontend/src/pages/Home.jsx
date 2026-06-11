@@ -68,7 +68,7 @@ function Home() {
           <div className="text-left md:w-1/2">
             <h1 className="!text-3xl md:!text-4xl font-bold text-gray-900 mb-4 leading-tight drop-shadow-sm">당신에게 꼭 맞는 <br className="hidden md:block" />
               <span className="text-accent">인연</span>을 만나보세요</h1>
-            <p className="text-gray-800 mb-1 font-medium drop-shadow-sm">설문을 통해 잘 맞는 동물을 추천해줍니다</p>
+            <p className="text-gray-800 mb-1 font-medium drop-shadow-sm">여러분과 어울리는 동물을 추천해줍니다</p>
             <p className="text-gray-800 font-medium drop-shadow-sm">지금 바로 인연을 찾아보세요</p>
           </div>
         </div>

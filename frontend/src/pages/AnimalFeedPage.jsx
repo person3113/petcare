@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fetchAnimalsPage, fetchSigungu, fetchShelters } from '../api/animals.js';
+import { fetchAnimalsPage, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
 import FilterBar from '../components/FilterBar.jsx';
 import AnimalCard from '../components/AnimalCard.jsx';
 import { SIDO_LIST } from '../constants.js';
@@ -37,9 +37,7 @@ function AnimalFeedPage() {
     let isMounted = true;
     
     // fetch sido
-    import('../api/animals.js').then((module) => {
-      module.fetchSido().then(setSidoList);
-    });
+    fetchSido().then(setSidoList);
 
     function init() {
       const params = { page, limit: pageLimit, keyword };

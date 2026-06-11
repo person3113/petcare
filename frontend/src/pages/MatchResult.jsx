@@ -4,7 +4,6 @@ import AnimalCard from '../components/AnimalCard.jsx';
 import { matchQuiz } from '../api/match.js';
 
 // 설문 결과 페이지
-// Survey에서 navigate로 전달받은 data를 렌더링
 function MatchResult() {
   const location = useLocation();
   const data = location.state || {};

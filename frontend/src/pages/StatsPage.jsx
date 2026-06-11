@@ -44,7 +44,7 @@ function StatsPage() {
     sido: ''
   });
 
-  // Fetch Global Stats on Mount
+  // 글로벌 통계
   useEffect(() => {
     function fetchGlobal() {
       setLoadingGlobal(true);
@@ -63,7 +63,7 @@ function StatsPage() {
     fetchGlobal();
   }, []);
 
-  // Fetch Filtered Stats when button is clicked or on initial load
+  //필터링된 통계 가져오기
   const fetchFiltered = () => {
     setLoadingFiltered(true);
     setErrorFiltered('');
@@ -81,7 +81,6 @@ function StatsPage() {
 
   useEffect(() => {
     fetchFiltered();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFilterChange = (e) => {
@@ -92,7 +91,7 @@ function StatsPage() {
     fetchFiltered();
   };
 
-  // --- Global Chart Data ---
+  // 글로벌 차트
   let rescueTrendData = null;
   if (globalStats?.rescueTrend) {
     rescueTrendData = {
@@ -118,7 +117,7 @@ function StatsPage() {
     };
   }
 
-  // --- Filtered Chart Data ---
+  // =============상세 차트==================================
   let regionalChartData = null;
   if (filteredStats?.regionalStats) {
     regionalChartData = {
@@ -206,7 +205,6 @@ function StatsPage() {
   return (
     <div className="px-4 py-8 max-w-7xl mx-auto bg-gray-50 min-h-screen space-y-12">
       
-      {/* 1. Global Stats Section */}
       <section>
         <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">전국 누적 통계</h1>
         <p className="text-lg text-gray-600 mb-8">전국의 유기동물 구조 및 분실 동향을 한눈에 파악하세요.</p>
@@ -228,10 +226,8 @@ function StatsPage() {
         )}
       </section>
 
-      {/* Divider */}
       <hr className="border-gray-200" />
 
-      {/* 2. Detailed Filtered Stats Section */}
       <section>
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
@@ -239,7 +235,7 @@ function StatsPage() {
             <p className="text-gray-600">원하는 기간과 지역을 선택하여 상세 데이터를 확인하세요.</p>
           </div>
           
-          {/* Filters */}
+          {/* 필터 */}
           <div className="flex flex-wrap items-end gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
             <label className="flex flex-col text-sm text-gray-600 font-medium">
               시작일

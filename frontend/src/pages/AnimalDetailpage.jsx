@@ -43,7 +43,7 @@ function AnimalDetailpage(){
             <div className="path ml-6">
                 <Link to="/" className="text-sm text-gray-500 hover:underline">메인 화면 </Link>
                 <span> &gt; </span>
-                <Link to="/animals" className="text-sm text-gray-500 hover:underline">인연 찾기 </Link>
+                <Link to="/animals" className="text-sm text-gray-500 hover:underline">입양하기 </Link>
                 <span> &gt; </span>
                 <span className="text-sm text-accent">인연 상세</span>
             </div>

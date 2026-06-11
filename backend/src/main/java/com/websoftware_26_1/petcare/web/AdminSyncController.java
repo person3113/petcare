@@ -30,29 +30,29 @@ public class AdminSyncController {
         @RequestParam(name = "numOfRows", defaultValue = "1000") int numOfRows
     ) {
         if ("all".equalsIgnoreCase(type)) {
-            LocalDate bgndeDate = parseDateOrDefault(bgnde, LocalDate.of(2024, 6, 1));
-            LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.of(2026, 6, 1));
+            LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.now());
+            LocalDate bgndeDate = parseDateOrDefault(bgnde, enddeDate.minusMonths(1));
             openApiSyncService.syncAllDataAsync(bgndeDate, enddeDate, numOfRows);
-            return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(-1, -1))); // Background process started
+            return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(-1, -1)));
         }
         if ("shelters".equalsIgnoreCase(type)) {
             OpenApiSyncService.SyncResult result = openApiSyncService.syncShelters(numOfRows);
             return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(result.getSavedCount(), result.getTotalCount())));
         }
         if ("stats".equalsIgnoreCase(type)) {
-            LocalDate bgndeDate = parseDateOrDefault(bgnde, LocalDate.of(2024, 6, 1));
-            LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.of(2026, 6, 1));
+            LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.now());
+            LocalDate bgndeDate = parseDateOrDefault(bgnde, enddeDate.minusMonths(1));
             OpenApiSyncService.SyncResult result = openApiSyncService.syncRescueStats(bgndeDate, enddeDate, numOfRows);
             return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(result.getSavedCount(), result.getTotalCount())));
         }
         if ("lost".equalsIgnoreCase(type)) {
-            LocalDate bgndeDate = parseDateOrDefault(bgnde, LocalDate.of(2024, 6, 1));
-            LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.of(2026, 6, 1));
+            LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.now());
+            LocalDate bgndeDate = parseDateOrDefault(bgnde, enddeDate.minusMonths(1));
             OpenApiSyncService.SyncResult result = openApiSyncService.syncLostAnimals(bgndeDate, enddeDate, numOfRows);
             return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(result.getSavedCount(), result.getTotalCount())));
         }
-        LocalDate bgndeDate = parseDateOrDefault(bgnde, LocalDate.of(2024, 6, 1));
-        LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.of(2026, 6, 1));
+        LocalDate enddeDate = parseDateOrDefault(endde, LocalDate.now());
+        LocalDate bgndeDate = parseDateOrDefault(bgnde, enddeDate.minusMonths(1));
         OpenApiSyncService.SyncResult result = openApiSyncService.syncAnimalsForPeriod(bgndeDate, enddeDate, numOfRows);
         return ResponseEntity.ok(ApiResponse.ok(new SyncResponse(result.getSavedCount(), result.getTotalCount())));
     }

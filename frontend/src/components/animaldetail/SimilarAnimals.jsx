@@ -98,7 +98,7 @@ function SimilarAnimals({ currentAnimal }) {
         breakpoints={{
           640: { slidesPerView: 2.5 },
           768: { slidesPerView: 3.5 },
-          1024: { slidesPerView: 4 }, // 데스크탑 4개
+          1024: { slidesPerView: 4 }, // pc는 4개
         }}
         className="w-full"
       >
