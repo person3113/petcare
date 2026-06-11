@@ -57,9 +57,10 @@ function Popup({ isOpen,Onclose,shelterName }){
                         <p className="font-bold flex gap-6"><span><FaCheck className="text-green-800"/></span>입양 후 책임서약서</p>
                         <p className="font-bold flex gap-6"><span><FaCheck className="text-green-800"/></span>돌봄 계획서</p>
                     </div>
-                    <p className="text-xs text-accent p-5 text-center leading-relaxed italic bg-amber-50 rounded-lg">
-                        <span><BsBrightnessHigh className="text-accent"/></span>충분한 준비는 보호자와 아이들 모두의 행복을 위한 중요한 단계입니다.
-                    </p>
+                    <div className="text-xs text-accent p-5 text-center leading-relaxed italic bg-amber-50 rounded-lg">
+                        <span><BsBrightnessHigh className="text-accent"/></span>충분한 준비는 보호자와 아이들 모두의 행복을 위한 중요한 단계입니다
+                        <p className="text-[10px] text-red-800">✱필요한 서류들은 보호소마다 다를 수 있으므로 정확한 준비는 보호소 상담을 통해 확인해주세요</p>
+                    </div>
                 </div>
 
                 <div style={sheltercallstyle}>

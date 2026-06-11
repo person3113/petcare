@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import { request } from '../api/http.js';
 import AnimalInfoBox from '../components/animaldetail/AnimalInfoBox';
 import AnimalImg from '../components/animaldetail/AnimalImg';
@@ -55,8 +55,15 @@ function LostAnimalDetailPage() {
 
     return (
         <div className="mx-auto max-w-5xl py-6">
+            {/*페이지 경로*/}
+            <div className="path ml-6">
+                <Link to="/" className="text-sm text-gray-500 hover:underline">메인 화면</Link>
+                <span>&gt;</span>
+                <Link to="/lost-animals" className="text-sm text-gray-500 hover:underline">분실 동물</Link>
+                <span>&gt;</span>
+                <span className="text-sm text-accent">인연 상세</span>
+            </div>
             <h1 className="text-xl font-bold text-gray-900">분실동물 상세 페이지</h1>
-            <p className="text-sm text-gray-600">동물의 id: {id}</p>
             <div className="mt-6 flex flex-col gap-10 lg:flex-row">
                 <div className="min-w-[320px] flex-1">
                     <AnimalImg images={normalizedAnimal.images || []} />
