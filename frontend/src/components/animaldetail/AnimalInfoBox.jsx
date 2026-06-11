@@ -118,7 +118,7 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
             <div className="mt-5 flex flex-wrap gap-2">
                 <Tag keyword="중성화" result={isNeutered === '아니오' ? '미완료' : '완료'}/>
                 <Tag keyword="건강" result={healthStatus}/>
-                <Tag keyword={"성별"}/>
+                <Tag keyword={"성별"} result={gender}/>
             </div>
 
             {/* 버튼 영역 */}
