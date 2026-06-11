@@ -17,7 +17,7 @@ function AnimalSwipePage() {
         sigungu: '',    //시군구
         shelterName: '',
         kind: '',
-        status: '',
+        status: '보호중',
         gender: '',
         isNeutered: '',
     });
@@ -49,31 +49,24 @@ function AnimalSwipePage() {
             return false;
         }
 
-        // kind는 "믹스견", "[개] 믹스견" 형태라 includes로 체크
         if (filter.kind !== '' && !animal.kind?.includes(filter.kind)) {
             return false;
         }
-        // status 필드명은 API 응답 기준
-        if (filter.status !== '' && animal.status !== filter.status) {
+        if (filter.status !== '' && filter.status !== '전체' && animal.status !== filter.status) {
             return false;
         }
-        // gender 필드명은 API 응답 기준
         if (filter.gender !== '' && animal.gender !== filter.gender) {
             return false;
         }
-        // 시도는 jurisdiction(관할) 필드에 포함 여부로 체크
         if (filter.sido !== '' && !animal.jurisdiction?.includes(filter.sido)) {
             return false;
         }
-        // 시군구도 jurisdiction 필드에 포함 여부로 체크
         if (filter.sigungu !== '' && !animal.jurisdiction?.includes(filter.sigungu)) {
             return false;
         }
-        // 보호소 이름 일치 여부
         if (filter.shelterName !== '' && animal.shelterName !== filter.shelterName) {
             return false;
         }
-        // 중성화 일치 여부
         if (filter.isNeutered !== '' && animal.isNeutered !== filter.isNeutered) {
             return false;
         }
@@ -256,9 +249,8 @@ function AnimalSwipePage() {
         else if (survey.neuterYn ==='N') isNeutered = '아니오';
         else if (survey.neuterYn ==='U')isNeutered = '미상';
 
-        let status = '';
-        if(survey.state === 'notice') status = '공고중';
-        else if(survey.state === 'protect') status = '보호중';
+        let status = '전체';
+        if(survey.state) status = survey.state;
 
         let sidoName = '';
         if(survey.uprCd) {
@@ -296,7 +288,7 @@ function AnimalSwipePage() {
                         <div className="relative h-[520px] w-[340px] items-start">
                             <AnimatePresence custom={exitX}>
                                 <SwipeCard
-                                    //key가 바뀌어야 AnimatePresence(바로 아래자식의)가 카드 교체로 인식하고 애니메이션을 실행
+                                    //key가 바뀌어야 카드 교체로 인식
                                     key={currentAnimal.id + '-' + nowIndex}
                                     currentAnimal={currentAnimal} //카드의 현재 동물
                                     exitX={exitX} //어느 방향으로 밀었는지 나타낼값
@@ -308,7 +300,6 @@ function AnimalSwipePage() {
                         </div>) : (<div className="flex h-[520px] w-[340px] items-center justify-center">
                                 <div className="py-12 text-center text-sm text-gray-500">조건에 맞는 동물이 없습니다.</div>
                             </div>)}
-                        {/* 하단 방향 설명 부분*/}
                         <div className="mt-8 flex gap-16 text-center text-sm text-gray-500">
                             <div className="flex flex-col items-center">
                                 <ArrowLeft size={24} className="mb-1 text-gray-400" />

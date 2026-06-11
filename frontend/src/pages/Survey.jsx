@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { matchQuiz, buildMatchParams } from '../api/match.js';
 import { saveSurvey } from '../api/survey.js';
-import { SIDO_LIST } from '../constants.js';
+import { SIDO_LIST, PROCESS_STATES } from '../constants.js';
 
 // 설문 5문항 페이지
-// 각 문항 응답을 모아 buildMatchParams로 변환 후 API 호출
 function Survey() {
   const navigate = useNavigate();
 
-  // 폼 상태: 5문항 각 선택값
   const [form, setForm] = useState({
     upkind: '',    // 축종
     sexCd: '',     // 성별
@@ -27,7 +25,7 @@ function Survey() {
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  // 폼 제출 핸들러
+  // 폼 제출
   function handleSubmit(event) {
     event.preventDefault();
     setError('');
@@ -132,7 +130,7 @@ function Survey() {
               </select>
             </div>
 
-            {/* 문항 4: 지역(시도) — 텍스트 input → 드롭다운으로 교체 */}
+            {/* 문항 4: 지역(시도)*/}
             <div className="flex flex-col gap-1">
               <label htmlFor="survey-upr" className="text-sm font-semibold text-gray-700">
                 4. 어느 지역의 동물을 찾으시나요?
@@ -166,8 +164,11 @@ function Survey() {
                 className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
               >
                 <option value="">선택 안함 (상관없어요)</option>
-                <option value="notice">공고중</option>
-                <option value="protect">보호중</option>
+                {PROCESS_STATES.map((st) => (
+                  <option key={st} value={st}>
+                    {st}
+                  </option>
+                ))}
               </select>
             </div>
 

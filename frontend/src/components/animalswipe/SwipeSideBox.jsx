@@ -124,7 +124,7 @@ function SwipeSideBox({LikeCnt, filter, onFilterChange, sidoList, sigunguList, s
                                 onChange={onFilterChange}
                                 className="rounded-lg border border-gray-200 px-3 py-2 text-sm"
                             >
-                                <option value="">전체</option>
+                                <option value="전체">전체</option>
                                 {PROCESS_STATES.map((st) => (
                                     <option key={st} value={st}>
                                         {st}

@@ -48,8 +48,7 @@ function SurveyHistory() {
     }
 
     function labelState(value) {
-        if (value === 'notice') return '공고중';
-        if (value === 'protect') return '보호중';
+        if (value) return value;
         return '상관없음';
     }
 
