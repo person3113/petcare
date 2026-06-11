@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaInstagram, FaFacebookF, FaTwitter } from 'react-icons/fa';
 
 function Footer() {
   return (
@@ -22,12 +23,12 @@ function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-3">서비스</h3>
             <ul className="space-y-2 text-xs text-gray-600">
-              <li><a href="#" className="hover:underline">인연 찾기</a></li>
-              <li><Link to="/animalswipe/1" className="hover:underline">동물 스와이프</Link></li>
-              <li><a href="#" className="hover:underline">입양하기</a></li>
-              <li><a href="#" className="hover:underline">매칭 테스트</a></li>
-              <li><a href="#" className="hover:underline">보호소 지도</a></li>
-              <li><a href="#" className="hover:underline">통계</a></li>
+              <li><Link to="/survey" className="hover:underline hover:text-accent transition-colors">인연 찾기</Link></li>
+              <li><Link to="/animalswipe/1" className="hover:underline hover:text-accent transition-colors">동물 스와이프</Link></li>
+              <li><Link to="/animals" className="hover:underline hover:text-accent transition-colors">입양하기</Link></li>
+              <li><Link to="/survey" className="hover:underline hover:text-accent transition-colors">매칭 테스트</Link></li>
+              <li><Link to="/map" className="hover:underline hover:text-accent transition-colors">보호소 지도</Link></li>
+              <li><Link to="/stats" className="hover:underline hover:text-accent transition-colors">통계</Link></li>
             </ul>
           </div>
 
@@ -35,10 +36,10 @@ function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-3">커뮤니티</h3>
             <ul className="space-y-2 text-xs text-gray-600">
-              <li><a href="#" className="hover:underline">입양후기</a></li>
-              <li><a href="#" className="hover:underline">질문</a></li>
-              <li><a href="#" className="hover:underline">분실·목격</a></li>
-              <li><a href="#" className="hover:underline">일상</a></li>
+              <li><Link to="/community" className="hover:underline hover:text-accent transition-colors">입양후기</Link></li>
+              <li><Link to="/community" className="hover:underline hover:text-accent transition-colors">질문</Link></li>
+              <li><Link to="/lost-animals" className="hover:underline hover:text-accent transition-colors">분실·목격</Link></li>
+              <li><Link to="/community" className="hover:underline hover:text-accent transition-colors">일상</Link></li>
             </ul>
           </div>
 
@@ -46,10 +47,10 @@ function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-3">정보</h3>
             <ul className="space-y-2 text-xs text-gray-600">
-              <li><a href="#" className="hover:underline">공지사항</a></li>
-              <li><a href="#" className="hover:underline">이용약관</a></li>
-              <li><a href="#" className="hover:underline">개인정보처리방침</a></li>
-              <li><a href="#" className="hover:underline">문의하기</a></li>
+              <li><Link to="/" className="hover:underline hover:text-accent transition-colors">공지사항</Link></li>
+              <li><Link to="/" className="hover:underline hover:text-accent transition-colors">이용약관</Link></li>
+              <li><Link to="/" className="hover:underline hover:text-accent transition-colors">개인정보처리방침</Link></li>
+              <li><Link to="/" className="hover:underline hover:text-accent transition-colors">문의하기</Link></li>
             </ul>
           </div>
         </div>
@@ -61,11 +62,17 @@ function Footer() {
           © 2026 Petcare. All rights reserved.
         </p>
 
-        {/* SNS 버튼 (Figma에 명시된 심플한 핑크빛 사각형 버튼 구조) */}
+        {/* SNS 버튼 (react-icons 사용) */}
         <div className="flex gap-2">
-          <a href="#" className="w-8 h-8 rounded bg-pink-100 hover:bg-pink-200 transition-colors flex items-center justify-center text-xs text-pink-600 font-semibold" aria-label="Instagram">IG</a>
-          <a href="#" className="w-8 h-8 rounded bg-pink-100 hover:bg-pink-200 transition-colors flex items-center justify-center text-xs text-pink-600 font-semibold" aria-label="Facebook">FB</a>
-          <a href="#" className="w-8 h-8 rounded bg-pink-100 hover:bg-pink-200 transition-colors flex items-center justify-center text-xs text-pink-600 font-semibold" aria-label="Twitter">TW</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-pink-50 hover:bg-pink-100 transition-colors flex items-center justify-center text-pink-600" aria-label="Instagram">
+            <FaInstagram size={16} />
+          </a>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-pink-50 hover:bg-pink-100 transition-colors flex items-center justify-center text-pink-600" aria-label="Facebook">
+            <FaFacebookF size={14} />
+          </a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded bg-pink-50 hover:bg-pink-100 transition-colors flex items-center justify-center text-pink-600" aria-label="Twitter">
+            <FaTwitter size={14} />
+          </a>
         </div>
       </div>
     </footer>

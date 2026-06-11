@@ -83,7 +83,7 @@ function Home() {
               <h2 className="sm:!text-sm !text-[9px] font-bold text-gray-400">
                 최근 한달간 유기동물 통계 (기준: {summary.realtime.todayDate})
               </h2>
-              <Link to="/stats" className="text-sm font-medium text-blue-600 hover:text-blue-800 transition">
+              <Link to="/stats" className="text-sm font-medium text-accent hover:opacity-80 transition">
                 상세 통계 보기 &rarr;
               </Link>
             </div>
