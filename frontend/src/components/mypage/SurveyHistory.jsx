@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchMySurvey } from '../../api/survey.js';
+import { matchQuiz, buildMatchParams } from '../../api/match.js';
 
 function SurveyHistory() {
     const [survey, setSurvey] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [matchLoading, setMatchLoading] = useState(false);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -48,6 +51,31 @@ function SurveyHistory() {
         if (value === 'notice') return '공고중';
         if (value === 'protect') return '보호중';
         return '상관없음';
+    }
+
+    function handleFindMatches() {
+        if (!survey) return;
+        setMatchLoading(true);
+        setError('');
+        
+        const payload = buildMatchParams(survey);
+        matchQuiz(payload)
+            .then(response => {
+                const data = response?.data || {};
+                navigate('/match-result', {
+                    state: {
+                        items: data.items || [],
+                        pagination: data.pagination || null,
+                        criteria: payload,
+                    },
+                });
+            })
+            .catch(err => {
+                setError(err?.message || '동물 매칭 데이터를 불러오는데 실패했습니다.');
+            })
+            .finally(() => {
+                setMatchLoading(false);
+            });
     }
 
     if(loading) {
@@ -106,13 +134,20 @@ function SurveyHistory() {
                     <span>{labelState(survey.state)}</span>
                 </div>
             </div>
-            <div className="mt-5 text-right">
+            <div className="mt-5 flex justify-end gap-2">
                 <Link
                     to="/survey"
-                    className="inline-block rounded-lg border border-amber-400 px-4 py-2 text-sm font-semibold text-amber-500 hover:bg-amber-50"
+                    className="inline-block rounded-lg border border-amber-400 px-4 py-2 text-sm font-semibold text-amber-500 transition hover:bg-amber-50"
                 >
                     설문 다시하기
                 </Link>
+                <button
+                    onClick={handleFindMatches}
+                    disabled={matchLoading}
+                    className="inline-block rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-500 disabled:opacity-50"
+                >
+                    {matchLoading ? '가져오는 중...' : '맞춤 동물 찾기'}
+                </button>
             </div>
         </div>
     )

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from '../Button.jsx';
 import { PROCESS_STATES } from '../../constants.js';
 
-function SwipeSideBox({LikeCnt, filter, onFilterChange, sidoList, sigunguList, shelterList}) {
+function SwipeSideBox({LikeCnt, filter, onFilterChange, sidoList, sigunguList, shelterList, mySurvey, applySurveyFilter}) {
 
     const disabledSigungu = !filter.sido; // 시도를 선택하지 않았으면, 시군구는 비활성화
     const disabledShelter = !filter.sido; // 시도를 선택하지 않았으면, 보호소는 비활성화
@@ -20,10 +20,26 @@ function SwipeSideBox({LikeCnt, filter, onFilterChange, sidoList, sigunguList, s
             {/*설문하러가기 버튼*/}
             <div className="flex gap-3 h-[180px] w-[300px] flex-col items-center justify-center rounded-[25px] border-2 border-gray-300 bg-white">
                 <h2>매칭 테스트</h2>
-                <p>5문항으로 조건 적용</p>
-                <Link to="/survey">
-                    <Button text="시작하기" width="250px"/>
-                </Link>
+                <p className="text-sm text-gray-500 text-center">
+                    {mySurvey ? '저장된 조건으로 필터링합니다' : '5문항으로 조건 적용'}
+                </p>
+                {mySurvey ? (
+                    <div className="flex w-full flex-col items-center gap-2 px-6">
+                        <Button 
+                            text="내 설문기록 적용하기" 
+                            width="100%" 
+                            variant="primary" 
+                            onClick={() => applySurveyFilter(mySurvey)} 
+                        />
+                        <Link to="/survey" className="text-xs text-gray-400 underline hover:text-amber-500 transition">
+                            설문 다시하기
+                        </Link>
+                    </div>
+                ) : (
+                    <Link to="/survey">
+                        <Button text="시작하기" width="250px" variant="primary" />
+                    </Link>
+                )}
             </div>
             {/*필터*/}
             <div className="flex py-6 w-[300px] flex-col items-center justify-center rounded-[25px] border-2 border-gray-300 bg-white">

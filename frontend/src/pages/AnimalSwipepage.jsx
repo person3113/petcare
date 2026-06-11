@@ -5,6 +5,7 @@ import SwipeCard from '../components/animalswipe/SwipeCard';
 import SwipeSideBox from '../components/animalswipe/SwipeSideBox.jsx';
 import { fetchAnimals, fetchSido, fetchSigungu, fetchShelters } from '../api/animals.js';
 import { addFavorite, getFavorites } from '../api/favorites.js';
+import { fetchMySurvey } from '../api/survey.js';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 function AnimalSwipePage() {
@@ -22,10 +23,10 @@ function AnimalSwipePage() {
     });
 
     const [nowIndex, setnowIndex] = useState(0); // 현재 보고 있는 카드의 인덱스
-    const [exitX, setexitX] = useState(0); // 카드가 어느 방향으로 날아갈지 결정 (500 또는 -500)
+    const [exitX, setexitX] = useState(0); // 카드가 어느 방향으로 날아갈지 결정(500 또는 -500)
     const [likeAnimal, setlikeAnimal] = useState([]); //찜한 동물id 리스트 저장 (서버에서 불러옴)
     const [todaylike, setTodaylike] = useState(()=>{
-        //오늘의 찜 localstorage에 저장한거 가져오기
+        //오늘의 찜 저장한거 가져오기
         const today = new Date().toLocaleDateString();
         const stats = JSON.parse(localStorage.getItem('daily_likes') || '{"date":"","count":0}');
 
@@ -33,6 +34,7 @@ function AnimalSwipePage() {
     }); //오늘의 찜 개수
 
     const [initialLiked, setInitialLiked] = useState([]); // 최초 찜한 동물 목록 (스와이프 인덱스 꼬임 방지용)
+    const [mySurvey, setMySurvey] = useState(null); // 내 설문기록
 
     // 필터 드롭다운 옵션 목록
     const [sidoList, setSidoList] = useState([]);
@@ -100,8 +102,15 @@ function AnimalSwipePage() {
             .finally(() => setLoading(false));
     }, [filter]);
 
-    // 기타 초기 로딩 (찜 목록, 시도 목록)
+    // 기타 초기 로딩(찜목록, 시도 목록, 설문)
     useEffect(() => {
+        // 설문 기록 불러오기
+        fetchMySurvey()
+            .then(res => setMySurvey(res?.data || null))
+            .catch(err => {
+                if (err?.status !== 401) console.log("설문 에러", err);
+            });
+
         // 찜 목록 서버에서 불러오기
         getFavorites()
             .then((data) => {
@@ -168,7 +177,7 @@ function AnimalSwipePage() {
 
     //==========================필터를 위한 부분================================
 
-    //필터를 위해 데이터를 다시 불러오거나(API 호출), 목록을 걸러주는 함수
+    //필터를 위해 데이터를 다시 불러오거나, 목록을 걸러주는 함수
     const FilterChange = (newFilter) => {
         //시도가 바뀌면
         if (newFilter.sido !== filter.sido) {
@@ -232,6 +241,43 @@ function AnimalSwipePage() {
         }
     }
 
+    const applySurveyFilter = (survey) => {
+        let kind = '';
+        if(survey.upkind === '417000')kind = '[개]';
+        else if (survey.upkind === '422400') kind = '[고양이]';
+        else if (survey.upkind === '429900') kind = '[기타축종]';
+
+        let gender = '';
+        if(survey.sexCd === 'M') gender = '수컷';
+        else if(survey.sexCd === 'F') gender = '암컷';
+
+        let isNeutered = '';
+        if (survey.neuterYn === 'Y') isNeutered = '예';
+        else if (survey.neuterYn ==='N') isNeutered = '아니오';
+        else if (survey.neuterYn ==='U')isNeutered = '미상';
+
+        let status = '';
+        if(survey.state === 'notice') status = '공고중';
+        else if(survey.state === 'protect') status = '보호중';
+
+        let sidoName = '';
+        if(survey.uprCd) {
+            sidoName = sidoList.find(s => s.code === survey.uprCd)?.name || '';
+        }
+
+        const newFilter ={
+            sido: sidoName,
+            sigungu: '',
+            shelterName: '',
+            kind,
+            status,
+            gender,
+            isNeutered
+        };
+
+        FilterChange(newFilter);
+    };
+
 
 
     return (
@@ -283,6 +329,8 @@ function AnimalSwipePage() {
                             sidoList={sidoList}
                             sigunguList={sigunguList}
                             shelterList={shelterList}
+                            mySurvey={mySurvey}
+                            applySurveyFilter={applySurveyFilter}
                             onFilterChange={(e) => {
                                 const {name, value, type, checked} = e.target;
                                 const finalValue = type === 'checkbox' ? checked : value;
