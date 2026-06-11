@@ -11,9 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class AuthService {
+
+    private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -55,6 +58,7 @@ public class AuthService {
     }
 
     private UserResponse toResponse(User user) {
-        return new UserResponse(user.getId(), user.getEmail(), user.getNickname());
+        String createdAtStr = user.getCreatedAt() != null ? user.getCreatedAt().format(DATETIME_FORMATTER) : null;
+        return new UserResponse(user.getId(), user.getEmail(), user.getNickname(), createdAtStr);
     }
 }
