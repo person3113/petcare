@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {Link, useParams} from 'react-router-dom';
 import { request } from '../api/http.js';
-import AnimalInfoBox from '../components/animaldetail/AnimalInfoBox';
+import LostAnimalInfoBox from '../components/animaldetail/LostAnimalInfoBox';
 import AnimalImg from '../components/animaldetail/AnimalImg';
-import AnimalInfoTab from '../components/animaldetail/AnimalInfoTab';
+import LostAnimalDetailSection from '../components/animaldetail/LostAnimalDetailSection';
 
 function LostAnimalDetailPage() {
     const { id } = useParams();
@@ -45,34 +45,28 @@ function LostAnimalDetailPage() {
 
     const normalizedAnimal = {
         ...animal,
-        weight: animal.weight || '정보 없음',
-        isNeutered: animal.isNeutered || '미상',
-        socialization: animal.socialization || '정보 없음',
-        healthStatus: animal.healthStatus || '정보 없음',
-        geminiIntro: null,
-        isLiked: false,
+        images: animal.images || [],
     };
 
     return (
         <div className="mx-auto max-w-5xl py-6">
-            {/*페이지 경로*/}
             <div className="path ml-6">
-                <Link to="/" className="text-sm text-gray-500 hover:underline">메인 화면</Link>
-                <span>&gt;</span>
-                <Link to="/lost-animals" className="text-sm text-gray-500 hover:underline">분실 동물</Link>
-                <span>&gt;</span>
-                <span className="text-sm text-accent">인연 상세</span>
+                <Link to="/" className="text-sm text-gray-500 hover:underline">메인 화면 </Link>
+                <span>&gt; </span>
+                <Link to="/lost-animals" className="text-sm text-gray-500 hover:underline">분실 동물 </Link>
+                <span>&gt; </span>
+                <span className="text-sm text-accent"> 상세 페이지</span>
             </div>
-            <h1 className="text-xl font-bold text-gray-900">분실동물 상세 페이지</h1>
+            
             <div className="mt-6 flex flex-col gap-10 lg:flex-row">
                 <div className="min-w-[320px] flex-1">
                     <AnimalImg images={normalizedAnimal.images || []} />
                 </div>
                 <div className="min-w-[320px] flex-1">
-                    <AnimalInfoBox animal={normalizedAnimal} onFavoriteChange={setAnimal} />
+                    <LostAnimalInfoBox animal={normalizedAnimal} onFavoriteChange={setAnimal} />
                 </div>
             </div>
-            <AnimalInfoTab animal={normalizedAnimal} />
+            <LostAnimalDetailSection animal={normalizedAnimal} />
         </div>
     );
 }

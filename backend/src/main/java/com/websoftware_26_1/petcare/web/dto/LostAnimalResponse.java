@@ -30,4 +30,5 @@ public class LostAnimalResponse {
     private String socialization;
     private String healthStatus;
     private String updatedAt;
+    private String callName;
 }

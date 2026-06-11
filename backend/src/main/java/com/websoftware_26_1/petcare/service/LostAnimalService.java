@@ -97,7 +97,8 @@ public class LostAnimalService {
             animal.getOrgNm(),
             "",
             "양호",
-            formatDateTime(animal.getCachedAt())
+            formatDateTime(animal.getCachedAt()),
+            animal.getCallName()
         );
     }
 
