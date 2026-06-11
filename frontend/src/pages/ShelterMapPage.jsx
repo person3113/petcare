@@ -138,7 +138,7 @@ function ShelterMapPage() {
 
 
   return (
-    <div className="py-6 h-[calc(100vh-100px)] min-h-[600px] flex flex-col md:flex-row gap-6">
+    <div className="py-6 h-auto min-h-[calc(100vh-100px)] md:h-[calc(100vh-100px)] md:min-h-[600px] flex flex-col md:flex-row gap-6">
       
       {}
       <div className="relative flex-1 rounded-xl overflow-hidden shadow-md bg-gray-100 min-h-[300px]">

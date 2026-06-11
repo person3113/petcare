@@ -25,7 +25,6 @@ function request(path, options = {}) {
         error.status = response.status;
         error.data = data;
         if (response.status === 401 && !options.skipAuthError) {
-          alert("로그인이 필요하거나 세션이 만료되었습니다.");
           window.location.href = '/login';
         }
         throw error;

@@ -29,6 +29,16 @@ function KakaoMap({ shelters, currentLocation, selectedShelter, onMarkerClick })
 
     if (!mapInstance.current) {
         mapInstance.current = new window.kakao.maps.Map(container, options);
+        mapInstance.current.setMinLevel(3);
+        
+        const resizeObserver = new ResizeObserver(() => {
+            if (mapInstance.current) {
+                const center = mapInstance.current.getCenter();
+                mapInstance.current.relayout();
+                mapInstance.current.setCenter(center);
+            }
+        });
+        resizeObserver.observe(container);
     } else if (currentLocation && !selectedShelter) {
         mapInstance.current.setCenter(centerPosition);
         mapInstance.current.setLevel(level);
@@ -95,7 +105,7 @@ function KakaoMap({ shelters, currentLocation, selectedShelter, onMarkerClick })
   return (
     <div
       ref={mapRef}
-      className="w-full h-full rounded-lg"
+      className="w-full h-full min-h-[300px] rounded-lg"
     />
   );
 }
