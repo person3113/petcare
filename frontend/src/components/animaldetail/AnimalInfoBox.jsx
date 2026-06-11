@@ -5,11 +5,13 @@ import Button from '../Button';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { LuMessageSquareHeart } from "react-icons/lu";
 import { useNavigate } from 'react-router-dom'; {/*보호소 연락버튼에 사용 지도페이지랑 연결*/}
+import Popup from './Popup'; //입양신청하기 누를때 뜨는 팝업창
 
 function AnimalInfoBox({animal, onFavoriteChange}) {
 
     const [favoriteLoading, setFavoriteLoading] = useState(false);
     const navigate = useNavigate(); //페이지 이동을 위한 함수(보호소값 전달을 위해)
+    const [isPopupOpen, setIsPopupOpen] = useState(false);//팝업창 열었는지 아닌지 여부
 
     if(!animal)return(<div>데이터 로드 안됨</div>)
 
@@ -133,6 +135,7 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
                     flex={1.5}
                     bgColor="#f59e0b"
                     textColor="white"
+                    onClick={() => setIsPopupOpen(true)}
                 />
                 <Button
                     text="보호소 찾기"
@@ -143,6 +146,13 @@ function AnimalInfoBox({animal, onFavoriteChange}) {
                     border="1px solid #ddd"
                 />
             </div>
+
+            {/*입양신청하기 눌렀을때 뜰 팝업창*/}
+            <Popup
+                isOpen={isPopupOpen}
+                shelterName={shelterName}
+                Onclose={()=>setIsPopupOpen(false)}
+            />
         </div>
     )
 }
